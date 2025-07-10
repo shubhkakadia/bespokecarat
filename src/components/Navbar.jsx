@@ -1,0 +1,220 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { ShoppingBagIcon } from "lucide-react";
+
+export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Handle search functionality here
+      console.log("Searching for:", searchQuery);
+      // You can add search logic or redirect to search results page
+    }
+  };
+
+  return (
+    <nav className="bg-surface shadow-soft border-b border-border sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Left Side - Navigation Links */}
+          <div className="hidden lg:flex items-center space-x-8">
+            <Link
+              href="/"
+              className="text-primary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+            >
+              Home
+            </Link>
+            <Link
+              href="/products"
+              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+            >
+              Products
+            </Link>
+            <Link
+              href="/aboutus"
+              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+            >
+              About Us
+            </Link>
+          </div>
+
+          {/* Center - Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center">
+              <h1 className="text-2xl font-bold text-brand text-primary transition duration-200">
+                Bespoke Carat
+              </h1>
+            </Link>
+          </div>
+
+          {/* Right Side - Search, Cart, Sign In */}
+          <div className="hidden lg:flex items-center space-x-4">
+            {/* Search Bar */}
+            <form onSubmit={handleSearch} className="relative">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search diamonds..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="text-gray-700 w-64 pl-10 pr-4 py-2 border border-border rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 outline-none transition duration-200 bg-surface-50"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg
+                    className="h-5 w-5 text-secondary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </form>
+
+            {/* Cart Button */}
+            <button className="cursor-pointer relative p-2 text-secondary">
+              <ShoppingBagIcon className="h-5 w-5 hover:text-primary-600" />
+              {/* Cart Badge */}
+              <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
+                3
+              </span>
+            </button>
+
+            {/* Contact */}
+            <Link
+              href="/contactus"
+              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+            >
+              Contact Us
+            </Link>
+
+            {/* Sign In Button */}
+            <Link href="/login" className="text-white cursor-pointer bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium transition duration-200 shadow-accent">
+              Sign In
+            </Link>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-md text-secondary hover:text-primary-600 hover:bg-surface-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-600"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {isMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden">
+            <div className="absolute inset-x-0 top-full p-4 space-y-2 bg-background-secondary border-t border-border rounded-xl shadow-lg">
+              {/* Mobile Search */}
+              <form onSubmit={handleSearch} className="px-3 py-2">
+                <div className="flex justify-between items-center">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search diamonds..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="text-gray-700 w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 outline-none bg-surface-50"
+                    />
+
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-secondary"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <button className="cursor-pointer relative p-2 text-secondary">
+                    <ShoppingBagIcon className="h-5 w-6 hover:text-primary-600" />
+                    {/* Cart Badge */}
+                    <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
+                      3
+                    </span>
+                  </button>
+                </div>
+              </form>
+
+              {/* Mobile Navigation Links */}
+              <Link
+                href="/"
+                className="text-primary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+              >
+                Home
+              </Link>
+              <Link
+                href="/products"
+                className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+              >
+                Products
+              </Link>
+              <Link
+                href="/about"
+                className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+              >
+                About
+              </Link>
+              <Link
+                href="/contact"
+                className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+              >
+                Contact
+              </Link>
+
+              {/* Mobile Cart and Sign In */}
+              <div className="flex items-center justify-between px-3 py-2">
+                <Link href="/login" className="text-white bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium shadow-accent">
+                  Sign In
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
