@@ -6,7 +6,7 @@ const Admin = db.admin;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { firstName, lastName, email, password, isMaster } = req.body;
+    const { first_name, last_name, email, password, is_master } = req.body;
 
     const isExist = await Admin.findOne({ where: { email } });
 
@@ -19,11 +19,11 @@ export default async function handler(req, res) {
     const defualtPwd = bcrypt.hashSync(password, 10);
 
     const data = {
-      first_name: firstName.trim(),
-      last_name: lastName.trim(),
+      first_name: first_name.trim(),
+      last_name: last_name.trim(),
       email: email.trim(),
       password: defualtPwd,
-      user_type: isMaster ? "master-admin" : "admin",
+      user_type: is_master ? "master-admin" : "admin",
       unique_id: getUniqueId(10),
     };
 
