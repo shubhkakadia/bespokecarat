@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ShoppingBagIcon } from "lucide-react";
+import { ShoppingBagIcon, ChevronDownIcon } from "lucide-react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,17 +30,264 @@ export default function Navbar() {
             >
               Home
             </Link>
-            <Link
-              href="/products"
-              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+
+            {/* Products Dropdown */}
+            <div
+              className="relative group"
+              onMouseEnter={() => setIsProductsDropdownOpen(true)}
+              onMouseLeave={() => setIsProductsDropdownOpen(false)}
             >
-              Products
-            </Link>
+              <button className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200 flex items-center">
+                Diamonds
+                <ChevronDownIcon className="ml-1 h-4 w-4" />
+              </button>
+
+              {/* Products Dropdown Menu */}
+              {isProductsDropdownOpen && (
+                <div
+                  className="absolute  top-full mt-1 w-screen bg-white border-t border-gray-200 shadow-2xl z-50"
+                  onMouseEnter={() => setIsProductsDropdownOpen(true)}
+                  onMouseLeave={() => setIsProductsDropdownOpen(false)}
+                >
+                  <div className="max-w-7xl px-8 py-8">
+                    <div className="grid grid-cols-12 gap-8">
+                      {/* Left Content - Categories */}
+                      <div className="col-span-8">
+                        <div className="grid grid-cols-5 gap-8">
+                          {/* Shop by Shape */}
+                          <div className="space-y-4">
+                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                              Shop by Shape
+                            </h3>
+                            <div className="space-y-2">
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Round
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Pear
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Oval
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Princess
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Asscher
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Marquise
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Emerald
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Cushion
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Radiant
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Heart
+                              </Link>
+                              <button className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors">
+                                View All
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Shop by Cut */}
+                          <div className="space-y-4">
+                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                              Shop by Cut
+                            </h3>
+                            <div className="space-y-2">
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Old Cut
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Antique Cut
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Rose Cut
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Pie Cut
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Portrait Cut
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Step Cut
+                              </Link>
+                              <button className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors">
+                                View All
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Color Diamonds */}
+                          <div className="space-y-4">
+                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                              Color Diamonds
+                            </h3>
+                            <div className="space-y-2">
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Pink
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Yellow
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Blue
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Champagne
+                              </Link>
+                              <button className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors">
+                                View All
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Lab Gemstones & Melee */}
+                          <div className="space-y-4">
+                            {/* Lab Gemstones */}
+                            <div className="space-y-2">
+                              <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                                Lab Gemstones
+                              </h3>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Emerald
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Ruby
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Sapphire
+                              </Link>
+                            </div>
+
+                            {/* Melee */}
+                            <div className="space-y-2">
+                              <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                                Melee
+                              </h3>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                Single Round Melee
+                              </Link>
+                              <Link
+                                href="#"
+                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                              >
+                                1ct Round Melee
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Side - Image */}
+                      <div className="col-span-4">
+                        <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg h-96 flex items-center justify-center">
+                          <div className="text-center text-gray-500">
+                            <div className="text-4xl mb-2">💎</div>
+                            <p className="text-sm">Diamond Shapes Image</p>
+                            <p className="text-xs mt-1">400 x 384px</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link
               href="/aboutus"
               className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
             >
               About Us
+            </Link>
+
+            {/* Contact Us moved to left side */}
+            <Link
+              href="/contactus"
+              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+            >
+              Contact Us
             </Link>
           </div>
 
@@ -91,16 +339,11 @@ export default function Navbar() {
               </span>
             </button>
 
-            {/* Contact */}
-            <Link
-              href="/contactus"
-              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
-            >
-              Contact Us
-            </Link>
-
             {/* Sign In Button */}
-            <Link href="/login" className="text-white cursor-pointer bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium transition duration-200 shadow-accent">
+            <Link
+              href="/login"
+              className="text-white cursor-pointer bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium transition duration-200 shadow-accent"
+            >
               Sign In
             </Link>
           </div>
@@ -190,24 +433,27 @@ export default function Navbar() {
                 href="/products"
                 className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
               >
-                Products
+                Diamonds
               </Link>
               <Link
-                href="/about"
+                href="/aboutus"
                 className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
               >
-                About
+                About Us
               </Link>
               <Link
-                href="/contact"
+                href="/contactus"
                 className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
               >
-                Contact
+                Contact Us
               </Link>
 
               {/* Mobile Cart and Sign In */}
               <div className="flex items-center justify-between px-3 py-2">
-                <Link href="/login" className="text-white bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium shadow-accent">
+                <Link
+                  href="/login"
+                  className="text-white bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium shadow-accent"
+                >
                   Sign In
                 </Link>
               </div>
