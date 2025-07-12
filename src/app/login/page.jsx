@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import { setAuthTokenByUserType, ROLES } from "../../lib/auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,6 +21,35 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [focusedFields, setFocusedFields] = useState({});
+
+  const signinAPI = async (formdata) => {
+    try {
+      let data = JSON.stringify({
+        email: formdata.emailOrPhone,
+        password: formdata.password,
+      });
+      console.log(process.env.NEXT_PUBLIC_BASE_URL);
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/signin`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      return await axios
+        .request(config)
+
+        .catch((error) => {
+          throw new Error("Login failed", error);
+        });
+    } catch (error) {
+      console.error("Login API error:", error);
+      throw error;
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -97,34 +127,31 @@ export default function LoginPage() {
     try {
       // TODO: Implement actual login logic here
       console.log("Login attempt:", formData);
+      // Call your API to log in
+      const loginResponse = await signinAPI(formData);
+      console.log(loginResponse);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!loginResponse.success) {
+        setErrors({ general: loginResponse.message });
+        return;
+      }
 
-      // Mock API response - replace with actual API call
-      // The backend should return user data including userType
-      const mockResponse = {
-        token: `mock_token_${Date.now()}`,
-        userType: 'customer', // This will come from backend
-        user: {
-          id: 1,
-          email: formData.emailOrPhone,
-          userType: 'customer'
-        }
-      };
-      
       // Set the appropriate token based on userType from backend
-      setAuthTokenByUserType(mockResponse.token, mockResponse.userType);
-      
+      setAuthTokenByUserType(
+        loginResponse.data.data.token,
+        (loginResponse.data.data.userType = "admin")
+      );
+
       // Update auth context
-      const userRole = mockResponse.userType === 'admin' ? ROLES.ADMIN : ROLES.CUSTOMER;
+      const userRole =
+        loginResponse.data.userType === "admin" ? ROLES.ADMIN : ROLES.CUSTOMER;
       login(userRole);
 
       // Redirect based on userType from backend
-      if (mockResponse.userType === 'admin') {
-        router.push('/admin');
+      if (loginResponse.data.userType === "admin") {
+        router.push("/admin");
       } else {
-        router.push('/dashboard');
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -279,30 +306,13 @@ export default function LoginPage() {
                 )}
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border rounded cursor-pointer"
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-2 block text-sm text-secondary cursor-pointer"
-                  >
-                    Remember me
-                  </label>
-                </div>
-                <div className="text-sm">
-                  <Link
-                    href="/forgot-password"
-                    className="text-primary-600 hover:text-primary-500 font-medium cursor-pointer"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+              <div className="text-sm float-right">
+                <Link
+                  href="/forgot-password"
+                  className="text-primary-600 hover:text-primary-500 font-medium cursor-pointer"
+                >
+                  Forgot password?
+                </Link>
               </div>
 
               {/* Submit Button */}
