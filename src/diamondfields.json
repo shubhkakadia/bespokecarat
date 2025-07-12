@@ -1,0 +1,21 @@
+{
+  "id": "uuid",
+  "sku": "string",
+  "name": "string",
+  "description": "string",
+  "caratWeight": "float",
+  "color": "string",
+  "clarity": "string",
+  "photoUrls": "list<string>",
+  "videoUrl": "string",
+  "price": "float",
+  "shape": "string",
+  "hardness": "string",
+  "diamondType": "string",
+  "certification": "string",
+  "availability": "boolean",
+  "reviewids": "list<uuid>",
+  "likes": "list<uuid>",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
