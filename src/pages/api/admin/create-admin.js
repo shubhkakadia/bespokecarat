@@ -4,6 +4,7 @@ import { isMasterAdmin } from "../../../../lib/authFromToken";
 import { getUniqueId } from "../../../../lib/getUniqueId";
 
 const Admin = db.admin;
+const Customers = db.customers;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -17,12 +18,14 @@ export default async function handler(req, res) {
 
     const { first_name, last_name, email, password, is_master } = req.body;
 
-    const isExist = await Admin.findOne({ where: { email } });
+    const isExistAdmin = await Admin.findOne({ where: { email } });
 
-    if (isExist) {
+    const isExistCustomer = await Customers.findOne({ where: { email } });
+
+    if (isExistAdmin || isExistCustomer) {
       return res
         .status(200)
-        .send({ status: false, message: "Email already exist" });
+        .send({ status: false, message: "Email already exists" });
     }
 
     const defualtPwd = bcrypt.hashSync(password, 10);
