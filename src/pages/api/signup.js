@@ -26,7 +26,7 @@ export default async function (req, res) {
       newsletter,
     } = value;
 
-    const isExist = await Customers.findOne({ Where: { email } });
+    const isExist = await Customers.findOne({ where: { email } });
 
     if (isExist) {
       return res
