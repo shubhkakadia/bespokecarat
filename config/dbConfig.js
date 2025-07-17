@@ -35,6 +35,7 @@ db.sequelize = sequelize;
 
 db.admin = require("../models/adminModel")(sequelize, DataTypes);
 db.sessions = require("../models/sessionsModel")(sequelize, DataTypes);
+db.customers = require("../models/customerModel")(sequelize, DataTypes);
 
 // ASSOCIATIONS START
 
@@ -42,6 +43,13 @@ db.admin.hasMany(db.sessions, {
   foreignKey: "userId",
 });
 db.sessions.belongsTo(db.admin, {
+  foreignKey: "userId",
+});
+
+db.customers.hasMany(db.sessions, {
+  foreignKey: "userId",
+});
+db.sessions.belongsTo(db.customers, {
   foreignKey: "userId",
 });
 

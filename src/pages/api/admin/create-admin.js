@@ -4,6 +4,7 @@ import { isMasterAdmin } from "../../../../lib/authFromToken";
 import { getUniqueId } from "../../../../lib/getUniqueId";
 
 const Admin = db.admin;
+const Customers = db.customers;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -15,24 +16,26 @@ export default async function handler(req, res) {
         .send({ status: false, message: "Only master admin allowed" });
     }
 
-    const { firstName, lastName, email, password, isMaster } = req.body;
+    const { first_name, last_name, email, password, is_master } = req.body;
 
-    const isExist = await Admin.findOne({ where: { email } });
+    const isExistAdmin = await Admin.findOne({ where: { email } });
 
-    if (isExist) {
+    const isExistCustomer = await Customers.findOne({ where: { email } });
+
+    if (isExistAdmin || isExistCustomer) {
       return res
         .status(200)
-        .send({ status: false, message: "Email already exist" });
+        .send({ status: false, message: "Email already exists" });
     }
 
     const defualtPwd = bcrypt.hashSync(password, 10);
 
     const data = {
-      first_name: firstName.trim(),
-      last_name: lastName.trim(),
+      first_name: first_name.trim(),
+      last_name: last_name.trim(),
       email: email.trim(),
       password: defualtPwd,
-      user_type: isMaster ? "master-admin" : "admin",
+      user_type: is_master ? "master-admin" : "admin",
       unique_id: getUniqueId(10),
     };
 

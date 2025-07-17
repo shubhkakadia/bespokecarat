@@ -1,34 +1,48 @@
 import db from "../../../config/dbConfig";
 import { getUniqueId } from "../../../lib/getUniqueId";
 import bcrypt from "bcrypt";
+import { signInValidator } from "../../../lib/validators/signInValidator";
 
 const Admin = db.admin;
+const Customers = db.customers;
 const Sessions = db.sessions;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { email, password } = req.body;
+    const { error, value } = signInValidator.validate(req.body);
 
-    const isExist = await Admin.findOne({ where: { email } });
+    if (error) {
+      return res
+        .status(200)
+        .json({ status: false, message: error.details[0].message });
+    }
 
-    if (!isExist) {
+    const { email, password } = value;
+
+    let user = await Admin.findOne({ where: { email } });
+
+    if (!user) {
+      user = await Customers.findOne({ where: { email } });
+    }
+
+    if (!user) {
       return res
         .status(200)
         .send({ status: false, message: "Email doesn't exist" });
     }
 
-    if (!bcrypt.compareSync(password.trim(), isExist.password)) {
+    const isPasswordValid = bcrypt.compareSync(password.trim(), user.password);
+    if (!isPasswordValid) {
       return res
         .status(200)
         .send({ status: false, message: "Credentials are wrong" });
     }
-
-    const token = `${isExist.unique_id}-${getUniqueId(99)}`;
+    const token = `${user.unique_id}-${getUniqueId(99)}`;
 
     const data = {
-      userId: isExist.id,
+      userId: user.id,
       token,
-      user_type: isExist.user_type,
+      user_type: user.user_type,
     };
 
     await Sessions.create(data);
@@ -36,7 +50,13 @@ export default async function handler(req, res) {
     return res.status(200).send({
       status: true,
       message: "Logged in successfully",
-      data: { token },
+      data: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        token,
+        user_type: user.user_type,
+      },
     });
   } else {
     return res.status(200).send({ status: false, message: "Not Allowed" });
