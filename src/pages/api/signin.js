@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       .status(200)
       .send({ status: false, message: "Invalid email or phone format" });
   }
-
+  
   if (!user) {
     return res
       .status(200)
@@ -58,6 +58,7 @@ export default async function handler(req, res) {
       .status(200)
       .send({ status: false, message: "Credentials are wrong" });
   }
+
 
   const token = `${user.unique_id}-${getUniqueId(99)}`;
 

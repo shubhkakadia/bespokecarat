@@ -1,5 +1,5 @@
 import "./globals.css";
-import { AuthProvider } from "../contexts/AuthContext";
+import Providers from "../components/Providers";
 
 export const metadata = {
   title: "Bespoke Carat - Premium Lab-Grown Diamonds",
@@ -13,9 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="antialiased" suppressHydrationWarning={true}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
