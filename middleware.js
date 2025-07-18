@@ -16,11 +16,44 @@ const protectedRoutes = {
   '/dashboard/settings': 'customer',
 };
 
-// Token keys for different roles
-const TOKEN_KEYS = {
-  CUSTOMER: 'token',
-  ADMIN: 'admin_token'
-};
+// Single token key for all users
+const TOKEN_KEY = 'token';
+
+// Helper function to decode JWT token
+function decodeToken(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+}
+
+// Helper function to get user role from token
+function getUserRoleFromToken(token) {
+  const decoded = decodeToken(token);
+  if (!decoded) return null;
+  
+  const userType = decoded.user_type;
+  if (userType === 'admin' || userType === 'master-admin') {
+    return 'admin';
+  }
+  if (userType === 'customer') {
+    return 'customer';
+  }
+  
+  return null;
+}
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -29,12 +62,20 @@ export function middleware(request) {
   const requiredRole = protectedRoutes[pathname];
   
   if (requiredRole) {
-    // Get the appropriate token based on the required role
-    const tokenKey = requiredRole === 'admin' ? TOKEN_KEYS.ADMIN : TOKEN_KEYS.CUSTOMER;
-    const token = request.cookies.get(tokenKey)?.value;
+    // Get the single token
+    const token = request.cookies.get(TOKEN_KEY)?.value;
     
     // If no token is found, redirect to login
     if (!token) {
+      const loginUrl = new URL('/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+    
+    // Get user role from token
+    const userRole = getUserRoleFromToken(token);
+    
+    // If cannot determine role or role doesn't match, redirect to login
+    if (!userRole || userRole !== requiredRole) {
       const loginUrl = new URL('/login', request.url);
       return NextResponse.redirect(loginUrl);
     }

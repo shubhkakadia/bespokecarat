@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Phone } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { setAuthTokenByUserType, ROLES } from "../../lib/auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
-import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isAuthenticated, getUserType, loading } = useAuth();
   const [formData, setFormData] = useState({
     emailOrPhone: "",
     password: "",
@@ -22,34 +20,17 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [focusedFields, setFocusedFields] = useState({});
 
-  const signinAPI = async (formdata) => {
-    try {
-      let data = JSON.stringify({
-        email: formdata.emailOrPhone,
-        password: formdata.password,
-      });
-      console.log(process.env.NEXT_PUBLIC_BASE_URL);
-      let config = {
-        method: "post",
-        maxBodyLength: Infinity,
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/signin`,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
-
-      return await axios
-        .request(config)
-
-        .catch((error) => {
-          throw new Error("Login failed", error);
-        });
-    } catch (error) {
-      console.error("Login API error:", error);
-      throw error;
+  // Check if user is already logged in and redirect
+  useEffect(() => {
+    if (isAuthenticated && !loading) {
+      const userType = getUserType();
+      if (userType === "admin" || userType === "master-admin") {
+        router.push("/admin");
+      } else if (userType === "customer") {
+        router.push("/dashboard");
+      }
     }
-  };
+  }, [isAuthenticated, getUserType, loading, router]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -125,37 +106,27 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual login logic here
-      console.log("Login attempt:", formData);
-      // Call your API to log in
-      const loginResponse = await signinAPI(formData);
-      console.log(loginResponse);
+      // Use the new Redux-based login function
+      const result = await login(formData);
 
-      if (!loginResponse.success) {
-        setErrors({ general: loginResponse.message });
-        return;
-      }
-
-      // Set the appropriate token based on userType from backend
-      setAuthTokenByUserType(
-        loginResponse.data.data.token,
-        (loginResponse.data.data.userType = "admin")
-      );
-
-      // Update auth context
-      const userRole =
-        loginResponse.data.userType === "admin" ? ROLES.ADMIN : ROLES.CUSTOMER;
-      login(userRole);
-
-      // Redirect based on userType from backend
-      if (loginResponse.data.userType === "admin") {
-        router.push("/admin");
+      if (result.success) {
+        // Redirect based on user_type from the stored user data
+        const userType = result.data.data.user_type;
+        if (userType === "admin" || userType === "master-admin") {
+          router.push("/admin");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
-        router.push("/dashboard");
+        setErrors({
+          general: result.error || "Login failed. Please try again.",
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
-      setErrors({ general: "Login failed. Please try again." });
+      setErrors({
+        general: "Network error. Please check your connection and try again.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -188,6 +159,15 @@ export default function LoginPage() {
       return <Phone className="h-5 w-5 text-secondary" />;
     return <Mail className="h-5 w-5 text-secondary" />;
   };
+
+  // Show loading if Redux is still loading
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 to-surface-100 flex flex-col">
@@ -410,6 +390,10 @@ export default function LoginPage() {
               ← Back to Home
             </Link>
           </div>
+          {/* admin email: shubhmaster@gmail.com
+          admin password: Shubh123
+          customer email: shubhcustomer@gmail.com
+          customer password: Shubh123 */}
         </div>
       </div>
 

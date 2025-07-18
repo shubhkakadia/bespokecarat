@@ -1,42 +1,84 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { isAuthenticated, ROLES } from '../lib/auth';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
-export default function ProtectedRoute({ 
-  children, 
-  requiredRole, 
+export default function ProtectedRoute({
+  children,
+  requiredUserType,
   fallback = null,
-  redirectTo = '/login'
+  redirectTo = "/login",
 }) {
   const router = useRouter();
+  const { isAuthenticated, getUserType, loading } = useAuth();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = () => {
-      const hasAccess = isAuthenticated(requiredRole);
-      
-      if (!hasAccess) {
-        // Redirect to login if not authenticated
+      // If still loading user data, wait
+      if (loading) {
+        return;
+      }
+
+      // Check if user is authenticated
+      if (!isAuthenticated) {
         router.push(redirectTo);
         return;
       }
-      
+
+      // If no specific user type required, just check authentication
+      if (!requiredUserType) {
+        setIsAuthorized(true);
+        setIsLoading(false);
+        return;
+      }
+
+      // Check if user has the required user type
+      const userType = getUserType();
+      const hasAccess = checkUserTypeAccess(userType, requiredUserType);
+
+      if (!hasAccess) {
+        router.push(redirectTo);
+        return;
+      }
+
       setIsAuthorized(true);
       setIsLoading(false);
     };
 
     checkAuth();
-  }, [requiredRole, router, redirectTo]);
+  }, [
+    isAuthenticated,
+    getUserType,
+    loading,
+    requiredUserType,
+    router,
+    redirectTo,
+  ]);
+
+  // Helper function to check user type access
+  const checkUserTypeAccess = (userType, required) => {
+    if (!userType || !required) return false;
+
+    // If required is an array, check if user type is in the array
+    if (Array.isArray(required)) {
+      return required.includes(userType);
+    }
+
+    // Direct match
+    return userType === required;
+  };
 
   // Show loading state
-  if (isLoading) {
-    return fallback || (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
+  if (isLoading || loading) {
+    return (
+      fallback || (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        </div>
+      )
     );
   }
 
@@ -44,11 +86,11 @@ export default function ProtectedRoute({
   return isAuthorized ? children : null;
 }
 
-// Convenience components for specific roles
-export function AdminRoute({ children, fallback, redirectTo = '/login' }) {
+// Convenience components for specific user types
+export function AdminRoute({ children, fallback, redirectTo = "/login" }) {
   return (
-    <ProtectedRoute 
-      requiredRole={ROLES.ADMIN} 
+    <ProtectedRoute
+      requiredUserType={["admin", "master-admin"]}
       fallback={fallback}
       redirectTo={redirectTo}
     >
@@ -57,14 +99,30 @@ export function AdminRoute({ children, fallback, redirectTo = '/login' }) {
   );
 }
 
-export function CustomerRoute({ children, fallback, redirectTo = '/login' }) {
+export function CustomerRoute({ children, fallback, redirectTo = "/login" }) {
   return (
-    <ProtectedRoute 
-      requiredRole={ROLES.CUSTOMER} 
+    <ProtectedRoute
+      requiredUserType="customer"
       fallback={fallback}
       redirectTo={redirectTo}
     >
       {children}
     </ProtectedRoute>
   );
-} 
+}
+
+export function MasterAdminRoute({
+  children,
+  fallback,
+  redirectTo = "/login",
+}) {
+  return (
+    <ProtectedRoute
+      requiredUserType="master-admin"
+      fallback={fallback}
+      redirectTo={redirectTo}
+    >
+      {children}
+    </ProtectedRoute>
+  );
+}

@@ -5,7 +5,7 @@ import { signUpValidator } from "../../../lib/validators/signUpValidator";
 
 const Customers = db.customers;
 
-export default async function (req, res) {
+export default async function handler(req, res) {
   if (req.method === "POST") {
     const { error, value } = signUpValidator.validate(req.body);
 

@@ -11,13 +11,14 @@ import {
   Phone,
   Building,
   ArrowRight,
-  Check,
 } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { setAuthTokenByUserType, ROLES } from "../../lib/auth";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+const axios = require("axios");
 
 export default function SignupPage() {
   const router = useRouter();
@@ -150,40 +151,53 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual signup logic here
-      console.log("Signup attempt:", formData);
+      const response = await signupAPI(formData);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (response.status === "true" || response.status === true) {
+        toast.success("Account created successfully! Redirecting to login...", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
 
-      // Mock API response - replace with actual API call
-      // The backend should return user data including userType
-      const mockResponse = {
-        token: `mock_token_${Date.now()}`,
-        userType: 'customer', // This will come from backend
-        user: {
-          id: 1,
-          email: formData.email,
-          userType: 'customer'
-        }
-      };
-      
-      // Set the appropriate token based on userType from backend
-      setAuthTokenByUserType(mockResponse.token, mockResponse.userType);
-      
-      // Update auth context
-      const userRole = mockResponse.userType === 'admin' ? ROLES.ADMIN : ROLES.CUSTOMER;
-      login(userRole);
-
-      // Redirect based on userType from backend
-      if (mockResponse.userType === 'admin') {
-        router.push('/admin');
+        // Navigate to login after a short delay
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
       } else {
-        router.push('/dashboard');
+        toast.error(response.message || "Signup failed. Please try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } catch (error) {
       console.error("Signup error:", error);
-      setErrors({ general: "Signup failed. Please try again." });
+
+      let errorMessage = "Signup failed. Please try again.";
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }
@@ -226,9 +240,54 @@ export default function SignupPage() {
 
   const strength = passwordStrength();
 
+  const signupAPI = async (formData) => {
+    try {
+      let data = JSON.stringify({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        phone_number: formData.phone,
+        company_name: formData.company,
+        accepted_terms: formData.agreeToTerms,
+        newsletter: formData.subscribeToNewsletter,
+      });
+
+      let config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/signup`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      const response = await axios.request(config);
+      return response.data;
+    } catch (error) {
+      console.error("Signup API error:", error);
+      throw error;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-surface-50 to-surface-100 flex flex-col">
       <Navbar />
+
+      {/* Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-2xl w-full space-y-8">

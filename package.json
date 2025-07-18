@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "crypto": "^1.0.1",
@@ -19,7 +20,11 @@
     "rand-token": "^1.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "sequelize": "^6.37.7"
+    "react-redux": "^9.2.0",
+    "react-toastify": "^11.0.5",
+    "redux-persist": "^6.0.0",
+    "sequelize": "^6.37.7",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

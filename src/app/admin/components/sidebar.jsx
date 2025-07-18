@@ -1,20 +1,15 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { clearAuthToken, ROLES } from "../../../lib/auth";
 import { useAuth } from "../../../contexts/AuthContext";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
+  const { logout, getUserData, getToken } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const menuItems = [
     { name: "Dashboard", icon: "/icons/dashboard.svg", href: "/admin" },
@@ -24,10 +19,21 @@ export default function Sidebar() {
     { name: "Enquiry", icon: "/icons/enquiry.svg", href: "/admin/enquiry" },
   ];
 
-  const bottomItems = [
-    { name: "Settings", icon: "/icons/setting.svg", href: "/admin/settings" },
-    { name: "Logout", icon: "/icons/logout.svg", href: "/" },
-  ];
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      router.push("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Redirect anyway for better UX
+      router.push("/");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  const userData = getUserData();
 
   return (
     <div className="w-64 h-screen relative ">
@@ -36,6 +42,13 @@ export default function Sidebar() {
       <div className="absolute top-8 text-slate-800 text-xl w-64 text-center font-medium">
         Bespoke Carat Admin
       </div>
+
+      {/* User info */}
+      {userData && (
+        <div className="absolute top-16 text-slate-600 text-sm w-64 text-center">
+          Welcome, {userData.first_name} {userData.last_name}
+        </div>
+      )}
 
       <div className="absolute left-4 top-26 inline-flex flex-col gap-2 w-56">
         {menuItems.map((item) => (
@@ -96,18 +109,23 @@ export default function Sidebar() {
 
         <button
           onClick={handleLogout}
-          className="self-stretch h-12 relative rounded-lg hover:bg-red-50 bg-white w-full text-left"
+          disabled={isLoggingOut}
+          className="cursor-pointer self-stretch h-12 relative rounded-lg hover:bg-red-50 bg-white w-full text-left disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <div className="absolute left-[12px] top-[12px] inline-flex items-center gap-3">
-            <Image
-              src="/icons/logout.svg"
-              alt="Logout Icon"
-              width={20}
-              height={20}
-              className="opacity-70"
-            />
+            {isLoggingOut ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-slate-500"></div>
+            ) : (
+              <Image
+                src="/icons/logout.svg"
+                alt="Logout Icon"
+                width={20}
+                height={20}
+                className="opacity-70"
+              />
+            )}
             <div className="text-md text-slate-500">
-              Logout
+              {isLoggingOut ? "Logging out..." : "Logout"}
             </div>
           </div>
         </button>
