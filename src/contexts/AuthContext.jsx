@@ -1,64 +1,87 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { 
-  isAuthenticated, 
-  getUserRole, 
-  clearAllAuthTokens, 
-  ROLES 
-} from '../lib/auth';
+import React, { createContext, useContext, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  loginUser,
+  logoutUser,
+  restoreSession,
+} from "../state/action/loggedInUser";
+import { getAuthToken } from "./auth";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [userRole, setUserRole] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { userData, loading, error, isAuthenticated } = useSelector(
+    (state) => state.loggedInUser
+  );
 
+  // Initialize authentication on app start
   useEffect(() => {
-    // Check authentication status on mount
-    const checkAuth = () => {
-      const role = getUserRole();
-      setUserRole(role);
-      setIsLoading(false);
-    };
+    dispatch(restoreSession());
+  }, [dispatch]);
 
-    checkAuth();
-  }, []);
-
-  const login = (role) => {
-    setUserRole(role);
+  const login = async (formdata) => {
+    return await dispatch(loginUser(formdata));
   };
 
-  const logout = () => {
-    clearAllAuthTokens();
-    setUserRole(null);
+  const logout = async () => {
+    const authToken = getAuthToken();
+    return await dispatch(logoutUser(authToken));
   };
 
-  const isAdmin = () => userRole === ROLES.ADMIN;
-  const isCustomer = () => userRole === ROLES.CUSTOMER;
-  const isLoggedIn = () => !!userRole;
+  // Helper functions to check user types
+  const isAdmin = () => {
+    return (
+      userData?.user_type === "admin" || userData?.user_type === "master-admin"
+    );
+  };
+
+  const isCustomer = () => {
+    return userData?.user_type === "customer";
+  };
+
+  const isMasterAdmin = () => {
+    return userData?.user_type === "master-admin";
+  };
+
+  const getUserType = () => {
+    return userData?.user_type || null;
+  };
+
+  const getUserData = () => {
+    return userData;
+  };
+
+  // Get token from cookies
+  const getToken = () => {
+    return getAuthToken();
+  };
 
   const value = {
-    userRole,
-    isLoading,
+    userData,
+    loading,
+    error,
+    isAuthenticated,
     login,
     logout,
     isAdmin,
     isCustomer,
-    isLoggedIn,
+    isMasterAdmin,
+    getUserType,
+    getUserData,
+    getToken,
+    isLoggedIn: () => isAuthenticated,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-} 
+}

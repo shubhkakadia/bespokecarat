@@ -1,52 +1,62 @@
 "use client";
 
-import React from 'react';
-import { CustomerRoute } from '../../components/ProtectedRoute';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import { ShoppingBag, Heart, User, Settings, LogOut } from 'lucide-react';
-import { clearAuthToken, ROLES } from '../../lib/auth';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState } from "react";
+import { CustomerRoute } from "../../components/ProtectedRoute";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import { ShoppingBag, Heart, User, Settings, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
+import Link from "next/link";
 
 export default function CustomerDashboard() {
   const router = useRouter();
   const { logout } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    router.push('/');
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      router.push("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Redirect anyway for better UX
+      router.push("/");
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   const dashboardItems = [
     {
-      title: 'My Orders',
-      description: 'View and track your orders',
+      title: "My Orders",
+      description: "View and track your orders",
       icon: ShoppingBag,
-      href: '/dashboard/orders',
-      color: 'bg-blue-500'
+      href: "/dashboard/orders",
+      color: "bg-blue-500",
     },
     {
-      title: 'Wishlist',
-      description: 'Your saved items',
+      title: "Wishlist",
+      description: "Your saved items",
       icon: Heart,
-      href: '/dashboard/wishlist',
-      color: 'bg-red-500'
+      href: "/dashboard/wishlist",
+      color: "bg-red-500",
     },
     {
-      title: 'Profile',
-      description: 'Manage your account',
+      title: "Profile",
+      description: "Manage your account",
       icon: User,
-      href: '/dashboard/profile',
-      color: 'bg-green-500'
+      href: "/dashboard/profile",
+      color: "bg-green-500",
     },
     {
-      title: 'Settings',
-      description: 'Account preferences',
+      title: "Settings",
+      description: "Account preferences",
       icon: Settings,
-      href: '/dashboard/settings',
-      color: 'bg-purple-500'
-    }
+      href: "/dashboard/settings",
+      color: "bg-purple-500",
+    },
   ];
 
   return (
@@ -66,28 +76,25 @@ export default function CustomerDashboard() {
               </p>
             </div>
 
-            {/* Dashboard Grid */}
+            {/* Dashboard Items Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {dashboardItems.map((item, index) => {
-                const IconComponent = item.icon;
-                return (
-                  <div
-                    key={index}
-                    className="bg-white rounded-xl border border-border p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
-                    onClick={() => router.push(item.href)}
-                  >
-                    <div className={`inline-flex p-3 rounded-lg ${item.color} text-white mb-4`}>
-                      <IconComponent className="h-6 w-6" />
+              {dashboardItems.map((item, index) => (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="block bg-white rounded-xl border border-border p-6 hover:shadow-soft transition-shadow duration-200"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className={`p-3 rounded-lg ${item.color} text-white`}>
+                      <item.icon className="h-6 w-6" />
                     </div>
-                    <h3 className="text-lg font-semibold text-text-dark mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-secondary text-sm">
-                      {item.description}
-                    </p>
                   </div>
-                );
-              })}
+                  <h3 className="text-lg font-semibold text-text-dark mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-secondary text-sm">{item.description}</p>
+                </Link>
+              ))}
             </div>
 
             {/* Quick Actions */}
@@ -97,23 +104,33 @@ export default function CustomerDashboard() {
               </h2>
               <div className="flex flex-wrap gap-4">
                 <button
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push("/")}
                   className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200"
                 >
                   Browse Products
                 </button>
                 <button
-                  onClick={() => router.push('/contactus')}
+                  onClick={() => router.push("/contactus")}
                   className="px-4 py-2 bg-surface-100 text-text-dark rounded-lg hover:bg-surface-200 transition-colors duration-200"
                 >
                   Contact Support
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 bg-accent-warm-100 text-accent-warm-800 rounded-lg hover:bg-accent-warm-200 transition-colors duration-200 flex items-center gap-2"
+                  disabled={isLoggingOut}
+                  className="px-4 py-2 bg-accent-warm-100 text-accent-warm-800 rounded-lg hover:bg-accent-warm-200 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <LogOut className="h-4 w-4" />
-                  Logout
+                  {isLoggingOut ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-accent-warm-800"></div>
+                      Logging out...
+                    </>
+                  ) : (
+                    <>
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -124,4 +141,4 @@ export default function CustomerDashboard() {
       </div>
     </CustomerRoute>
   );
-} 
+}

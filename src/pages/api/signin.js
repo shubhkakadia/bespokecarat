@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         .send({ status: false, message: "Credentials are wrong" });
     }
     const token = `${user.unique_id}-${getUniqueId(99)}`;
-
+console.log(user, "this is user")
     const data = {
       userId: user.id,
       token,

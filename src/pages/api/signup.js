@@ -5,7 +5,7 @@ import { signUpValidator } from "../../../lib/validators/signUpValidator";
 
 const Customers = db.customers;
 
-export default async function (req, res) {
+export default async function handler(req, res) {
   if (req.method === "POST") {
     const { error, value } = signUpValidator.validate(req.body);
 
@@ -26,7 +26,7 @@ export default async function (req, res) {
       newsletter,
     } = value;
 
-    const isExist = await Customers.findOne({ Where: { email } });
+    const isExist = await Customers.findOne({ where: { email } });
 
     if (isExist) {
       return res
