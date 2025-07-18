@@ -26,12 +26,21 @@ export default async function (req, res) {
       newsletter,
     } = value;
 
-    const isExist = await Customers.findOne({ Where: { email } });
+    const isExist = await Customers.findOne({ where: { email } });
 
     if (isExist) {
       return res
         .status(200)
         .send({ status: false, message: "Email already exist" });
+    }
+
+    const phoneExist = await Customers.findOne({
+      where: { phone_number },
+    });
+    if (phoneExist) {
+      return res
+        .status(200)
+        .send({ status: false, message: "Phone number already exists" });
     }
 
     const hasedPwd = bcrypt.hashSync(password, 10);

@@ -41,16 +41,12 @@ db.customers = require("../models/customerModel")(sequelize, DataTypes);
 
 db.admin.hasMany(db.sessions, {
   foreignKey: "userId",
-});
-db.sessions.belongsTo(db.admin, {
-  foreignKey: "userId",
+  constraints: false,
 });
 
 db.customers.hasMany(db.sessions, {
   foreignKey: "userId",
-});
-db.sessions.belongsTo(db.customers, {
-  foreignKey: "userId",
+  constraints: false,
 });
 
 // ASSOCIATIONS END

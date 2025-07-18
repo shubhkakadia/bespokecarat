@@ -2,6 +2,7 @@ import db from "@/../config/dbConfig";
 import bcrypt from "bcrypt";
 import { isMasterAdmin } from "../../../../lib/authFromToken";
 import { getUniqueId } from "../../../../lib/getUniqueId";
+import { adminCreateValidator } from "../../../../lib/validators/createAdminValidator";
 
 const Admin = db.admin;
 const Customers = db.customers;
@@ -16,7 +17,15 @@ export default async function handler(req, res) {
         .send({ status: false, message: "Only master admin allowed" });
     }
 
-    const { first_name, last_name, email, password, is_master } = req.body;
+    const { error, value } = adminCreateValidator.validate(req.body);
+
+    if (error) {
+      return res
+        .status(200)
+        .send({ status: false, message: error.details[0].message });
+    }
+
+    const { first_name, last_name, email, password, is_master } = value;
 
     const isExistAdmin = await Admin.findOne({ where: { email } });
 
