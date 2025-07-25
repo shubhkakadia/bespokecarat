@@ -1,0 +1,2212 @@
+{
+  "productTypes": {
+    "diamond": [
+      {
+        "name": "Diamond Pear 1",
+        "shape": "Emerald",
+        "sku": "DIA-0001",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "HRD",
+        "description": "High-quality diamond 1 with excellent brilliance.",
+        "availability": true,
+        "images": [
+          "DIA-0001_img1.jpg",
+          "DIA-0001_img2.jpg"
+        ],
+        "video": "DIA-0001_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "U",
+            "clarity": "I2",
+            "caratWeight": 0.62,
+            "price": 13051.85
+          },
+          {
+            "id": 2,
+            "color": "W",
+            "clarity": "VS1",
+            "caratWeight": 0.77,
+            "price": 10565.59
+          },
+          {
+            "id": 3,
+            "color": "Q",
+            "clarity": "VVS1",
+            "caratWeight": 4.01,
+            "price": 11803.53
+          },
+          {
+            "id": 4,
+            "color": "T",
+            "clarity": "I1",
+            "caratWeight": 3.88,
+            "price": 11865.66
+          },
+          {
+            "id": 5,
+            "color": "R",
+            "clarity": "SI1",
+            "caratWeight": 4.43,
+            "price": 7443.68
+          }
+        ]
+      },
+      {
+        "name": "Diamond Radiant 2",
+        "shape": "Cushion",
+        "sku": "DIA-0002",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "certification": "HRD",
+        "description": "High-quality diamond 2 with excellent brilliance.",
+        "availability": false,
+        "images": [
+          "DIA-0002_img1.jpg",
+          "DIA-0002_img2.jpg"
+        ],
+        "video": "DIA-0002_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "R",
+            "clarity": "I1",
+            "caratWeight": 1.23,
+            "price": 19554.07
+          },
+          {
+            "id": 2,
+            "color": "W",
+            "clarity": "I3",
+            "caratWeight": 3.96,
+            "price": 8931.75
+          },
+          {
+            "id": 3,
+            "color": "D",
+            "clarity": "FL",
+            "caratWeight": 3.78,
+            "price": 15270.95
+          },
+          {
+            "id": 4,
+            "color": "M",
+            "clarity": "I2",
+            "caratWeight": 1.07,
+            "price": 18137.61
+          },
+          {
+            "id": 5,
+            "color": "J",
+            "clarity": "VVS1",
+            "caratWeight": 4.7,
+            "price": 7605.42
+          }
+        ]
+      },
+      {
+        "name": "Diamond Asscher 3",
+        "shape": "Heart",
+        "sku": "DIA-0003",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "certification": "HRD",
+        "description": "High-quality diamond 3 with excellent brilliance.",
+        "availability": true,
+        "images": [
+          "DIA-0003_img1.jpg",
+          "DIA-0003_img2.jpg"
+        ],
+        "video": "DIA-0003_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "J",
+            "clarity": "SI1",
+            "caratWeight": 4.08,
+            "price": 17408.79
+          },
+          {
+            "id": 2,
+            "color": "O",
+            "clarity": "VVS1",
+            "caratWeight": 4.3,
+            "price": 18745.11
+          },
+          {
+            "id": 3,
+            "color": "N",
+            "clarity": "IF",
+            "caratWeight": 4.08,
+            "price": 18886.87
+          },
+          {
+            "id": 4,
+            "color": "S",
+            "clarity": "FL",
+            "caratWeight": 4.51,
+            "price": 10676.69
+          },
+          {
+            "id": 5,
+            "color": "R",
+            "clarity": "FL",
+            "caratWeight": 1.05,
+            "price": 10329.51
+          }
+        ]
+      },
+      {
+        "name": "Diamond Radiant 4",
+        "shape": "Princess",
+        "sku": "DIA-0004",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "certification": "None",
+        "description": "High-quality diamond 4 with excellent brilliance.",
+        "availability": true,
+        "images": [
+          "DIA-0004_img1.jpg",
+          "DIA-0004_img2.jpg"
+        ],
+        "video": "DIA-0004_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "V",
+            "clarity": "FL",
+            "caratWeight": 3.95,
+            "price": 2502.84
+          },
+          {
+            "id": 2,
+            "color": "J",
+            "clarity": "SI1",
+            "caratWeight": 2.39,
+            "price": 3674.78
+          },
+          {
+            "id": 3,
+            "color": "L",
+            "clarity": "I2",
+            "caratWeight": 0.7,
+            "price": 18535.15
+          },
+          {
+            "id": 4,
+            "color": "I",
+            "clarity": "VVS2",
+            "caratWeight": 1.57,
+            "price": 18685.36
+          },
+          {
+            "id": 5,
+            "color": "V",
+            "clarity": "VS2",
+            "caratWeight": 3.1,
+            "price": 7653.18
+          }
+        ]
+      },
+      {
+        "name": "Diamond Asscher 5",
+        "shape": "Oval",
+        "sku": "DIA-0005",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "None",
+        "description": "High-quality diamond 5 with excellent brilliance.",
+        "availability": true,
+        "images": [
+          "DIA-0005_img1.jpg",
+          "DIA-0005_img2.jpg"
+        ],
+        "video": "DIA-0005_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "M",
+            "clarity": "FL",
+            "caratWeight": 1.17,
+            "price": 4084.07
+          },
+          {
+            "id": 2,
+            "color": "I",
+            "clarity": "I1",
+            "caratWeight": 0.8,
+            "price": 12166.48
+          },
+          {
+            "id": 3,
+            "color": "H",
+            "clarity": "SI1",
+            "caratWeight": 3.05,
+            "price": 18939.54
+          },
+          {
+            "id": 4,
+            "color": "P",
+            "clarity": "I3",
+            "caratWeight": 2.93,
+            "price": 8374.53
+          },
+          {
+            "id": 5,
+            "color": "O",
+            "clarity": "IF",
+            "caratWeight": 2.38,
+            "price": 13641.43
+          }
+        ]
+      },
+      {
+        "name": "Diamond Cushion 6",
+        "shape": "Marquise",
+        "sku": "DIA-0006",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "HRD",
+        "description": "High-quality diamond 6 with excellent brilliance.",
+        "availability": false,
+        "images": [
+          "DIA-0006_img1.jpg",
+          "DIA-0006_img2.jpg"
+        ],
+        "video": "DIA-0006_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "G",
+            "clarity": "FL",
+            "caratWeight": 2.08,
+            "price": 10644.67
+          },
+          {
+            "id": 2,
+            "color": "V",
+            "clarity": "SI1",
+            "caratWeight": 4.06,
+            "price": 12318.39
+          },
+          {
+            "id": 3,
+            "color": "J",
+            "clarity": "FL",
+            "caratWeight": 1.9,
+            "price": 10125.32
+          },
+          {
+            "id": 4,
+            "color": "W",
+            "clarity": "VVS2",
+            "caratWeight": 0.76,
+            "price": 2447.46
+          },
+          {
+            "id": 5,
+            "color": "D",
+            "clarity": "FL",
+            "caratWeight": 1.54,
+            "price": 10650.71
+          }
+        ]
+      },
+      {
+        "name": "Diamond Pear 7",
+        "shape": "Asscher",
+        "sku": "DIA-0007",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "GIA",
+        "description": "High-quality diamond 7 with excellent brilliance.",
+        "availability": true,
+        "images": [
+          "DIA-0007_img1.jpg",
+          "DIA-0007_img2.jpg"
+        ],
+        "video": "DIA-0007_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "O",
+            "clarity": "I3",
+            "caratWeight": 4.84,
+            "price": 8511.74
+          },
+          {
+            "id": 2,
+            "color": "M",
+            "clarity": "I1",
+            "caratWeight": 1.54,
+            "price": 5453.57
+          },
+          {
+            "id": 3,
+            "color": "T",
+            "clarity": "I3",
+            "caratWeight": 2.0,
+            "price": 17741.12
+          },
+          {
+            "id": 4,
+            "color": "D",
+            "clarity": "VVS1",
+            "caratWeight": 4.77,
+            "price": 16011.72
+          },
+          {
+            "id": 5,
+            "color": "N",
+            "clarity": "IF",
+            "caratWeight": 2.01,
+            "price": 6286.39
+          }
+        ]
+      },
+      {
+        "name": "Diamond Cushion 8",
+        "shape": "Heart",
+        "sku": "DIA-0008",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "GIA",
+        "description": "High-quality diamond 8 with excellent brilliance.",
+        "availability": false,
+        "images": [
+          "DIA-0008_img1.jpg",
+          "DIA-0008_img2.jpg"
+        ],
+        "video": "DIA-0008_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "Z",
+            "clarity": "SI1",
+            "caratWeight": 1.31,
+            "price": 2417.55
+          },
+          {
+            "id": 2,
+            "color": "G",
+            "clarity": "VVS2",
+            "caratWeight": 4.96,
+            "price": 15589.07
+          },
+          {
+            "id": 3,
+            "color": "T",
+            "clarity": "VS1",
+            "caratWeight": 2.33,
+            "price": 16141.72
+          },
+          {
+            "id": 4,
+            "color": "N",
+            "clarity": "I2",
+            "caratWeight": 0.74,
+            "price": 7455.0
+          },
+          {
+            "id": 5,
+            "color": "S",
+            "clarity": "VS1",
+            "caratWeight": 1.95,
+            "price": 10963.53
+          }
+        ]
+      },
+      {
+        "name": "Diamond Radiant 9",
+        "shape": "Round",
+        "sku": "DIA-0009",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "HRD",
+        "description": "High-quality diamond 9 with excellent brilliance.",
+        "availability": true,
+        "images": [
+          "DIA-0009_img1.jpg",
+          "DIA-0009_img2.jpg"
+        ],
+        "video": "DIA-0009_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "V",
+            "clarity": "FL",
+            "caratWeight": 3.78,
+            "price": 12001.38
+          },
+          {
+            "id": 2,
+            "color": "E",
+            "clarity": "VS2",
+            "caratWeight": 3.45,
+            "price": 16546.16
+          },
+          {
+            "id": 3,
+            "color": "Q",
+            "clarity": "FL",
+            "caratWeight": 4.12,
+            "price": 7817.74
+          },
+          {
+            "id": 4,
+            "color": "K",
+            "clarity": "IF",
+            "caratWeight": 1.36,
+            "price": 16263.7
+          },
+          {
+            "id": 5,
+            "color": "X",
+            "clarity": "I3",
+            "caratWeight": 4.09,
+            "price": 12715.05
+          }
+        ]
+      },
+      {
+        "name": "Diamond Oval 10",
+        "shape": "Oval",
+        "sku": "DIA-0010",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "certification": "GIA",
+        "description": "High-quality diamond 10 with excellent brilliance.",
+        "availability": false,
+        "images": [
+          "DIA-0010_img1.jpg",
+          "DIA-0010_img2.jpg"
+        ],
+        "video": "DIA-0010_video.mp4",
+        "diamondVariants": [
+          {
+            "id": 1,
+            "color": "Q",
+            "clarity": "I3",
+            "caratWeight": 4.65,
+            "price": 10508.8
+          },
+          {
+            "id": 2,
+            "color": "L",
+            "clarity": "VS1",
+            "caratWeight": 3.67,
+            "price": 1377.61
+          },
+          {
+            "id": 3,
+            "color": "Q",
+            "clarity": "VS1",
+            "caratWeight": 2.94,
+            "price": 18239.21
+          },
+          {
+            "id": 4,
+            "color": "U",
+            "clarity": "VS2",
+            "caratWeight": 1.1,
+            "price": 1612.3
+          },
+          {
+            "id": 5,
+            "color": "P",
+            "clarity": "I3",
+            "caratWeight": 2.65,
+            "price": 2347.01
+          }
+        ]
+      }
+    ],
+    "melee": [
+      {
+        "name": "Melee Batch 1",
+        "shape": "Round",
+        "sku": "MLEE-0001",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Small melee diamonds batch 1.",
+        "availability": false,
+        "images": [
+          "MLEE-0001_img1.jpg",
+          "MLEE-0001_img2.jpg"
+        ],
+        "video": "MLEE-0001_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "1.1mm - 1.3mm",
+            "pricePerCarat": 373.33,
+            "colorRange": "W-X",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 324.97,
+            "colorRange": "K-L",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 3,
+            "sieveSize": "0.7mm - 0.9mm",
+            "pricePerCarat": 685.75,
+            "colorRange": "I-J",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "0.9mm - 1.1mm",
+            "pricePerCarat": 346.96,
+            "colorRange": "U-V",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 5,
+            "sieveSize": "0.7mm - 0.9mm",
+            "pricePerCarat": 439.4,
+            "colorRange": "Y-Z",
+            "clarityRange": "I1-I3"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 2",
+        "shape": "Round",
+        "sku": "MLEE-0002",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Small melee diamonds batch 2.",
+        "availability": false,
+        "images": [
+          "MLEE-0002_img1.jpg",
+          "MLEE-0002_img2.jpg"
+        ],
+        "video": "MLEE-0002_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "0.9mm - 1.1mm",
+            "pricePerCarat": 600.15,
+            "colorRange": "M-N",
+            "clarityRange": "FL-IF"
+          },
+          {
+            "id": 2,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 520.24,
+            "colorRange": "Q-R",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 3,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 547.19,
+            "colorRange": "U-V",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 683.06,
+            "colorRange": "M-N",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 5,
+            "sieveSize": "1.9mm - 2.1mm",
+            "pricePerCarat": 218.14,
+            "colorRange": "S-T",
+            "clarityRange": "VVS1-VVS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 3",
+        "shape": "Round",
+        "sku": "MLEE-0003",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Small melee diamonds batch 3.",
+        "availability": true,
+        "images": [
+          "MLEE-0003_img1.jpg",
+          "MLEE-0003_img2.jpg"
+        ],
+        "video": "MLEE-0003_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "1.3mm - 1.5mm",
+            "pricePerCarat": 672.4,
+            "colorRange": "U-V",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "2.7mm - 2.9mm",
+            "pricePerCarat": 591.87,
+            "colorRange": "M-N",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 3,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 620.0,
+            "colorRange": "W-X",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 409.65,
+            "colorRange": "O-P",
+            "clarityRange": "FL-IF"
+          },
+          {
+            "id": 5,
+            "sieveSize": "1.9mm - 2.1mm",
+            "pricePerCarat": 213.09,
+            "colorRange": "W-X",
+            "clarityRange": "VS1-VS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 4",
+        "shape": "Round",
+        "sku": "MLEE-0004",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Small melee diamonds batch 4.",
+        "availability": true,
+        "images": [
+          "MLEE-0004_img1.jpg",
+          "MLEE-0004_img2.jpg"
+        ],
+        "video": "MLEE-0004_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "1.9mm - 2.1mm",
+            "pricePerCarat": 360.1,
+            "colorRange": "O-P",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "3.3mm - 3.5mm",
+            "pricePerCarat": 661.06,
+            "colorRange": "O-P",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 3,
+            "sieveSize": "1.9mm - 2.1mm",
+            "pricePerCarat": 250.37,
+            "colorRange": "G-H",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "1.5mm - 1.7mm",
+            "pricePerCarat": 334.76,
+            "colorRange": "W-X",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 5,
+            "sieveSize": "2.9mm - 3.1mm",
+            "pricePerCarat": 273.83,
+            "colorRange": "I-J",
+            "clarityRange": "VS1-VS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 5",
+        "shape": "Round",
+        "sku": "MLEE-0005",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Small melee diamonds batch 5.",
+        "availability": true,
+        "images": [
+          "MLEE-0005_img1.jpg",
+          "MLEE-0005_img2.jpg"
+        ],
+        "video": "MLEE-0005_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 472.77,
+            "colorRange": "D-F",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "3.3mm - 3.5mm",
+            "pricePerCarat": 475.95,
+            "colorRange": "S-T",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 3,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 796.69,
+            "colorRange": "M-N",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "3.3mm - 3.5mm",
+            "pricePerCarat": 598.66,
+            "colorRange": "S-T",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 5,
+            "sieveSize": "0.5mm - 0.7mm",
+            "pricePerCarat": 554.08,
+            "colorRange": "U-V",
+            "clarityRange": "VS1-VS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 6",
+        "shape": "Round",
+        "sku": "MLEE-0006",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Small melee diamonds batch 6.",
+        "availability": false,
+        "images": [
+          "MLEE-0006_img1.jpg",
+          "MLEE-0006_img2.jpg"
+        ],
+        "video": "MLEE-0006_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "2.9mm - 3.1mm",
+            "pricePerCarat": 578.05,
+            "colorRange": "S-T",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "2.7mm - 2.9mm",
+            "pricePerCarat": 691.53,
+            "colorRange": "Y-Z",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 3,
+            "sieveSize": "0.9mm - 1.1mm",
+            "pricePerCarat": 550.76,
+            "colorRange": "Y-Z",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 4,
+            "sieveSize": "3.3mm - 3.5mm",
+            "pricePerCarat": 215.33,
+            "colorRange": "Y-Z",
+            "clarityRange": "FL-IF"
+          },
+          {
+            "id": 5,
+            "sieveSize": "2.7mm - 2.9mm",
+            "pricePerCarat": 274.16,
+            "colorRange": "M-N",
+            "clarityRange": "VS1-VS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 7",
+        "shape": "Round",
+        "sku": "MLEE-0007",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Small melee diamonds batch 7.",
+        "availability": false,
+        "images": [
+          "MLEE-0007_img1.jpg",
+          "MLEE-0007_img2.jpg"
+        ],
+        "video": "MLEE-0007_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "2.7mm - 2.9mm",
+            "pricePerCarat": 469.14,
+            "colorRange": "K-L",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 2,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 576.68,
+            "colorRange": "I-J",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 3,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 512.69,
+            "colorRange": "W-X",
+            "clarityRange": "FL-IF"
+          },
+          {
+            "id": 4,
+            "sieveSize": "2.9mm - 3.1mm",
+            "pricePerCarat": 327.38,
+            "colorRange": "U-V",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 5,
+            "sieveSize": "2.7mm - 2.9mm",
+            "pricePerCarat": 721.45,
+            "colorRange": "M-N",
+            "clarityRange": "VVS1-VVS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 8",
+        "shape": "Round",
+        "sku": "MLEE-0008",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Small melee diamonds batch 8.",
+        "availability": true,
+        "images": [
+          "MLEE-0008_img1.jpg",
+          "MLEE-0008_img2.jpg"
+        ],
+        "video": "MLEE-0008_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "0.5mm - 0.7mm",
+            "pricePerCarat": 794.07,
+            "colorRange": "O-P",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "2.5mm - 2.7mm",
+            "pricePerCarat": 609.47,
+            "colorRange": "Y-Z",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 3,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 709.95,
+            "colorRange": "S-T",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 4,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 397.28,
+            "colorRange": "I-J",
+            "clarityRange": "I1-I3"
+          },
+          {
+            "id": 5,
+            "sieveSize": "0.7mm - 0.9mm",
+            "pricePerCarat": 574.17,
+            "colorRange": "W-X",
+            "clarityRange": "SI1-SI2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 9",
+        "shape": "Round",
+        "sku": "MLEE-0009",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Small melee diamonds batch 9.",
+        "availability": true,
+        "images": [
+          "MLEE-0009_img1.jpg",
+          "MLEE-0009_img2.jpg"
+        ],
+        "video": "MLEE-0009_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "3.3mm - 3.5mm",
+            "pricePerCarat": 799.8,
+            "colorRange": "Q-R",
+            "clarityRange": "VS1-VS2"
+          },
+          {
+            "id": 2,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 693.12,
+            "colorRange": "S-T",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 3,
+            "sieveSize": "2.3mm - 2.5mm",
+            "pricePerCarat": 570.88,
+            "colorRange": "U-V",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "1.3mm - 1.5mm",
+            "pricePerCarat": 329.31,
+            "colorRange": "Q-R",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 5,
+            "sieveSize": "0.9mm - 1.1mm",
+            "pricePerCarat": 279.0,
+            "colorRange": "D-F",
+            "clarityRange": "VVS1-VVS2"
+          }
+        ]
+      },
+      {
+        "name": "Melee Batch 10",
+        "shape": "Round",
+        "sku": "MLEE-0010",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Small melee diamonds batch 10.",
+        "availability": false,
+        "images": [
+          "MLEE-0010_img1.jpg",
+          "MLEE-0010_img2.jpg"
+        ],
+        "video": "MLEE-0010_video.mp4",
+        "meleeVariants": [
+          {
+            "id": 1,
+            "sieveSize": "1.7mm - 1.9mm",
+            "pricePerCarat": 435.18,
+            "colorRange": "O-P",
+            "clarityRange": "FL-IF"
+          },
+          {
+            "id": 2,
+            "sieveSize": "0.7mm - 0.9mm",
+            "pricePerCarat": 260.14,
+            "colorRange": "Y-Z",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 3,
+            "sieveSize": "3.1mm - 3.3mm",
+            "pricePerCarat": 579.34,
+            "colorRange": "Q-R",
+            "clarityRange": "SI1-SI2"
+          },
+          {
+            "id": 4,
+            "sieveSize": "0.9mm - 1.1mm",
+            "pricePerCarat": 385.66,
+            "colorRange": "Y-Z",
+            "clarityRange": "VVS1-VVS2"
+          },
+          {
+            "id": 5,
+            "sieveSize": "3.3mm - 3.5mm",
+            "pricePerCarat": 649.24,
+            "colorRange": "O-P",
+            "clarityRange": "VS1-VS2"
+          }
+        ]
+      }
+    ],
+    "colorstone": [
+      {
+        "name": "Colorstone 1",
+        "color": "Pink",
+        "sku": "CS-0001",
+        "hardness": "7.7 Mohs",
+        "diamondType": "N/A",
+        "certification": "None",
+        "description": "Beautiful colorstone 1.",
+        "availability": false,
+        "images": [
+          "CS-0001_img1.jpg",
+          "CS-0001_img2.jpg"
+        ],
+        "video": "CS-0001_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Oval",
+            "caratWeight": 1.26,
+            "dimension": "8x6x4 mm",
+            "price": 2065.75
+          },
+          {
+            "id": 2,
+            "shape": "Heart",
+            "caratWeight": 1.88,
+            "dimension": "9x7x5 mm",
+            "price": 509.95
+          },
+          {
+            "id": 3,
+            "shape": "Heart",
+            "caratWeight": 0.89,
+            "dimension": "10x8x6 mm",
+            "price": 4865.82
+          },
+          {
+            "id": 4,
+            "shape": "Oval",
+            "caratWeight": 7.5,
+            "dimension": "9x7x5 mm",
+            "price": 752.18
+          },
+          {
+            "id": 5,
+            "shape": "Asscher",
+            "caratWeight": 3.5,
+            "dimension": "5x5x3 mm",
+            "price": 4291.42
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 2",
+        "color": "Pink",
+        "sku": "CS-0002",
+        "hardness": "6.8 Mohs",
+        "diamondType": "N/A",
+        "certification": "Certified",
+        "description": "Beautiful colorstone 2.",
+        "availability": false,
+        "images": [
+          "CS-0002_img1.jpg",
+          "CS-0002_img2.jpg"
+        ],
+        "video": "CS-0002_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Marquise",
+            "caratWeight": 9.26,
+            "dimension": "10x8x6 mm",
+            "price": 3413.26
+          },
+          {
+            "id": 2,
+            "shape": "Princess",
+            "caratWeight": 9.74,
+            "dimension": "8x6x4 mm",
+            "price": 532.33
+          },
+          {
+            "id": 3,
+            "shape": "Radiant",
+            "caratWeight": 3.36,
+            "dimension": "5x5x3 mm",
+            "price": 2111.13
+          },
+          {
+            "id": 4,
+            "shape": "Pear",
+            "caratWeight": 8.62,
+            "dimension": "10x8x6 mm",
+            "price": 3637.49
+          },
+          {
+            "id": 5,
+            "shape": "Cushion",
+            "caratWeight": 1.4,
+            "dimension": "5x5x3 mm",
+            "price": 4301.2
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 3",
+        "color": "Blue",
+        "sku": "CS-0003",
+        "hardness": "8.9 Mohs",
+        "diamondType": "N/A",
+        "certification": "None",
+        "description": "Beautiful colorstone 3.",
+        "availability": true,
+        "images": [
+          "CS-0003_img1.jpg",
+          "CS-0003_img2.jpg"
+        ],
+        "video": "CS-0003_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Radiant",
+            "caratWeight": 4.77,
+            "dimension": "8x6x4 mm",
+            "price": 1109.48
+          },
+          {
+            "id": 2,
+            "shape": "Round",
+            "caratWeight": 9.82,
+            "dimension": "5x5x3 mm",
+            "price": 4705.84
+          },
+          {
+            "id": 3,
+            "shape": "Emerald",
+            "caratWeight": 3.2,
+            "dimension": "5x5x3 mm",
+            "price": 3330.85
+          },
+          {
+            "id": 4,
+            "shape": "Princess",
+            "caratWeight": 4.4,
+            "dimension": "5x5x3 mm",
+            "price": 3180.65
+          },
+          {
+            "id": 5,
+            "shape": "Princess",
+            "caratWeight": 1.66,
+            "dimension": "8x6x4 mm",
+            "price": 4612.59
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 4",
+        "color": "Yellow",
+        "sku": "CS-0004",
+        "hardness": "6.6 Mohs",
+        "diamondType": "N/A",
+        "certification": "None",
+        "description": "Beautiful colorstone 4.",
+        "availability": true,
+        "images": [
+          "CS-0004_img1.jpg",
+          "CS-0004_img2.jpg"
+        ],
+        "video": "CS-0004_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Heart",
+            "caratWeight": 2.79,
+            "dimension": "6x4x4 mm",
+            "price": 1926.54
+          },
+          {
+            "id": 2,
+            "shape": "Pear",
+            "caratWeight": 8.12,
+            "dimension": "9x7x5 mm",
+            "price": 4454.36
+          },
+          {
+            "id": 3,
+            "shape": "Marquise",
+            "caratWeight": 9.76,
+            "dimension": "5x5x3 mm",
+            "price": 3251.36
+          },
+          {
+            "id": 4,
+            "shape": "Oval",
+            "caratWeight": 4.14,
+            "dimension": "9x7x5 mm",
+            "price": 3385.18
+          },
+          {
+            "id": 5,
+            "shape": "Marquise",
+            "caratWeight": 7.53,
+            "dimension": "10x8x6 mm",
+            "price": 1444.1
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 5",
+        "color": "Blue",
+        "sku": "CS-0005",
+        "hardness": "7.8 Mohs",
+        "diamondType": "N/A",
+        "certification": "Certified",
+        "description": "Beautiful colorstone 5.",
+        "availability": false,
+        "images": [
+          "CS-0005_img1.jpg",
+          "CS-0005_img2.jpg"
+        ],
+        "video": "CS-0005_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Radiant",
+            "caratWeight": 2.6,
+            "dimension": "5x5x3 mm",
+            "price": 4283.02
+          },
+          {
+            "id": 2,
+            "shape": "Marquise",
+            "caratWeight": 6.33,
+            "dimension": "7x5x3 mm",
+            "price": 3100.9
+          },
+          {
+            "id": 3,
+            "shape": "Marquise",
+            "caratWeight": 4.41,
+            "dimension": "9x7x5 mm",
+            "price": 4211.45
+          },
+          {
+            "id": 4,
+            "shape": "Asscher",
+            "caratWeight": 8.53,
+            "dimension": "7x5x3 mm",
+            "price": 2422.13
+          },
+          {
+            "id": 5,
+            "shape": "Pear",
+            "caratWeight": 7.9,
+            "dimension": "8x6x4 mm",
+            "price": 4038.1
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 6",
+        "color": "Pink",
+        "sku": "CS-0006",
+        "hardness": "8.3 Mohs",
+        "diamondType": "N/A",
+        "certification": "Certified",
+        "description": "Beautiful colorstone 6.",
+        "availability": false,
+        "images": [
+          "CS-0006_img1.jpg",
+          "CS-0006_img2.jpg"
+        ],
+        "video": "CS-0006_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Princess",
+            "caratWeight": 4.31,
+            "dimension": "6x4x4 mm",
+            "price": 3433.81
+          },
+          {
+            "id": 2,
+            "shape": "Princess",
+            "caratWeight": 3.64,
+            "dimension": "8x6x4 mm",
+            "price": 3244.28
+          },
+          {
+            "id": 3,
+            "shape": "Asscher",
+            "caratWeight": 4.97,
+            "dimension": "5x5x3 mm",
+            "price": 653.55
+          },
+          {
+            "id": 4,
+            "shape": "Cushion",
+            "caratWeight": 3.25,
+            "dimension": "9x7x5 mm",
+            "price": 4297.85
+          },
+          {
+            "id": 5,
+            "shape": "Asscher",
+            "caratWeight": 8.08,
+            "dimension": "8x6x4 mm",
+            "price": 1426.62
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 7",
+        "color": "Blue",
+        "sku": "CS-0007",
+        "hardness": "7.7 Mohs",
+        "diamondType": "N/A",
+        "certification": "Certified",
+        "description": "Beautiful colorstone 7.",
+        "availability": false,
+        "images": [
+          "CS-0007_img1.jpg",
+          "CS-0007_img2.jpg"
+        ],
+        "video": "CS-0007_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Oval",
+            "caratWeight": 1.85,
+            "dimension": "7x5x3 mm",
+            "price": 3273.88
+          },
+          {
+            "id": 2,
+            "shape": "Princess",
+            "caratWeight": 0.5,
+            "dimension": "5x5x3 mm",
+            "price": 976.13
+          },
+          {
+            "id": 3,
+            "shape": "Round",
+            "caratWeight": 9.9,
+            "dimension": "8x6x4 mm",
+            "price": 1547.11
+          },
+          {
+            "id": 4,
+            "shape": "Pear",
+            "caratWeight": 2.87,
+            "dimension": "10x8x6 mm",
+            "price": 1271.75
+          },
+          {
+            "id": 5,
+            "shape": "Round",
+            "caratWeight": 1.88,
+            "dimension": "6x4x4 mm",
+            "price": 3598.15
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 8",
+        "color": "Yellow",
+        "sku": "CS-0008",
+        "hardness": "8.1 Mohs",
+        "diamondType": "N/A",
+        "certification": "Certified",
+        "description": "Beautiful colorstone 8.",
+        "availability": true,
+        "images": [
+          "CS-0008_img1.jpg",
+          "CS-0008_img2.jpg"
+        ],
+        "video": "CS-0008_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Emerald",
+            "caratWeight": 1.69,
+            "dimension": "5x5x3 mm",
+            "price": 3888.45
+          },
+          {
+            "id": 2,
+            "shape": "Asscher",
+            "caratWeight": 2.58,
+            "dimension": "8x6x4 mm",
+            "price": 4908.65
+          },
+          {
+            "id": 3,
+            "shape": "Asscher",
+            "caratWeight": 5.01,
+            "dimension": "5x5x3 mm",
+            "price": 4995.23
+          },
+          {
+            "id": 4,
+            "shape": "Cushion",
+            "caratWeight": 7.13,
+            "dimension": "8x6x4 mm",
+            "price": 4300.15
+          },
+          {
+            "id": 5,
+            "shape": "Radiant",
+            "caratWeight": 3.35,
+            "dimension": "5x5x3 mm",
+            "price": 3753.77
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 9",
+        "color": "Yellow",
+        "sku": "CS-0009",
+        "hardness": "8.7 Mohs",
+        "diamondType": "N/A",
+        "certification": "None",
+        "description": "Beautiful colorstone 9.",
+        "availability": false,
+        "images": [
+          "CS-0009_img1.jpg",
+          "CS-0009_img2.jpg"
+        ],
+        "video": "CS-0009_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Round",
+            "caratWeight": 9.31,
+            "dimension": "7x5x3 mm",
+            "price": 4836.1
+          },
+          {
+            "id": 2,
+            "shape": "Pear",
+            "caratWeight": 8.95,
+            "dimension": "7x5x3 mm",
+            "price": 3676.51
+          },
+          {
+            "id": 3,
+            "shape": "Oval",
+            "caratWeight": 9.85,
+            "dimension": "6x4x4 mm",
+            "price": 2856.36
+          },
+          {
+            "id": 4,
+            "shape": "Round",
+            "caratWeight": 1.01,
+            "dimension": "5x5x3 mm",
+            "price": 2117.68
+          },
+          {
+            "id": 5,
+            "shape": "Marquise",
+            "caratWeight": 1.31,
+            "dimension": "8x6x4 mm",
+            "price": 4323.99
+          }
+        ]
+      },
+      {
+        "name": "Colorstone 10",
+        "color": "Pink",
+        "sku": "CS-0010",
+        "hardness": "7.3 Mohs",
+        "diamondType": "N/A",
+        "certification": "None",
+        "description": "Beautiful colorstone 10.",
+        "availability": false,
+        "images": [
+          "CS-0010_img1.jpg",
+          "CS-0010_img2.jpg"
+        ],
+        "video": "CS-0010_video.mp4",
+        "colorStoneVariants": [
+          {
+            "id": 1,
+            "shape": "Princess",
+            "caratWeight": 5.79,
+            "dimension": "6x4x4 mm",
+            "price": 1106.59
+          },
+          {
+            "id": 2,
+            "shape": "Emerald",
+            "caratWeight": 4.55,
+            "dimension": "9x7x5 mm",
+            "price": 2841.96
+          },
+          {
+            "id": 3,
+            "shape": "Emerald",
+            "caratWeight": 2.17,
+            "dimension": "9x7x5 mm",
+            "price": 1292.1
+          },
+          {
+            "id": 4,
+            "shape": "Princess",
+            "caratWeight": 4.21,
+            "dimension": "5x5x3 mm",
+            "price": 3228.44
+          },
+          {
+            "id": 5,
+            "shape": "Oval",
+            "caratWeight": 1.64,
+            "dimension": "5x5x3 mm",
+            "price": 4475.49
+          }
+        ]
+      }
+    ],
+    "antiquecut": [
+      {
+        "name": "Antique Cut 1",
+        "sku": "ANT-0001",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Antique cut diamond 1 with vintage charm.",
+        "availability": true,
+        "images": [
+          "ANT-0001_img1.jpg",
+          "ANT-0001_img2.jpg"
+        ],
+        "video": "ANT-0001_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "F",
+            "clarity": "SI2",
+            "caratWeight": 2.63,
+            "colorRange": "O-P",
+            "clarityRange": "VS1-VS2",
+            "dimension": "7x5x3 mm",
+            "price": 12838.16
+          },
+          {
+            "id": 2,
+            "color": "K",
+            "clarity": "SI2",
+            "caratWeight": 2.24,
+            "colorRange": "O-P",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "7x5x3 mm",
+            "price": 7221.99
+          },
+          {
+            "id": 3,
+            "color": "X",
+            "clarity": "FL",
+            "caratWeight": 2.59,
+            "colorRange": "Y-Z",
+            "clarityRange": "SI1-SI2",
+            "dimension": "10x8x6 mm",
+            "price": 3513.98
+          },
+          {
+            "id": 4,
+            "color": "Y",
+            "clarity": "VVS2",
+            "caratWeight": 1.1,
+            "colorRange": "W-X",
+            "clarityRange": "I1-I3",
+            "dimension": "7x5x3 mm",
+            "price": 2035.81
+          },
+          {
+            "id": 5,
+            "color": "Q",
+            "clarity": "VVS1",
+            "caratWeight": 3.31,
+            "colorRange": "Q-R",
+            "clarityRange": "I1-I3",
+            "dimension": "10x8x6 mm",
+            "price": 13665.03
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 2",
+        "sku": "ANT-0002",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Antique cut diamond 2 with vintage charm.",
+        "availability": false,
+        "images": [
+          "ANT-0002_img1.jpg",
+          "ANT-0002_img2.jpg"
+        ],
+        "video": "ANT-0002_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "I",
+            "clarity": "I1",
+            "caratWeight": 3.38,
+            "colorRange": "W-X",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "9x7x5 mm",
+            "price": 6847.2
+          },
+          {
+            "id": 2,
+            "color": "R",
+            "clarity": "IF",
+            "caratWeight": 3.6,
+            "colorRange": "Y-Z",
+            "clarityRange": "FL-IF",
+            "dimension": "7x5x3 mm",
+            "price": 13803.4
+          },
+          {
+            "id": 3,
+            "color": "W",
+            "clarity": "VVS1",
+            "caratWeight": 3.63,
+            "colorRange": "Q-R",
+            "clarityRange": "I1-I3",
+            "dimension": "10x8x6 mm",
+            "price": 4627.82
+          },
+          {
+            "id": 4,
+            "color": "P",
+            "clarity": "I2",
+            "caratWeight": 3.39,
+            "colorRange": "U-V",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "5x5x3 mm",
+            "price": 11297.17
+          },
+          {
+            "id": 5,
+            "color": "K",
+            "clarity": "IF",
+            "caratWeight": 3.06,
+            "colorRange": "Y-Z",
+            "clarityRange": "FL-IF",
+            "dimension": "6x4x4 mm",
+            "price": 3698.7
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 3",
+        "sku": "ANT-0003",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Antique cut diamond 3 with vintage charm.",
+        "availability": false,
+        "images": [
+          "ANT-0003_img1.jpg",
+          "ANT-0003_img2.jpg"
+        ],
+        "video": "ANT-0003_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "V",
+            "clarity": "VVS1",
+            "caratWeight": 3.9,
+            "colorRange": "Q-R",
+            "clarityRange": "VS1-VS2",
+            "dimension": "9x7x5 mm",
+            "price": 10433.01
+          },
+          {
+            "id": 2,
+            "color": "U",
+            "clarity": "VS2",
+            "caratWeight": 2.95,
+            "colorRange": "D-F",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "10x8x6 mm",
+            "price": 8534.32
+          },
+          {
+            "id": 3,
+            "color": "K",
+            "clarity": "VVS2",
+            "caratWeight": 1.97,
+            "colorRange": "U-V",
+            "clarityRange": "I1-I3",
+            "dimension": "5x5x3 mm",
+            "price": 3988.95
+          },
+          {
+            "id": 4,
+            "color": "I",
+            "clarity": "SI2",
+            "caratWeight": 3.99,
+            "colorRange": "W-X",
+            "clarityRange": "VS1-VS2",
+            "dimension": "7x5x3 mm",
+            "price": 2994.61
+          },
+          {
+            "id": 5,
+            "color": "G",
+            "clarity": "VVS1",
+            "caratWeight": 3.96,
+            "colorRange": "K-L",
+            "clarityRange": "I1-I3",
+            "dimension": "7x5x3 mm",
+            "price": 6042.17
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 4",
+        "sku": "ANT-0004",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Antique cut diamond 4 with vintage charm.",
+        "availability": false,
+        "images": [
+          "ANT-0004_img1.jpg",
+          "ANT-0004_img2.jpg"
+        ],
+        "video": "ANT-0004_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "W",
+            "clarity": "I2",
+            "caratWeight": 3.44,
+            "colorRange": "S-T",
+            "clarityRange": "VS1-VS2",
+            "dimension": "10x8x6 mm",
+            "price": 9426.45
+          },
+          {
+            "id": 2,
+            "color": "S",
+            "clarity": "SI1",
+            "caratWeight": 1.03,
+            "colorRange": "I-J",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "7x5x3 mm",
+            "price": 6789.25
+          },
+          {
+            "id": 3,
+            "color": "Q",
+            "clarity": "I3",
+            "caratWeight": 2.51,
+            "colorRange": "I-J",
+            "clarityRange": "I1-I3",
+            "dimension": "5x5x3 mm",
+            "price": 14717.89
+          },
+          {
+            "id": 4,
+            "color": "H",
+            "clarity": "I2",
+            "caratWeight": 2.31,
+            "colorRange": "U-V",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "9x7x5 mm",
+            "price": 13981.91
+          },
+          {
+            "id": 5,
+            "color": "P",
+            "clarity": "SI2",
+            "caratWeight": 2.53,
+            "colorRange": "K-L",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "7x5x3 mm",
+            "price": 14094.77
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 5",
+        "sku": "ANT-0005",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Antique cut diamond 5 with vintage charm.",
+        "availability": false,
+        "images": [
+          "ANT-0005_img1.jpg",
+          "ANT-0005_img2.jpg"
+        ],
+        "video": "ANT-0005_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "W",
+            "clarity": "I1",
+            "caratWeight": 1.8,
+            "colorRange": "O-P",
+            "clarityRange": "I1-I3",
+            "dimension": "6x4x4 mm",
+            "price": 7864.11
+          },
+          {
+            "id": 2,
+            "color": "H",
+            "clarity": "I2",
+            "caratWeight": 3.44,
+            "colorRange": "S-T",
+            "clarityRange": "I1-I3",
+            "dimension": "8x6x4 mm",
+            "price": 3376.31
+          },
+          {
+            "id": 3,
+            "color": "V",
+            "clarity": "I3",
+            "caratWeight": 0.91,
+            "colorRange": "G-H",
+            "clarityRange": "SI1-SI2",
+            "dimension": "7x5x3 mm",
+            "price": 5541.85
+          },
+          {
+            "id": 4,
+            "color": "S",
+            "clarity": "VVS2",
+            "caratWeight": 3.13,
+            "colorRange": "Y-Z",
+            "clarityRange": "I1-I3",
+            "dimension": "8x6x4 mm",
+            "price": 7065.8
+          },
+          {
+            "id": 5,
+            "color": "U",
+            "clarity": "FL",
+            "caratWeight": 2.14,
+            "colorRange": "U-V",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "5x5x3 mm",
+            "price": 8957.28
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 6",
+        "sku": "ANT-0006",
+        "hardness": "10 Mohs",
+        "diamondType": "Lab-Grown",
+        "description": "Antique cut diamond 6 with vintage charm.",
+        "availability": true,
+        "images": [
+          "ANT-0006_img1.jpg",
+          "ANT-0006_img2.jpg"
+        ],
+        "video": "ANT-0006_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "X",
+            "clarity": "SI2",
+            "caratWeight": 3.19,
+            "colorRange": "Q-R",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "9x7x5 mm",
+            "price": 7306.45
+          },
+          {
+            "id": 2,
+            "color": "H",
+            "clarity": "FL",
+            "caratWeight": 0.61,
+            "colorRange": "Q-R",
+            "clarityRange": "FL-IF",
+            "dimension": "10x8x6 mm",
+            "price": 1357.71
+          },
+          {
+            "id": 3,
+            "color": "Z",
+            "clarity": "SI1",
+            "caratWeight": 2.39,
+            "colorRange": "Q-R",
+            "clarityRange": "VS1-VS2",
+            "dimension": "5x5x3 mm",
+            "price": 7641.48
+          },
+          {
+            "id": 4,
+            "color": "L",
+            "clarity": "I1",
+            "caratWeight": 1.13,
+            "colorRange": "S-T",
+            "clarityRange": "VS1-VS2",
+            "dimension": "8x6x4 mm",
+            "price": 11418.35
+          },
+          {
+            "id": 5,
+            "color": "S",
+            "clarity": "VVS2",
+            "caratWeight": 3.75,
+            "colorRange": "Q-R",
+            "clarityRange": "VS1-VS2",
+            "dimension": "7x5x3 mm",
+            "price": 11895.79
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 7",
+        "sku": "ANT-0007",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Antique cut diamond 7 with vintage charm.",
+        "availability": true,
+        "images": [
+          "ANT-0007_img1.jpg",
+          "ANT-0007_img2.jpg"
+        ],
+        "video": "ANT-0007_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "G",
+            "clarity": "IF",
+            "caratWeight": 1.1,
+            "colorRange": "G-H",
+            "clarityRange": "SI1-SI2",
+            "dimension": "10x8x6 mm",
+            "price": 3312.19
+          },
+          {
+            "id": 2,
+            "color": "W",
+            "clarity": "VVS1",
+            "caratWeight": 1.7,
+            "colorRange": "D-F",
+            "clarityRange": "SI1-SI2",
+            "dimension": "7x5x3 mm",
+            "price": 13837.7
+          },
+          {
+            "id": 3,
+            "color": "W",
+            "clarity": "VS2",
+            "caratWeight": 3.36,
+            "colorRange": "M-N",
+            "clarityRange": "FL-IF",
+            "dimension": "8x6x4 mm",
+            "price": 7050.59
+          },
+          {
+            "id": 4,
+            "color": "E",
+            "clarity": "FL",
+            "caratWeight": 3.07,
+            "colorRange": "S-T",
+            "clarityRange": "VS1-VS2",
+            "dimension": "7x5x3 mm",
+            "price": 3554.29
+          },
+          {
+            "id": 5,
+            "color": "U",
+            "clarity": "FL",
+            "caratWeight": 2.27,
+            "colorRange": "G-H",
+            "clarityRange": "FL-IF",
+            "dimension": "7x5x3 mm",
+            "price": 6873.09
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 8",
+        "sku": "ANT-0008",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Antique cut diamond 8 with vintage charm.",
+        "availability": true,
+        "images": [
+          "ANT-0008_img1.jpg",
+          "ANT-0008_img2.jpg"
+        ],
+        "video": "ANT-0008_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "K",
+            "clarity": "SI1",
+            "caratWeight": 2.79,
+            "colorRange": "K-L",
+            "clarityRange": "FL-IF",
+            "dimension": "8x6x4 mm",
+            "price": 9360.68
+          },
+          {
+            "id": 2,
+            "color": "T",
+            "clarity": "I2",
+            "caratWeight": 1.82,
+            "colorRange": "S-T",
+            "clarityRange": "I1-I3",
+            "dimension": "6x4x4 mm",
+            "price": 11886.85
+          },
+          {
+            "id": 3,
+            "color": "K",
+            "clarity": "VVS2",
+            "caratWeight": 3.97,
+            "colorRange": "O-P",
+            "clarityRange": "VS1-VS2",
+            "dimension": "7x5x3 mm",
+            "price": 9830.67
+          },
+          {
+            "id": 4,
+            "color": "P",
+            "clarity": "VVS2",
+            "caratWeight": 2.47,
+            "colorRange": "Q-R",
+            "clarityRange": "FL-IF",
+            "dimension": "10x8x6 mm",
+            "price": 14533.32
+          },
+          {
+            "id": 5,
+            "color": "P",
+            "clarity": "VVS1",
+            "caratWeight": 2.41,
+            "colorRange": "M-N",
+            "clarityRange": "SI1-SI2",
+            "dimension": "10x8x6 mm",
+            "price": 2288.89
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 9",
+        "sku": "ANT-0009",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Antique cut diamond 9 with vintage charm.",
+        "availability": true,
+        "images": [
+          "ANT-0009_img1.jpg",
+          "ANT-0009_img2.jpg"
+        ],
+        "video": "ANT-0009_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "W",
+            "clarity": "VS1",
+            "caratWeight": 1.33,
+            "colorRange": "Y-Z",
+            "clarityRange": "VS1-VS2",
+            "dimension": "9x7x5 mm",
+            "price": 10840.74
+          },
+          {
+            "id": 2,
+            "color": "S",
+            "clarity": "IF",
+            "caratWeight": 0.81,
+            "colorRange": "M-N",
+            "clarityRange": "VVS1-VVS2",
+            "dimension": "7x5x3 mm",
+            "price": 12718.46
+          },
+          {
+            "id": 3,
+            "color": "R",
+            "clarity": "I1",
+            "caratWeight": 1.69,
+            "colorRange": "W-X",
+            "clarityRange": "FL-IF",
+            "dimension": "8x6x4 mm",
+            "price": 13400.55
+          },
+          {
+            "id": 4,
+            "color": "U",
+            "clarity": "I1",
+            "caratWeight": 1.99,
+            "colorRange": "D-F",
+            "clarityRange": "I1-I3",
+            "dimension": "5x5x3 mm",
+            "price": 3664.16
+          },
+          {
+            "id": 5,
+            "color": "Q",
+            "clarity": "SI2",
+            "caratWeight": 3.73,
+            "colorRange": "Q-R",
+            "clarityRange": "I1-I3",
+            "dimension": "9x7x5 mm",
+            "price": 8039.13
+          }
+        ]
+      },
+      {
+        "name": "Antique Cut 10",
+        "sku": "ANT-0010",
+        "hardness": "10 Mohs",
+        "diamondType": "Natural",
+        "description": "Antique cut diamond 10 with vintage charm.",
+        "availability": true,
+        "images": [
+          "ANT-0010_img1.jpg",
+          "ANT-0010_img2.jpg"
+        ],
+        "video": "ANT-0010_video.mp4",
+        "antiqueCutVariants": [
+          {
+            "id": 1,
+            "color": "S",
+            "clarity": "VVS2",
+            "caratWeight": 2.34,
+            "colorRange": "I-J",
+            "clarityRange": "FL-IF",
+            "dimension": "5x5x3 mm",
+            "price": 2218.26
+          },
+          {
+            "id": 2,
+            "color": "N",
+            "clarity": "VVS1",
+            "caratWeight": 0.56,
+            "colorRange": "Y-Z",
+            "clarityRange": "VS1-VS2",
+            "dimension": "10x8x6 mm",
+            "price": 9702.75
+          },
+          {
+            "id": 3,
+            "color": "L",
+            "clarity": "I3",
+            "caratWeight": 3.24,
+            "colorRange": "Q-R",
+            "clarityRange": "VS1-VS2",
+            "dimension": "8x6x4 mm",
+            "price": 7493.41
+          },
+          {
+            "id": 4,
+            "color": "X",
+            "clarity": "SI2",
+            "caratWeight": 1.91,
+            "colorRange": "U-V",
+            "clarityRange": "I1-I3",
+            "dimension": "9x7x5 mm",
+            "price": 12729.31
+          },
+          {
+            "id": 5,
+            "color": "O",
+            "clarity": "SI1",
+            "caratWeight": 1.96,
+            "colorRange": "S-T",
+            "clarityRange": "FL-IF",
+            "dimension": "5x5x3 mm",
+            "price": 13752.56
+          }
+        ]
+      }
+    ]
+  }
+}
