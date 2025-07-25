@@ -27,7 +27,7 @@ export default function LoginPage() {
       if (userType === "admin" || userType === "master-admin") {
         router.push("/admin");
       } else if (userType === "customer") {
-        router.push("/dashboard");
+        router.push("/customer");
       }
     }
   }, [isAuthenticated, getUserType, loading, router]);

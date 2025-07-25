@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function HomePage() {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -29,127 +30,211 @@ export default function HomePage() {
           (prevIndex) => (prevIndex + 1) % animatedWords.length
         );
         setIsVisible(true);
-      }, 300); // Half second for smooth transition
-    }, 2000); // Change word every 2 seconds
+      }, 300);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [animatedWords.length]);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+      <section className="bg-surface py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-primary mb-6">
+            BESPOKE CARAT
+          </h1>
+          <h2 className="text-xl md:text-2xl text-text-dark mb-8">
+            CUSTOM LAB GROWN DIAMONDS
+          </h2>
+          <p className="text-base md:text-lg text-secondary mb-8 max-w-3xl mx-auto">
+            Designed for visionaries. Delivered with precision.
+          </p>
+        </div>
+      </section>
+
+      {/* Shop by Category Section */}
+      <section className="py-16 bg-background-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              <span
-                className={`inline-block transition-all duration-300 ease-in-out ${
-                  isVisible
-                    ? "opacity-100 transform translate-y-0"
-                    : "opacity-0 transform -translate-y-2"
-                }`}
-              >
-                {animatedWords[currentWordIndex]}
-              </span>{" "}
-              Lab-Grown
-              <span className="text-primary-600 block">Diamonds</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Discover our exquisite collection of lab-grown diamonds. From
-              precision star melee to stunning colored stones, we offer the
-              finest quality diamonds with complete transparency and
-              certification.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition duration-200">
-                Explore Collection
-              </button>
-              <button className="cursor-pointer border border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium transition duration-200">
-                Learn More
-              </button>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-text-dark mb-4">
+              SHOP BY CATEGORY
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Small Loose Diamonds */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://i.etsystatic.com/8335775/r/il/80d1e8/849619294/il_1588xN.849619294_5y77.jpg"
+                  alt="Small Loose Diamonds"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Small Loose Diamonds
+                </h3>
+              </div>
+            </div>
+
+            {/* Brilliant Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://cdn.shopify.com/s/files/1/0536/3086/1474/files/BRC_cut_636x358_59b1bd6e-f14a-42c5-81e6-ecc2cd209418.jpg?v=1626433488"
+                  alt="Brilliant Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Brilliant Cut
+                </h3>
+              </div>
+            </div>
+
+            {/* Antique Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://ourosjewels.com/cdn/shop/files/LG5466_1_00b63814-b0e1-45b7-975e-ebf3abaf0eea_1400x1400.webp?v=1749276960"
+                  alt="Antique Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Antique Cut
+                </h3>
+              </div>
+            </div>
+
+            {/* Colored Diamonds */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://ourosjewels.com/cdn/shop/files/GEM2238-OJ5377-EWI_1_d4e842cd-9aad-4988-b27c-78dc90cbe2a1_1400x1400.webp?v=1749274849"
+                  alt="Colored Diamonds"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Colored Diamonds
+                </h3>
+              </div>
+            </div>
+
+            {/* Portuguese Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://ourosjewels.com/cdn/shop/files/OA1557_1_9b9800d5-5fdd-48df-af28-d7520e91a074_1400x1400.webp?v=1749280901"
+                  alt="Portuguese Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Portuguese Cut
+                </h3>
+              </div>
+            </div>
+
+            {/* Baguette, Tapered & Step Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://i.etsystatic.com/13062514/r/il/8314b6/2580085146/il_570xN.2580085146_946u.jpg"
+                  alt="Baguette Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Baguette, Tapered & Step Cut
+                </h3>
+              </div>
+            </div>
+
+            {/* Rose Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://ourosjewels.com/cdn/shop/files/Antique-Shape-Lab-Diamond-Loose_5ef91f99-2d59-49e7-9ae5-23161764a111_1400x1400.webp?v=1749279653"
+                  alt="Rose Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Rose Cut
+                </h3>
+              </div>
+            </div>
+
+            {/* Old Mine Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://ourosjewels.com/cdn/shop/files/OA5973-EWI_6_2a6226d3-0a2e-4feb-9fe5-b662c1afab19_1400x1400.webp?v=1749287781"
+                  alt="Old Mine Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Old Mine Cut
+                </h3>
+              </div>
+            </div>
+
+            {/* Alphabet Cut */}
+            <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+              <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                <img
+                  src="https://ourosjewels.com/cdn/shop/files/01_49748425-a83f-4c22-be84-c955ba6530cb_1400x1400.webp?v=1750941829"
+                  alt="Alphabet Cut"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Alphabet Cut
+                </h3>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Diamond Collections
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Choose from our carefully curated selection of lab-grown diamonds,
-              each certified for quality and brilliance.
-            </p>
+      <div className="text-center bg-background-secondary">
+            <Link
+              href="/login"
+              className="inline-block bg-primary text-surface px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary-800 transition duration-300"
+            >
+              Login to view full inventory & pricing
+            </Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Star Melee */}
-            <div className="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition duration-300">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <svg
-                  className="w-8 h-8 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Star Melee Diamonds
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Precision-cut small diamonds available in various sieve sizes.
-                Choose by clarity and color to match your exact specifications.
-              </p>
-              <button className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium">
-                Explore Melee →
-              </button>
-            </div>
+      {/* Why Shop With Us */}
+      <section className="py-16 bg-background-secondary">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-text-dark mb-8">
+              WHY SHOP WITH US
+            </h2>
+          </div>
 
-            {/* Colored Diamonds */}
-            <div className="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition duration-300">
-              <div className="w-16 h-16 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-purple-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Colored Diamonds
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Vibrant colored lab-grown diamonds available in 0.25, 0.5, 0.75,
-                and 1 carat sizes. Perfect for unique jewelry pieces.
-              </p>
-              <button className="cursor-pointer text-purple-600 hover:text-purple-700 font-medium">
-                View Colors →
-              </button>
-            </div>
-
-            {/* Antique Shapes - Coming Soon */}
-            <div className="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition duration-300 opacity-75">
-              <div className="w-16 h-16 bg-amber-100 rounded-lg flex items-center justify-center mb-6">
-                <svg
-                  className="w-8 h-8 text-amber-600"
+                  className="w-8 h-8 text-accent-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -162,35 +247,17 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Antique Shaped
+              <h3 className="text-sm font-semibold text-text-dark mb-2">
+                Precision-Cut
+                <br />
+                Lab-Grown Diamonds
               </h3>
-              <p className="text-gray-600 mb-6">
-                Classic and vintage-inspired diamond cuts with timeless appeal.
-                Perfect for traditional and heritage jewelry designs.
-              </p>
-              <button className="cursor-pointer text-amber-600 hover:text-amber-700 font-medium">
-                Coming Soon →
-              </button>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Bespoke Carat?
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="w-8 h-8 text-accent-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -203,19 +270,17 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Certified Quality
+              <h3 className="text-sm font-semibold text-text-dark mb-2">
+                Custom Sizes
+                <br />
+                Shapes & Grades
               </h3>
-              <p className="text-gray-600">
-                Every diamond comes with detailed certification and quality
-                assurance.
-              </p>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-blue-600"
+                  className="w-8 h-8 text-accent-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -228,19 +293,38 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Lab-Grown Excellence
+              <h3 className="text-sm font-semibold text-text-dark mb-2">
+                Trusted by Jewelers
               </h3>
-              <p className="text-gray-600">
-                Environmentally conscious diamonds with identical properties to
-                natural stones.
-              </p>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-purple-600"
+                  className="w-8 h-8 text-accent-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold text-text-dark mb-2">
+                Transparent
+                <br />
+                Sourcing & Grading
+              </h3>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-accent-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -253,19 +337,17 @@ export default function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-sm font-semibold text-text-dark mb-2">
                 Competitive Pricing
+                <br />
+                No Compromise on Quality
               </h3>
-              <p className="text-gray-600">
-                Direct sourcing ensures the best prices without compromising on
-                quality.
-              </p>
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
-                  className="w-8 h-8 text-indigo-600"
+                  className="w-8 h-8 text-accent-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -274,99 +356,106 @@ export default function HomePage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 3v18m9-9H3"
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Custom Solutions
+              <h3 className="text-sm font-semibold text-text-dark mb-2">
+                Bulk Order &<br />
+                B2B Support
               </h3>
-              <p className="text-gray-600">
-                Tailored diamond selection to meet your specific requirements
-                and preferences.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How Orders Work */}
+      <section className="py-16 bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-text-dark mb-8">
+              HOW MAKE TO ORDERS WORK
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary">1</span>
+              </div>
+              <h3 className="text-lg font-semibold text-text-dark mb-2">
+                Share Your Vision
+              </h3>
+              <p className="text-secondary text-sm">
+                Send us your idea, sketch, or desired diamond specification.
+                Whether it's a custom size, shape, or special request, we're
+                ready.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary">2</span>
+              </div>
+              <h3 className="text-lg font-semibold text-text-dark mb-2">
+                We Review & Respond
+              </h3>
+              <p className="text-secondary text-sm">
+                Our team will assess the design, confirm feasibility, and share
+                all details including estimating production time.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary">3</span>
+              </div>
+              <h3 className="text-lg font-semibold text-text-dark mb-2">
+                Approved & Proceed
+              </h3>
+              <p className="text-secondary text-sm">
+                Once you approve the design, payment is processed and we begin
+                cultivated and moved into production with precision standards.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-primary">4</span>
+              </div>
+              <h3 className="text-lg font-semibold text-text-dark mb-2">
+                Delivered to Your Doorstep
+              </h3>
+              <p className="text-secondary text-sm">
+                Your Diamonds is shipped securely to your location. You will be
+                tracked, and ready to set.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      {/* Our Vision */}
+      <section className="py-16 bg-background-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Star Melee</h3>
-              <p className="text-gray-400">
-                Premium lab-grown diamonds with uncompromising quality and
-                transparency.
-              </p>
+          <div className="text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-text-dark mb-8">
+              OUR VISION
+            </h2>
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-surface rounded-2xl px-8 md:px-12 py-6 md:py-8 border-2 border-neutral-400">
+                <p className="text-lg md:text-xl text-text-dark leading-relaxed">
+                  To inspire a new era of brilliance where every diamond tells a
+                  story of innovation, ethics, and infinite possibility.
+                </p>
+              </div>
             </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Products</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/products/melee" className="hover:text-white">
-                    Star Melee
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/products/colored" className="hover:text-white">
-                    Colored Diamonds
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/products/antique" className="hover:text-white">
-                    Antique Shapes
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/about" className="hover:text-white">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-white">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/certifications" className="hover:text-white">
-                    Certifications
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/support" className="hover:text-white">
-                    Customer Support
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shipping" className="hover:text-white">
-                    Shipping Info
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/returns" className="hover:text-white">
-                    Returns
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Bespoke Carat. All rights reserved.</p>
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

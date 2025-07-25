@@ -115,7 +115,7 @@ export const clearUser = () => (dispatch) => {
 const signinAPI = async (formdata) => {
   try {
     let data = JSON.stringify({
-      email: formdata.emailOrPhone,
+      email_or_phone: formdata.emailOrPhone,
       password: formdata.password,
     });
 

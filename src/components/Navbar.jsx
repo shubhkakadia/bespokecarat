@@ -1,13 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ShoppingBagIcon, ChevronDownIcon } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import {
+  ShoppingBagIcon,
+  ChevronDownIcon,
+  UserIcon,
+  LogOutIcon,
+  SettingsIcon,
+  ShoppingCartIcon,
+  UsersIcon,
+} from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
+  const avatarDropdownRef = useRef(null);
+
+  const { isAuthenticated, isAdmin, isCustomer, userData, logout } = useAuth();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        avatarDropdownRef.current &&
+        !avatarDropdownRef.current.contains(event.target)
+      ) {
+        setIsAvatarDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -16,6 +46,41 @@ export default function Navbar() {
       console.log("Searching for:", searchQuery);
       // You can add search logic or redirect to search results page
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsAvatarDropdownOpen(false);
+      // Optionally redirect to home page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+  const getInitials = () => {
+    if (userData?.name) {
+      return userData.name
+        .split(" ")
+        .map((name) => name[0])
+        .join("")
+        .toUpperCase();
+    }
+    if (userData?.email) {
+      return userData.email.substring(0, 2).toUpperCase();
+    }
+    return "U";
+  };
+
+  const getAvatarNavigationPath = () => {
+    if (isAdmin()) {
+      return "/admin";
+    }
+    if (isCustomer()) {
+      return "/dashboard";
+    }
+    return "/dashboard";
   };
 
   return (
@@ -339,13 +404,73 @@ export default function Navbar() {
               </span>
             </button>
 
-            {/* Sign In Button */}
-            <Link
-              href="/login"
-              className="text-white cursor-pointer bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium transition duration-200 shadow-accent"
-            >
-              Sign In
-            </Link>
+            {/* Sign In Button or Avatar */}
+            {isAuthenticated ? (
+              <div className="relative" ref={avatarDropdownRef}>
+                <button
+                  onClick={() => setIsAvatarDropdownOpen(!isAvatarDropdownOpen)}
+                  className="flex items-center space-x-2 p-1 rounded-full hover:bg-surface-100 transition duration-200"
+                >
+                  <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                    {getInitials()}
+                  </div>
+                  <ChevronDownIcon className="w-4 h-4 text-secondary" />
+                </button>
+
+                {/* Avatar Dropdown Menu */}
+                {isAvatarDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <div className="px-4 py-2 border-b border-gray-200">
+                      <p className="text-sm font-medium text-gray-900">
+                        {userData?.name || userData?.email}
+                      </p>
+                      <p className="text-xs text-gray-500 capitalize">
+                        {userData?.user_type}
+                      </p>
+                    </div>
+
+                    <Link
+                      href={getAvatarNavigationPath()}
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsAvatarDropdownOpen(false)}
+                    >
+                      {isAdmin() ? (
+                        <SettingsIcon className="w-4 h-4 mr-2" />
+                      ) : (
+                        <UserIcon className="w-4 h-4 mr-2" />
+                      )}
+                      {isAdmin() ? "Admin Dashboard" : "My Dashboard"}
+                    </Link>
+
+                    {isCustomer() && (
+                      <Link
+                        href="/orders"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsAvatarDropdownOpen(false)}
+                      >
+                        <ShoppingCartIcon className="w-4 h-4 mr-2" />
+                        My Orders
+                      </Link>
+                    )}
+
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      <LogOutIcon className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="text-white cursor-pointer bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium transition duration-200 shadow-accent"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -448,15 +573,49 @@ export default function Navbar() {
                 Contact Us
               </Link>
 
-              {/* Mobile Cart and Sign In */}
+              {/* Mobile Cart and Sign In/Avatar */}
               <div className="flex items-center justify-between px-3 py-2">
-                <Link
-                  href="/login"
-                  className="text-white bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium shadow-accent"
-                >
-                  Sign In
-                </Link>
+                {isAuthenticated ? (
+                  <div className="flex items-center space-x-4 w-full">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                        {getInitials()}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {userData?.name || userData?.email}
+                        </p>
+                        <p className="text-xs text-gray-500 capitalize">
+                          {userData?.user_type}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="text-white bg-primary-600 hover:bg-primary text-brand px-4 py-2 rounded-md text-sm font-medium shadow-accent"
+                  >
+                    Sign In
+                  </Link>
+                )}
               </div>
+
+              {/* Mobile Dashboard Link for authenticated users */}
+              {isAuthenticated && (
+                <Link
+                  href={getAvatarNavigationPath()}
+                  className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+                >
+                  {isAdmin() ? "Admin Dashboard" : "My Dashboard"}
+                </Link>
+              )}
             </div>
           </div>
         )}

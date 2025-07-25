@@ -1,0 +1,276 @@
+{
+  "productTypes": {
+    "diamond": {
+      "mainFields": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "shape": {
+          "type": "string",
+          "required": true
+        },
+        "sku": {
+          "type": "string",
+          "required": true
+        },
+        "hardness": {
+          "type": "string"
+        },
+        "diamondType": {
+          "type": "string",
+          "required": true
+        },
+        "certification": {
+          "type": "string"
+        },
+        "description": {
+          "type": "text"
+        },
+        "availability": {
+          "type": "boolean"
+        }
+      },
+      "mediaFields": {
+        "images": {
+          "type": "file[]"
+        },
+        "video": {
+          "type": "file"
+        }
+      },
+      "variants": {
+        "diamondVariants": {
+          "type": "array",
+          "required": true,
+          "fields": {
+            "id": {
+              "type": "number",
+              "required": true
+            },
+            "color": {
+              "type": "string",
+              "required": true
+            },
+            "clarity": {
+              "type": "string",
+              "required": true
+            },
+            "caratWeight": {
+              "type": "number",
+              "required": true
+            },
+            "price": {
+              "type": "number",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "melee": {
+      "mainFields": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "shape": {
+          "type": "string",
+          "required": true
+        },
+        "sku": {
+          "type": "string",
+          "required": true
+        },
+        "hardness": {
+          "type": "string"
+        },
+        "diamondType": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "text"
+        },
+        "availability": {
+          "type": "boolean"
+        }
+      },
+      "mediaFields": {
+        "images": {
+          "type": "file[]"
+        },
+        "video": {
+          "type": "file"
+        }
+      },
+      "variants": {
+        "meleeVariants": {
+          "type": "array",
+          "required": true,
+          "fields": {
+            "id": {
+              "type": "number",
+              "required": true
+            },
+            "sieveSize": {
+              "type": "string",
+              "required": true
+            },
+            "pricePerCarat": {
+              "type": "number",
+              "required": true
+            },
+            "colorRange": {
+              "type": "string"
+            },
+            "clarityRange": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "colorstone": {
+      "mainFields": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "color": {
+          "type": "string",
+          "required": true
+        },
+        "sku": {
+          "type": "string",
+          "required": true
+        },
+        "hardness": {
+          "type": "string"
+        },
+        "diamondType": {
+          "type": "string",
+          "required": true
+        },
+        "certification": {
+          "type": "string"
+        },
+        "description": {
+          "type": "text"
+        },
+        "availability": {
+          "type": "boolean"
+        }
+      },
+      "mediaFields": {
+        "images": {
+          "type": "file[]"
+        },
+        "video": {
+          "type": "file"
+        }
+      },
+      "variants": {
+        "colorStoneVariants": {
+          "type": "array",
+          "required": true,
+          "fields": {
+            "id": {
+              "type": "number",
+              "required": true
+            },
+            "shape": {
+              "type": "string",
+              "required": true
+            },
+            "caratWeight": {
+              "type": "number",
+              "required": true
+            },
+            "dimension": {
+              "type": "string",
+              "required": true
+            },
+            "price": {
+              "type": "number",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "antiquecut": {
+      "mainFields": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "sku": {
+          "type": "string",
+          "required": true
+        },
+        "hardness": {
+          "type": "string"
+        },
+        "diamondType": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "text"
+        },
+        "availability": {
+          "type": "boolean"
+        }
+      },
+      "mediaFields": {
+        "images": {
+          "type": "file[]"
+        },
+        "video": {
+          "type": "file"
+        }
+      },
+      "variants": {
+        "antiqueCutVariants": {
+          "type": "array",
+          "required": true,
+          "fields": {
+            "id": {
+              "type": "number",
+              "required": true
+            },
+            "color": {
+              "type": "string",
+              "required": true
+            },
+            "clarity": {
+              "type": "string",
+              "required": true
+            },
+            "caratWeight": {
+              "type": "number",
+              "required": true
+            },
+            "colorRange": {
+              "type": "string",
+              "required": true
+            },
+            "clarityRange": {
+              "type": "string",
+              "required": true
+            },
+            "dimension": {
+              "type": "string",
+              "required": true
+            },
+            "price": {
+              "type": "number",
+              "required": true
+            }
+          }
+        }
+      }
+    }
+  }
+}
