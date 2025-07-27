@@ -13,7 +13,8 @@ export default function Page() {
         <div className="flex-1 p-8 overflow-auto bg-whitesmoke">
           <h1 className="text-2xl font-bold">Admin Dashboard</h1>
           <p>
-            Welcome to the admin dashboard. Here you can manage your application.
+            Welcome to the admin dashboard. Here you can manage your
+            application.
           </p>
         </div>
       </div>

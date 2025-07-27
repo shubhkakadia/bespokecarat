@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { CustomerRoute } from "../../components/ProtectedRoute";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
+import { CustomerRoute } from "@/components/ProtectedRoute";
 import { ShoppingBag, Heart, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function CustomerDashboard() {
   const router = useRouter();
@@ -33,28 +33,28 @@ export default function CustomerDashboard() {
       title: "My Orders",
       description: "View and track your orders",
       icon: ShoppingBag,
-      href: "/dashboard/orders",
+      href: "/customer/orders",
       color: "bg-blue-500",
     },
     {
       title: "Wishlist",
       description: "Your saved items",
       icon: Heart,
-      href: "/dashboard/wishlist",
+      href: "/customer/wishlist",
       color: "bg-red-500",
     },
     {
       title: "Profile",
       description: "Manage your account",
       icon: User,
-      href: "/dashboard/profile",
+      href: "/customer/profile",
       color: "bg-green-500",
     },
     {
       title: "Settings",
       description: "Account preferences",
       icon: Settings,
-      href: "/dashboard/settings",
+      href: "/customer/settings",
       color: "bg-purple-500",
     },
   ];
