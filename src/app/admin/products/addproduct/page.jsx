@@ -14,8 +14,6 @@ export default function AddProductPage() {
     color: "",
     description: "",
     sku: "",
-    hardness: "",
-    diamondType: "Lab Grown",
     certification: "",
     availability: true,
     dimension: "",
@@ -53,18 +51,42 @@ export default function AddProductPage() {
     },
   ]);
 
-  const [antiqueCutVariants, setAntiqueCutVariants] = useState([
+  const [cutVariants, setCutVariants] = useState([
     {
       id: 1,
       color: "",
       clarity: "",
       caratWeight: "",
-      colorRange: "",
-      clarityRange: "",
       dimension: "",
       price: "",
     },
   ]);
+
+  const [layoutVariants, setLayoutVariants] = useState([
+    {
+      id: 1,
+      shape: "",
+      totalPcs: "",
+      totalCaratWeight: "",
+      dimensions: "",
+      colorRange: "",
+      clarityRange: "",
+    },
+  ]);
+
+  const [layoutPrice, setLayoutPrice] = useState("");
+  const [layoutType, setLayoutType] = useState("");
+  const [cutType, setCutType] = useState("");
+
+  const [alphabetVariants, setAlphabetVariants] = useState([
+    {
+      id: 1,
+      caratWeight: "",
+      price: "",
+    },
+  ]);
+
+  const [character, setCharacter] = useState("");
 
   const [activeProductTab, setActiveProductTab] = useState("diamond");
 
@@ -75,14 +97,16 @@ export default function AddProductPage() {
       color: "",
       description: "",
       sku: "",
-      hardness: "",
-      diamondType: "Lab Grown",
       certification: "",
       availability: true,
       dimension: "",
     });
     setImages([]);
     setVideo(null);
+    setLayoutPrice("");
+    setLayoutType("");
+    setCutType("");
+    setCharacter("");
   };
 
   const handleTabChange = (tab) => {
@@ -103,6 +127,8 @@ export default function AddProductPage() {
     "Heart",
     "Cushion",
     "Radiant",
+    "Baguette",
+    "Tapered Baguette",
   ];
 
   const colorOptions = [
@@ -161,6 +187,23 @@ export default function AddProductPage() {
 
   const clarityRanges = ["FL-IF", "VVS1-VVS2", "VS1-VS2", "SI1-SI2", "I1-I3"];
 
+  const layoutTypeOptions = [
+    "Bracelet",
+    "Necklace",
+    "Anklet",
+    "Brooch",
+    "Choker",
+    "Tennis Bracelet",
+  ];
+
+  const cutTypeOptions = [
+    "Cut",
+    "Portuguese Cut",
+    "Rose Cut",
+    "Old Mine Cut",
+    "Step Cut",
+  ];
+
   // Sieve size options in mm
   const sieveSizeOptions = [
     "0.5mm - 0.7mm",
@@ -183,17 +226,14 @@ export default function AddProductPage() {
   const validateDiamondForm = () => {
     const errors = [];
 
-    if (!formData.name.trim()) {
+    if (!formData.name?.trim()) {
       errors.push("Diamond name is required");
     }
-    if (!formData.shape.trim()) {
+    if (!formData.shape?.trim()) {
       errors.push("Shape is required");
     }
-    if (!formData.sku.trim()) {
+    if (!formData.sku?.trim()) {
       errors.push("SKU is required");
-    }
-    if (!formData.diamondType.trim()) {
-      errors.push("Diamond type is required");
     }
 
     const validVariants = diamondVariants.filter(
@@ -213,17 +253,14 @@ export default function AddProductPage() {
   const validateMeleeForm = () => {
     const errors = [];
 
-    if (!formData.name.trim()) {
+    if (!formData.name?.trim()) {
       errors.push("Melee name is required");
     }
-    if (!formData.shape.trim()) {
+    if (!formData.shape?.trim()) {
       errors.push("Shape is required");
     }
-    if (!formData.sku.trim()) {
+    if (!formData.sku?.trim()) {
       errors.push("SKU is required");
-    }
-    if (!formData.diamondType.trim()) {
-      errors.push("Diamond type is required");
     }
 
     const validVariants = meleeVariants.filter(
@@ -242,17 +279,14 @@ export default function AddProductPage() {
   const validateColorStoneForm = () => {
     const errors = [];
 
-    if (!formData.name.trim()) {
+    if (!formData.name?.trim()) {
       errors.push("Color stone name is required");
     }
-    if (!formData.color.trim()) {
+    if (!formData.color?.trim()) {
       errors.push("Color is required");
     }
-    if (!formData.sku.trim()) {
+    if (!formData.sku?.trim()) {
       errors.push("SKU is required");
-    }
-    if (!formData.diamondType.trim()) {
-      errors.push("Diamond type is required");
     }
 
     const validVariants = colorStoneVariants.filter(
@@ -272,33 +306,99 @@ export default function AddProductPage() {
     return errors;
   };
 
-  const validateAntiqueCutForm = () => {
+  const validateCutForm = () => {
     const errors = [];
 
-    if (!formData.name.trim()) {
-      errors.push("Antique cut name is required");
+    if (!formData.name?.trim()) {
+      errors.push("By cut name is required");
     }
-    if (!formData.sku.trim()) {
+    if (!formData.shape?.trim()) {
+      errors.push("Shape is required");
+    }
+    if (!cutType?.trim()) {
+      errors.push("Cut type is required");
+    }
+    if (!formData.sku?.trim()) {
       errors.push("SKU is required");
     }
-    if (!formData.diamondType.trim()) {
-      errors.push("Diamond type is required");
-    }
 
-    const validVariants = antiqueCutVariants.filter(
+    const validVariants = cutVariants.filter(
       (variant) =>
         variant.color &&
         variant.clarity &&
         variant.caratWeight &&
-        variant.colorRange &&
-        variant.clarityRange &&
         variant.dimension &&
         variant.price
     );
 
     if (validVariants.length === 0) {
       errors.push(
-        "At least one complete antique cut variant is required (color, clarity, carat weight, color range, clarity range, dimension, and price)"
+        "At least one complete by cut variant is required (color, clarity, carat weight, dimension, and price)"
+      );
+    }
+
+    return errors;
+  };
+
+  const validateLayoutForm = () => {
+    const errors = [];
+
+    if (!formData.name?.trim()) {
+      errors.push("Layout name is required");
+    }
+    if (!layoutType?.trim()) {
+      errors.push("Layout type is required");
+    }
+    if (!formData.sku?.trim()) {
+      errors.push("SKU is required");
+    }
+    if (!layoutPrice?.trim()) {
+      errors.push("Price is required");
+    }
+
+    const validVariants = layoutVariants.filter(
+      (variant) =>
+        variant.shape &&
+        variant.totalPcs &&
+        variant.totalCaratWeight &&
+        variant.dimensions &&
+        variant.colorRange &&
+        variant.clarityRange
+    );
+
+    if (validVariants.length === 0) {
+      errors.push(
+        "At least one complete layout variant is required (shape, total pcs, total carat weight, dimensions, color range, and clarity range)"
+      );
+    }
+
+    return errors;
+  };
+
+  const validateAlphabetForm = () => {
+    const errors = [];
+
+    if (!formData.name?.trim()) {
+      errors.push("Alphabet name is required");
+    }
+    if (!formData.sku?.trim()) {
+      errors.push("SKU is required");
+    }
+    if (!character?.trim()) {
+      errors.push("Character is required");
+    } else if (character.length !== 1) {
+      errors.push(
+        "Character must be exactly 1 character (e.g., 'A' is correct, 'AB' is wrong)"
+      );
+    }
+
+    const validVariants = alphabetVariants.filter(
+      (variant) => variant.caratWeight && variant.price
+    );
+
+    if (validVariants.length === 0) {
+      errors.push(
+        "At least one complete alphabet variant is required (carat weight and price)"
       );
     }
 
@@ -421,32 +521,95 @@ export default function AddProductPage() {
     }
   };
 
-  const handleAntiqueCutVariantChange = (id, field, value) => {
-    setAntiqueCutVariants((prev) =>
+  const handleCutVariantChange = (id, field, value) => {
+    setCutVariants((prev) =>
       prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
   };
 
-  const addAntiqueCutVariant = () => {
-    const newId = Math.max(...antiqueCutVariants.map((d) => d.id)) + 1;
-    setAntiqueCutVariants((prev) => [
+  const addCutVariant = () => {
+    const newId = Math.max(...cutVariants.map((d) => d.id)) + 1;
+    setCutVariants((prev) => [
       ...prev,
       {
         id: newId,
         color: "",
         clarity: "",
         caratWeight: "",
-        colorRange: "",
-        clarityRange: "",
         dimension: "",
         price: "",
       },
     ]);
   };
 
-  const removeAntiqueCutVariant = (id) => {
-    if (antiqueCutVariants.length > 1) {
-      setAntiqueCutVariants((prev) => prev.filter((item) => item.id !== id));
+  const removeCutVariant = (id) => {
+    if (cutVariants.length > 1) {
+      setCutVariants((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
+  const handleLayoutVariantChange = (id, field, value) => {
+    setLayoutVariants((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  };
+
+  const addLayoutVariant = () => {
+    const newId = Math.max(...layoutVariants.map((d) => d.id)) + 1;
+    setLayoutVariants((prev) => [
+      ...prev,
+      {
+        id: newId,
+        shape: "",
+        totalPcs: "",
+        totalCaratWeight: "",
+        dimensions: "",
+        colorRange: "",
+        clarityRange: "",
+      },
+    ]);
+  };
+
+  const removeLayoutVariant = (id) => {
+    if (layoutVariants.length > 1) {
+      setLayoutVariants((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
+  // Calculate totals for layout variants
+  const calculateLayoutTotals = () => {
+    const totalPcs = layoutVariants.reduce(
+      (sum, variant) => sum + (parseFloat(variant.totalPcs) || 0),
+      0
+    );
+    const totalCaratWeight = layoutVariants.reduce(
+      (sum, variant) => sum + (parseFloat(variant.totalCaratWeight) || 0),
+      0
+    );
+    return { totalPcs, totalCaratWeight };
+  };
+
+  const handleAlphabetVariantChange = (id, field, value) => {
+    setAlphabetVariants((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  };
+
+  const addAlphabetVariant = () => {
+    const newId = Math.max(...alphabetVariants.map((d) => d.id)) + 1;
+    setAlphabetVariants((prev) => [
+      ...prev,
+      {
+        id: newId,
+        caratWeight: "",
+        price: "",
+      },
+    ]);
+  };
+
+  const removeAlphabetVariant = (id) => {
+    if (alphabetVariants.length > 1) {
+      setAlphabetVariants((prev) => prev.filter((item) => item.id !== id));
     }
   };
 
@@ -463,8 +626,14 @@ export default function AddProductPage() {
       case "colorstone":
         errors = validateColorStoneForm();
         break;
-      case "antiquecut":
-        errors = validateAntiqueCutForm();
+      case "cut":
+        errors = validateCutForm();
+        break;
+      case "layout":
+        errors = validateLayoutForm();
+        break;
+      case "alphabet":
+        errors = validateAlphabetForm();
         break;
     }
 
@@ -492,8 +661,18 @@ export default function AddProductPage() {
       case "colorstone":
         completeData.colorStoneVariants = colorStoneVariants;
         break;
-      case "antiquecut":
-        completeData.antiqueCutVariants = antiqueCutVariants;
+      case "cut":
+        completeData.cutVariants = cutVariants;
+        completeData.cutType = cutType;
+        break;
+      case "layout":
+        completeData.layoutVariants = layoutVariants;
+        completeData.layoutType = layoutType;
+        completeData.layoutPrice = layoutPrice;
+        break;
+      case "alphabet":
+        completeData.alphabetVariants = alphabetVariants;
+        completeData.character = character;
         break;
     }
 
@@ -503,7 +682,9 @@ export default function AddProductPage() {
       diamond: "Diamond",
       melee: "Melee",
       colorstone: "Color Stone",
-      antiquecut: "Antique Cut",
+      antiquecut: "By Cut",
+      layout: "Layout",
+      alphabet: "Alphabet",
     };
 
     toast.success(
@@ -519,7 +700,10 @@ export default function AddProductPage() {
           {activeProductTab === "diamond" && "Diamond Details"}
           {activeProductTab === "melee" && "Melee Details"}
           {activeProductTab === "colorstone" && "Color Stone Details"}
-          {activeProductTab === "antiquecut" && "Antique Cut Details"}
+          {activeProductTab === "cut" &&
+            "By Cut Details (Antique Cut, Portuguese Cut, Rose Cut, Old Mine Cut, Step Cut)"}
+          {activeProductTab === "layout" && "Layout Details"}
+          {activeProductTab === "alphabet" && "Alphabet Details"}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div>
@@ -527,7 +711,9 @@ export default function AddProductPage() {
               {activeProductTab === "diamond" && "Diamond Name"}
               {activeProductTab === "melee" && "Melee Name"}
               {activeProductTab === "colorstone" && "Color Stone Name"}
-              {activeProductTab === "antiquecut" && "Antique Cut Name"}
+              {activeProductTab === "cut" && "By Cut Name"}
+              {activeProductTab === "layout" && "Layout Name"}
+              {activeProductTab === "alphabet" && "Alphabet Name"}
               <span className="text-red-500">*</span>
             </label>
             <input
@@ -543,13 +729,19 @@ export default function AddProductPage() {
                   ? "Round Cut Melee"
                   : activeProductTab === "colorstone"
                   ? "Ruby Round Cut"
-                  : "Antique Round Cut"
+                  : activeProductTab === "cut"
+                  ? "By Cut Diamond"
+                  : activeProductTab === "layout"
+                  ? "Tennis Bracelet Layout"
+                  : "Alphabet Letter A"
               }
               required
             />
           </div>
 
-          {(activeProductTab === "diamond" || activeProductTab === "melee") && (
+          {(activeProductTab === "diamond" ||
+            activeProductTab === "melee" ||
+            activeProductTab === "cut") && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Shape <span className="text-red-500">*</span>
@@ -606,45 +798,168 @@ export default function AddProductPage() {
                   ? "MEL001"
                   : activeProductTab === "colorstone"
                   ? "CS001"
-                  : "AC001"
+                  : activeProductTab === "cut"
+                  ? "AC001"
+                  : activeProductTab === "layout"
+                  ? "LAY001"
+                  : "ALF001"
               }
               required
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Hardness
-            </label>
-            <input
-              type="text"
-              name="hardness"
-              value={formData.hardness}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-              placeholder="10"
-            />
-          </div>
+          {activeProductTab === "layout" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Layout Type <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={layoutType}
+                onChange={(e) => setLayoutType(e.target.value)}
+                list="layoutTypeOptions"
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Type or select layout type"
+                required
+              />
+              <datalist id="layoutTypeOptions">
+                {layoutTypeOptions.map((type) => (
+                  <option key={type} value={type} />
+                ))}
+              </datalist>
+            </div>
+          )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Diamond Type <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="diamondType"
-              value={formData.diamondType}
-              onChange={handleInputChange}
-              list="diamondTypeOptions"
-              className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-              placeholder="Type or select type"
-              required
-            />
-            <datalist id="diamondTypeOptions">
-              <option value="Natural" />
-              <option value="Lab Grown" />
-            </datalist>
-          </div>
+          {activeProductTab === "cut" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cut Type <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={cutType}
+                onChange={(e) => setAntiqueType(e.target.value)}
+                list="cutTypeOptions"
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Type or select cut type"
+                required
+              />
+              <datalist id="cutTypeOptions">
+                {cutTypeOptions.map((type) => (
+                  <option key={type} value={type} />
+                ))}
+              </datalist>
+            </div>
+          )}
+
+          {activeProductTab === "cut" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Color Range
+              </label>
+              <input
+                type="text"
+                name="color"
+                value={formData.color}
+                onChange={handleInputChange}
+                list="colorRangeOptions"
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Type or select color range"
+              />
+              <datalist id="colorRangeOptions">
+                {colorRanges.map((range) => (
+                  <option key={range} value={range} />
+                ))}
+              </datalist>
+            </div>
+          )}
+
+          {activeProductTab === "cut" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Clarity Range
+              </label>
+              <input
+                type="text"
+                name="dimension"
+                value={formData.dimension}
+                onChange={handleInputChange}
+                list="clarityRangeOptions"
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Type or select clarity range"
+              />
+              <datalist id="clarityRangeOptions">
+                {clarityRanges.map((range) => (
+                  <option key={range} value={range} />
+                ))}
+              </datalist>
+            </div>
+          )}
+
+          {activeProductTab === "alphabet" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Character <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={character}
+                onChange={(e) => {
+                  // Limit to 1 character
+                  const value = e.target.value.slice(0, 1);
+                  setCharacter(value.toUpperCase());
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="A"
+                maxLength="1"
+                required
+              />
+            </div>
+          )}
+
+          {activeProductTab === "alphabet" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Color Range
+              </label>
+              <input
+                type="text"
+                name="color"
+                value={formData.color}
+                onChange={handleInputChange}
+                list="colorRangeOptions"
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Type or select color range"
+              />
+              <datalist id="colorRangeOptions">
+                {colorRanges.map((range) => (
+                  <option key={range} value={range} />
+                ))}
+              </datalist>
+            </div>
+          )}
+
+          {activeProductTab === "alphabet" && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Clarity Range
+              </label>
+              <input
+                type="text"
+                name="dimension"
+                value={formData.dimension}
+                onChange={handleInputChange}
+                list="clarityRangeOptions"
+                className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Type or select clarity range"
+              />
+              <datalist id="clarityRangeOptions">
+                {clarityRanges.map((range) => (
+                  <option key={range} value={range} />
+                ))}
+              </datalist>
+            </div>
+          )}
 
           {(activeProductTab === "diamond" ||
             activeProductTab === "colorstone") && (
@@ -658,7 +973,7 @@ export default function AddProductPage() {
                 value={formData.certification}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="GIA"
+                placeholder="IGI"
               />
             </div>
           )}
@@ -898,7 +1213,7 @@ export default function AddProductPage() {
             className="cursor-pointer mt-4 flex items-center text-primary-600 hover:text-primary-800"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Diamond
+            Add
           </button>
         </div>
       )}
@@ -1033,7 +1348,7 @@ export default function AddProductPage() {
             className="cursor-pointer mt-4 flex items-center text-primary-600 hover:text-primary-800"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Melee Size
+            Add
           </button>
         </div>
       )}
@@ -1158,31 +1473,24 @@ export default function AddProductPage() {
             className="cursor-pointer mt-4 flex items-center text-primary-600 hover:text-primary-800"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Color Stone Variant
+            Add
           </button>
         </div>
       )}
 
-      {activeProductTab === "antiquecut" && (
-        // Antique Cut Variants Section
+      {activeProductTab === "cut" && (
+        // By Cut Variants Section
         <div>
           <h3 className="text-lg font-medium mb-4">
-            Antique Cut Variants <span className="text-red-500">*</span>
+            By Cut Variants <span className="text-red-500">*</span>
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-50">
                   <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
-                    Color Range
-                  </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
-                    Clarity Range
-                  </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
                     Carat Weight
                   </th>
-
                   <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
                     Dimension
                   </th>
@@ -1195,59 +1503,15 @@ export default function AddProductPage() {
                 </tr>
               </thead>
               <tbody>
-                {antiqueCutVariants.map((variant) => (
+                {cutVariants.map((variant) => (
                   <tr key={variant.id}>
-                    <td className="border border-gray-300 px-2 py-2">
-                      <input
-                        type="text"
-                        value={variant.colorRange}
-                        onChange={(e) =>
-                          handleAntiqueCutVariantChange(
-                            variant.id,
-                            "colorRange",
-                            e.target.value
-                          )
-                        }
-                        list={`colorRangeOptions-antique-${variant.id}`}
-                        className="cursor-pointer w-full px-2 py-1 text-sm border-0 focus:outline-none"
-                        placeholder="Type or select color range"
-                      />
-                      <datalist id={`colorRangeOptions-antique-${variant.id}`}>
-                        {colorRanges.map((range) => (
-                          <option key={range} value={range} />
-                        ))}
-                      </datalist>
-                    </td>
-                    <td className="border border-gray-300 px-2 py-2">
-                      <input
-                        type="text"
-                        value={variant.clarityRange}
-                        onChange={(e) =>
-                          handleAntiqueCutVariantChange(
-                            variant.id,
-                            "clarityRange",
-                            e.target.value
-                          )
-                        }
-                        list={`clarityRangeOptions-antique-${variant.id}`}
-                        className="cursor-pointer w-full px-2 py-1 text-sm border-0 focus:outline-none"
-                        placeholder="Type or select clarity range"
-                      />
-                      <datalist
-                        id={`clarityRangeOptions-antique-${variant.id}`}
-                      >
-                        {clarityRanges.map((range) => (
-                          <option key={range} value={range} />
-                        ))}
-                      </datalist>
-                    </td>
                     <td className="border border-gray-300 px-2 py-2">
                       <input
                         type="number"
                         step="0.01"
                         value={variant.caratWeight}
                         onChange={(e) =>
-                          handleAntiqueCutVariantChange(
+                          handleCutVariantChange(
                             variant.id,
                             "caratWeight",
                             e.target.value
@@ -1263,7 +1527,7 @@ export default function AddProductPage() {
                         type="text"
                         value={variant.dimension}
                         onChange={(e) =>
-                          handleAntiqueCutVariantChange(
+                          handleCutVariantChange(
                             variant.id,
                             "dimension",
                             e.target.value
@@ -1278,7 +1542,7 @@ export default function AddProductPage() {
                         type="number"
                         value={variant.price}
                         onChange={(e) =>
-                          handleAntiqueCutVariantChange(
+                          handleCutVariantChange(
                             variant.id,
                             "price",
                             e.target.value
@@ -1289,9 +1553,9 @@ export default function AddProductPage() {
                       />
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
-                      {antiqueCutVariants.length > 1 && (
+                      {cutVariants.length > 1 && (
                         <button
-                          onClick={() => removeAntiqueCutVariant(variant.id)}
+                          onClick={() => removeCutVariant(variant.id)}
                           className="cursor-pointer text-red-500 hover:text-red-700"
                         >
                           <Trash2 className="w-4 h-4 stroke-2" />
@@ -1305,11 +1569,297 @@ export default function AddProductPage() {
           </div>
 
           <button
-            onClick={addAntiqueCutVariant}
+            onClick={addCutVariant}
             className="cursor-pointer mt-4 flex items-center text-primary-600 hover:text-primary-800"
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Antique Cut Variant
+            Add
+          </button>
+        </div>
+      )}
+
+      {activeProductTab === "layout" && (
+        // Layout Variants Section
+        <div>
+          <h3 className="text-lg font-medium mb-4">
+            Diamond Details <span className="text-red-500">*</span>
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Shape
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Total Pcs
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Total Carat Weight
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Dimensions
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Color Range
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Clarity Range
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {layoutVariants.map((variant) => (
+                  <tr key={variant.id}>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="text"
+                        value={variant.shape}
+                        onChange={(e) =>
+                          handleLayoutVariantChange(
+                            variant.id,
+                            "shape",
+                            e.target.value
+                          )
+                        }
+                        list={`shapeOptions-layout-${variant.id}`}
+                        className="cursor-pointer w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="Type or select shape"
+                      />
+                      <datalist id={`shapeOptions-layout-${variant.id}`}>
+                        {shapeOptions.map((shape) => (
+                          <option key={shape} value={shape} />
+                        ))}
+                      </datalist>
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="number"
+                        value={variant.totalPcs}
+                        onChange={(e) =>
+                          handleLayoutVariantChange(
+                            variant.id,
+                            "totalPcs",
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="50"
+                      />
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={variant.totalCaratWeight}
+                        onChange={(e) =>
+                          handleLayoutVariantChange(
+                            variant.id,
+                            "totalCaratWeight",
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="5.50"
+                      />
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="text"
+                        value={variant.dimensions}
+                        onChange={(e) =>
+                          handleLayoutVariantChange(
+                            variant.id,
+                            "dimensions",
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="2.5x2.5x1.5 mm"
+                      />
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="text"
+                        value={variant.colorRange}
+                        onChange={(e) =>
+                          handleLayoutVariantChange(
+                            variant.id,
+                            "colorRange",
+                            e.target.value
+                          )
+                        }
+                        list={`colorRangeOptions-layout-${variant.id}`}
+                        className="cursor-pointer w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="Type or select color range"
+                      />
+                      <datalist id={`colorRangeOptions-layout-${variant.id}`}>
+                        {colorRanges.map((range) => (
+                          <option key={range} value={range} />
+                        ))}
+                      </datalist>
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="text"
+                        value={variant.clarityRange}
+                        onChange={(e) =>
+                          handleLayoutVariantChange(
+                            variant.id,
+                            "clarityRange",
+                            e.target.value
+                          )
+                        }
+                        list={`clarityRangeOptions-layout-${variant.id}`}
+                        className="cursor-pointer w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="Type or select clarity range"
+                      />
+                      <datalist id={`clarityRangeOptions-layout-${variant.id}`}>
+                        {clarityRanges.map((range) => (
+                          <option key={range} value={range} />
+                        ))}
+                      </datalist>
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      {layoutVariants.length > 1 && (
+                        <button
+                          onClick={() => removeLayoutVariant(variant.id)}
+                          className="cursor-pointer text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4 stroke-2" />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+
+                {/* Total Row */}
+                {layoutVariants.length > 0 && (
+                  <tr className="bg-gray-100 font-medium">
+                    <td className="border border-gray-300 px-2 py-2 text-center">
+                      Total
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2 text-center">
+                      {calculateLayoutTotals().totalPcs}
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2 text-center">
+                      {calculateLayoutTotals().totalCaratWeight.toFixed(2)}
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2"></td>
+                    <td className="border border-gray-300 px-2 py-2"></td>
+                    <td className="border border-gray-300 px-2 py-2"></td>
+                    <td className="border border-gray-300 px-2 py-2"></td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          <button
+            onClick={addLayoutVariant}
+            className="cursor-pointer mt-4 flex items-center text-primary-600 hover:text-primary-800"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Diamond Detail
+          </button>
+
+          {/* Layout Price */}
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Layout Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={layoutPrice}
+              onChange={(e) => setLayoutPrice(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Enter layout price"
+              required
+            />
+          </div>
+        </div>
+      )}
+
+      {activeProductTab === "alphabet" && (
+        // Alphabet Variants Section
+        <div>
+          <h3 className="text-lg font-medium mb-4">
+            Alphabet Variants <span className="text-red-500">*</span>
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Carat Weight
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Price
+                  </th>
+                  <th className="border border-gray-300 px-4 py-2 text-left text-sm font-medium">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {alphabetVariants.map((variant) => (
+                  <tr key={variant.id}>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={variant.caratWeight}
+                        onChange={(e) =>
+                          handleAlphabetVariantChange(
+                            variant.id,
+                            "caratWeight",
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="1.50"
+                      />
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      <input
+                        type="number"
+                        value={variant.price}
+                        onChange={(e) =>
+                          handleAlphabetVariantChange(
+                            variant.id,
+                            "price",
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
+                        placeholder="1000"
+                      />
+                    </td>
+                    <td className="border border-gray-300 px-2 py-2">
+                      {alphabetVariants.length > 1 && (
+                        <button
+                          onClick={() => removeAlphabetVariant(variant.id)}
+                          className="cursor-pointer text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4 stroke-2" />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <button
+            onClick={addAlphabetVariant}
+            className="cursor-pointer mt-4 flex items-center text-primary-600 hover:text-primary-800"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Variant
           </button>
         </div>
       )}
@@ -1347,7 +1897,7 @@ export default function AddProductPage() {
         pauseOnHover
       />
 
-      <div className="flex h-full">
+      <div className="flex h-screen">
         <Sidebar />
 
         {/* Main Content */}
@@ -1372,7 +1922,7 @@ export default function AddProductPage() {
                   />
                 </svg>
               </Link>
-              <h1 className="text-2xl font-semibold text-gray-800">
+              <h1 className="text-xl font-semibold text-gray-800">
                 Add Product
               </h1>
             </div>
@@ -1413,14 +1963,34 @@ export default function AddProductPage() {
                     Add Color Stone
                   </button>
                   <button
-                    onClick={() => handleTabChange("antiquecut")}
+                    onClick={() => handleTabChange("cut")}
                     className={`cursor-pointer py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeProductTab === "antiquecut"
+                      activeProductTab === "cut"
                         ? "border-primary-500 text-primary-600"
                         : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                     }`}
                   >
-                    Add Antique Cut
+                    Add By Cut
+                  </button>
+                  <button
+                    onClick={() => handleTabChange("layout")}
+                    className={`cursor-pointer py-4 px-1 border-b-2 font-medium text-sm ${
+                      activeProductTab === "layout"
+                        ? "border-primary-500 text-primary-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    }`}
+                  >
+                    Add Layout
+                  </button>
+                  <button
+                    onClick={() => handleTabChange("alphabet")}
+                    className={`cursor-pointer py-4 px-1 border-b-2 font-medium text-sm ${
+                      activeProductTab === "alphabet"
+                        ? "border-primary-500 text-primary-600"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    }`}
+                  >
+                    Add Alphabets
                   </button>
                 </nav>
               </div>
@@ -1442,7 +2012,11 @@ export default function AddProductPage() {
                       ? "Melee"
                       : activeProductTab === "colorstone"
                       ? "Color Stone"
-                      : "Antique Cut"}
+                      : activeProductTab === "cut"
+                      ? "By Cut"
+                      : activeProductTab === "layout"
+                      ? "Layout"
+                      : "Alphabet"}
                   </button>
                 </div>
               </div>
