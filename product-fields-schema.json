@@ -14,13 +14,6 @@
           "type": "string",
           "required": true
         },
-        "hardness": {
-          "type": "string"
-        },
-        "diamondType": {
-          "type": "string",
-          "required": true
-        },
         "certification": {
           "type": "string"
         },
@@ -36,7 +29,7 @@
           "type": "file[]"
         },
         "video": {
-          "type": "file"
+          "type": "file[]"
         }
       },
       "variants": {
@@ -82,13 +75,6 @@
           "type": "string",
           "required": true
         },
-        "hardness": {
-          "type": "string"
-        },
-        "diamondType": {
-          "type": "string",
-          "required": true
-        },
         "description": {
           "type": "text"
         },
@@ -101,7 +87,7 @@
           "type": "file[]"
         },
         "video": {
-          "type": "file"
+          "type": "file[]"
         }
       },
       "variants": {
@@ -117,15 +103,17 @@
               "type": "string",
               "required": true
             },
+            "colorRange": {
+              "type": "string",
+              "required": true
+            },
+            "clarityRange": {
+              "type": "string",
+              "required": true
+            },
             "pricePerCarat": {
               "type": "number",
               "required": true
-            },
-            "colorRange": {
-              "type": "string"
-            },
-            "clarityRange": {
-              "type": "string"
             }
           }
         }
@@ -145,13 +133,6 @@
           "type": "string",
           "required": true
         },
-        "hardness": {
-          "type": "string"
-        },
-        "diamondType": {
-          "type": "string",
-          "required": true
-        },
         "certification": {
           "type": "string"
         },
@@ -167,7 +148,7 @@
           "type": "file[]"
         },
         "video": {
-          "type": "file"
+          "type": "file[]"
         }
       },
       "variants": {
@@ -179,8 +160,75 @@
               "type": "number",
               "required": true
             },
+            "dimension": {
+              "type": "string",
+              "required": true
+            },
             "shape": {
               "type": "string",
+              "required": true
+            },
+            "caratWeight": {
+              "type": "number",
+              "required": true
+            },
+            "price": {
+              "type": "number",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "cut": {
+      "mainFields": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "shape": {
+          "type": "string",
+          "required": true
+        },
+        "sku": {
+          "type": "string",
+          "required": true
+        },
+        "cutType": {
+          "type": "string",
+          "required": true
+        },
+        "colorRange": {
+          "type": "string",
+          "required": true
+        },
+        "clarityRange": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "text"
+        },
+        "availability": {
+          "type": "boolean",
+          "required": true
+        }
+      },
+      "mediaFields": {
+        "images": {
+          "type": "file[]"
+        },
+        "video": {
+          "type": "file[]"
+        }
+      },
+      "variants": {
+        "cutVariants": {
+          "type": "array",
+          "required": true,
+          "fields": {
+            "id": {
+              "type": "number",
               "required": true
             },
             "caratWeight": {
@@ -199,7 +247,7 @@
         }
       }
     },
-    "antiquecut": {
+    "layout": {
       "mainFields": {
         "name": {
           "type": "string",
@@ -209,10 +257,85 @@
           "type": "string",
           "required": true
         },
-        "hardness": {
-          "type": "string"
+        "layoutType": {
+          "type": "string",
+          "required": true
         },
-        "diamondType": {
+        "layoutPrice": {
+          "type": "number",
+          "required": true
+        },
+        "description": {
+          "type": "text"
+        },
+        "availability": {
+          "type": "boolean"
+        }
+      },
+      "mediaFields": {
+        "images": {
+          "type": "file[]"
+        },
+        "video": {
+          "type": "file[]"
+        }
+      },
+      "variants": {
+        "layoutVariants": {
+          "type": "array",
+          "required": true,
+          "fields": {
+            "id": {
+              "type": "number",
+              "required": true
+            },
+            "shape": {
+              "type": "string",
+              "required": true
+            },
+            "totalPcs": {
+              "type": "number",
+              "required": true
+            },
+            "totalCaratWeight": {
+              "type": "number",
+              "required": true
+            },
+            "dimensions": {
+              "type": "string",
+              "required": true
+            },
+            "colorRange": {
+              "type": "string",
+              "required": true
+            },
+            "clarityRange": {
+              "type": "string",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "alphabet": {
+      "mainFields": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "sku": {
+          "type": "string",
+          "required": true
+        },
+        "character": {
+          "type": "string",
+          "required": true
+        },
+        "colorRange": {
+          "type": "string",
+          "required": true
+        },
+        "clarityRange": {
           "type": "string",
           "required": true
         },
@@ -228,11 +351,11 @@
           "type": "file[]"
         },
         "video": {
-          "type": "file"
+          "type": "file[]"
         }
       },
       "variants": {
-        "antiqueCutVariants": {
+        "alphabetVariants": {
           "type": "array",
           "required": true,
           "fields": {
@@ -240,28 +363,8 @@
               "type": "number",
               "required": true
             },
-            "color": {
-              "type": "string",
-              "required": true
-            },
-            "clarity": {
-              "type": "string",
-              "required": true
-            },
             "caratWeight": {
               "type": "number",
-              "required": true
-            },
-            "colorRange": {
-              "type": "string",
-              "required": true
-            },
-            "clarityRange": {
-              "type": "string",
-              "required": true
-            },
-            "dimension": {
-              "type": "string",
               "required": true
             },
             "price": {
@@ -272,5 +375,105 @@
         }
       }
     }
+  },
+  "fieldOptions": {
+    "shapeOptions": [
+      "Round",
+      "Princess",
+      "Emerald",
+      "Asscher",
+      "Oval",
+      "Marquise",
+      "Pear",
+      "Heart",
+      "Cushion",
+      "Radiant",
+      "Baguette",
+      "Tapered Baguette"
+    ],
+    "colorOptions": [
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "W",
+      "X",
+      "Y",
+      "Z"
+    ],
+    "clarityOptions": [
+      "FL",
+      "IF",
+      "VVS1",
+      "VVS2",
+      "VS1",
+      "VS2",
+      "SI1",
+      "SI2",
+      "I1",
+      "I2",
+      "I3"
+    ],
+    "colorRangeOptions": [
+      "D-F",
+      "G-H",
+      "I-J",
+      "K-L",
+      "M-N",
+      "O-P",
+      "Q-R",
+      "S-T",
+      "U-V",
+      "W-X",
+      "Y-Z"
+    ],
+    "clarityRangeOptions": ["FL-IF", "VVS1-VVS2", "VS1-VS2", "SI1-SI2", "I1-I3"],
+    "layoutTypeOptions": [
+      "Bracelet",
+      "Necklace",
+      "Anklet",
+      "Brooch",
+      "Choker",
+      "Tennis Bracelet"
+    ],
+    "cutTypeOptions": [
+      "Antique Cut",
+      "Portuguese Cut",
+      "Rose Cut",
+      "Old Mine Cut",
+      "Step Cut"
+    ],
+    "sieveSizeOptions": [
+      "0.5mm - 0.7mm",
+      "0.7mm - 0.9mm",
+      "0.9mm - 1.1mm",
+      "1.1mm - 1.3mm",
+      "1.3mm - 1.5mm",
+      "1.5mm - 1.7mm",
+      "1.7mm - 1.9mm",
+      "1.9mm - 2.1mm",
+      "2.1mm - 2.3mm",
+      "2.3mm - 2.5mm",
+      "2.5mm - 2.7mm",
+      "2.7mm - 2.9mm",
+      "2.9mm - 3.1mm",
+      "3.1mm - 3.3mm",
+      "3.3mm - 3.5mm"
+    ]
   }
 }
