@@ -409,7 +409,7 @@ export default function Navbar() {
               <div className="relative" ref={avatarDropdownRef}>
                 <button
                   onClick={() => setIsAvatarDropdownOpen(!isAvatarDropdownOpen)}
-                  className="flex items-center space-x-2 p-1 rounded-full hover:bg-surface-100 transition duration-200"
+                  className="cursor-pointer flex items-center space-x-2 p-1 rounded-full hover:bg-surface-100 transition duration-200"
                 >
                   <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                     {getInitials()}
