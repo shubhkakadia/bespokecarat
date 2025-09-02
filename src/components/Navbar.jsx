@@ -19,8 +19,23 @@ export default function Navbar() {
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const avatarDropdownRef = useRef(null);
+  const dropdownTimeoutRef = useRef(null);
 
   const { isAuthenticated, isAdmin, isCustomer, userData, logout } = useAuth();
+
+  // Dropdown hover handlers with delay
+  const handleDropdownEnter = () => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    setIsProductsDropdownOpen(true);
+  };
+
+  const handleDropdownLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setIsProductsDropdownOpen(false);
+    }, 300); // 300ms delay before hiding
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -36,6 +51,10 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      // Clean up timeout on unmount
+      if (dropdownTimeoutRef.current) {
+        clearTimeout(dropdownTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -99,245 +118,231 @@ export default function Navbar() {
             {/* Products Dropdown */}
             <div
               className="relative group"
-              onMouseEnter={() => setIsProductsDropdownOpen(true)}
-              onMouseLeave={() => setIsProductsDropdownOpen(false)}
+              onMouseEnter={handleDropdownEnter}
+              onMouseLeave={handleDropdownLeave}
             >
               <button className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200 flex items-center">
                 Diamonds
                 <ChevronDownIcon className="ml-1 h-4 w-4" />
               </button>
 
-              {/* Products Dropdown Menu */}
-              {isProductsDropdownOpen && (
-                <div
-                  className="absolute  top-full mt-1 w-screen bg-white border-t border-gray-200 shadow-2xl z-50"
-                  onMouseEnter={() => setIsProductsDropdownOpen(true)}
-                  onMouseLeave={() => setIsProductsDropdownOpen(false)}
-                >
-                  <div className="max-w-7xl px-8 py-8">
-                    <div className="grid grid-cols-12 gap-8">
-                      {/* Left Content - Categories */}
-                      <div className="col-span-8">
-                        <div className="grid grid-cols-5 gap-8">
-                          {/* Shop by Shape */}
-                          <div className="space-y-4">
-                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
-                              Shop by Shape
-                            </h3>
-                            <div className="space-y-2">
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Round
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Pear
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Oval
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Princess
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Asscher
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Marquise
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Emerald
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Cushion
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Radiant
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Heart
-                              </Link>
-                              <button className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors">
-                                View All
-                              </button>
-                            </div>
+              {/* Products Dropdown Menu with animation */}
+              <div
+                className={`fixed left-0 top-16 w-full bg-white border-t border-gray-200 shadow-2xl z-50 transform transition-all duration-300 ease-out ${
+                  isProductsDropdownOpen
+                    ? "opacity-100 translate-y-0 visible"
+                    : "opacity-0 -translate-y-2 invisible"
+                }`}
+                onMouseEnter={handleDropdownEnter}
+                onMouseLeave={handleDropdownLeave}
+              >
+                <div className="max-w-7xl mx-auto px-8 py-8">
+                  <div className="grid grid-cols-12 gap-8">
+                    {/* Left Content - Categories */}
+                    <div className="col-span-8">
+                      <div className="grid grid-cols-4 gap-8">
+                        {/* Shop by Shape */}
+                        <div className="space-y-4">
+                          <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                            Shop by Shape
+                          </h3>
+                          <div className="space-y-2">
+                            <Link
+                              href="/collections/round"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Round
+                            </Link>
+                            <Link
+                              href="/collections/pear"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Pear
+                            </Link>
+                            <Link
+                              href="/collections/oval"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Oval
+                            </Link>
+                            <Link
+                              href="/collections/princess"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Princess
+                            </Link>
+                            <Link
+                              href="/collections/asscher"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Asscher
+                            </Link>
+                            <Link
+                              href="/collections/marquise"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Marquise
+                            </Link>
+                            <Link
+                              href="/collections/emerald"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Emerald
+                            </Link>
+                            <Link
+                              href="/collections/cushion"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Cushion
+                            </Link>
+                            <Link
+                              href="/collections/radiant"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Radiant
+                            </Link>
+                            <Link
+                              href="/collections/heart"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Heart
+                            </Link>
+                            <Link
+                              href="/collections/shapes"
+                              className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors"
+                            >
+                              View All
+                            </Link>
                           </div>
+                        </div>
 
-                          {/* Shop by Cut */}
-                          <div className="space-y-4">
-                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
-                              Shop by Cut
-                            </h3>
-                            <div className="space-y-2">
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Old Cut
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Antique Cut
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Rose Cut
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Pie Cut
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Portrait Cut
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Step Cut
-                              </Link>
-                              <button className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors">
-                                View All
-                              </button>
-                            </div>
+                        {/* Shop by Cut */}
+                        <div className="space-y-4">
+                          <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                            Shop by Cut
+                          </h3>
+                          <div className="space-y-2">
+                            <Link
+                              href="/collections/oldcut"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Old Cut
+                            </Link>
+                            <Link
+                              href="/collections/antiquecut"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Antique Cut
+                            </Link>
+                            <Link
+                              href="/collections/rosecut"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Rose Cut
+                            </Link>
+                            <Link
+                              href="/collections/piecut"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Pie Cut
+                            </Link>
+                            <Link
+                              href="/collections/portraitcut"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Portrait Cut
+                            </Link>
+                            <Link
+                              href="/collections/stepcut"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Step Cut
+                            </Link>
+                            <Link
+                              href="/collections/cuts"
+                              className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors"
+                            >
+                              View All
+                            </Link>
                           </div>
+                        </div>
 
-                          {/* Color Diamonds */}
-                          <div className="space-y-4">
-                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
-                              Color Diamonds
-                            </h3>
-                            <div className="space-y-2">
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Pink
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Yellow
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Blue
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Champagne
-                              </Link>
-                              <button className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors">
-                                View All
-                              </button>
-                            </div>
+                        {/* Color Diamonds */}
+                        <div className="space-y-4">
+                          <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                            Color Diamonds
+                          </h3>
+                          <div className="space-y-2">
+                            <Link
+                              href="/collections/pink"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Pink
+                            </Link>
+                            <Link
+                              href="/collections/yellow"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Yellow
+                            </Link>
+                            <Link
+                              href="/collections/blue"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Blue
+                            </Link>
+                            <Link
+                              href="/collections/champagne"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              Champagne
+                            </Link>
+                            <Link
+                              href="/collections/colorstone"
+                              className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors"
+                            >
+                              View All
+                            </Link>
                           </div>
+                        </div>
 
-                          {/* Lab Gemstones & Melee */}
-                          <div className="space-y-4">
-                            {/* Lab Gemstones */}
-                            <div className="space-y-2">
-                              <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
-                                Lab Gemstones
-                              </h3>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Emerald
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Ruby
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Sapphire
-                              </Link>
-                            </div>
-
-                            {/* Melee */}
-                            <div className="space-y-2">
-                              <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
-                                Melee
-                              </h3>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                Single Round Melee
-                              </Link>
-                              <Link
-                                href="#"
-                                className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
-                              >
-                                1ct Round Melee
-                              </Link>
-                            </div>
+                        {/* Lab Gemstones & Melee */}
+                        <div className="space-y-4">
+                          {/* Melee */}
+                          <div className="space-y-2">
+                            <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
+                              Melee
+                            </h3>
+                            <Link
+                              href="/collections/1ctroundmelee"
+                              className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
+                            >
+                              1ct Round Melee
+                            </Link>
+                            <Link
+                              href="/collections/melee"
+                              className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors"
+                            >
+                              View All
+                            </Link>
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Right Side - Image */}
-                      <div className="col-span-4">
-                        <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg h-96 flex items-center justify-center">
-                          <div className="text-center text-gray-500">
-                            <div className="text-4xl mb-2">💎</div>
-                            <p className="text-sm">Diamond Shapes Image</p>
-                            <p className="text-xs mt-1">400 x 384px</p>
-                          </div>
+                    {/* Right Side - Image */}
+                    <div className="col-span-4">
+                      <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg h-96 flex items-center justify-center">
+                        <div className="text-center text-gray-500">
+                          <div className="text-4xl mb-2">💎</div>
+                          <p className="text-sm">Diamond Shapes Image</p>
+                          <p className="text-xs mt-1">400 x 384px</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
 
             <Link
