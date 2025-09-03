@@ -15,12 +15,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 // Import dummy data
 import productsData from "../../../../products_dummy2.json";
 
 export default function ProductsPage() {
-  
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("diamond");
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,13 +96,12 @@ export default function ProductsPage() {
 
   // Get variant count for a product
   const getVariantCount = (product) => {
-    if (activeTab === "diamond") return product.diamondVariants?.length || 0;
-    if (activeTab === "melee") return product.meleeVariants?.length || 0;
-    if (activeTab === "colorstone")
-      return product.colorStoneVariants?.length || 0;
-    if (activeTab === "cuts") return product.cutVariants?.length || 0;
-    if (activeTab === "layout") return product.layoutVariants?.length || 0;
-    if (activeTab === "alphabet") return product.alphabetVariants?.length || 0;
+    if (activeTab === "diamond") return product.variants?.length || 0;
+    if (activeTab === "melee") return product.variants?.length || 0;
+    if (activeTab === "colorstone") return product.variants?.length || 0;
+    if (activeTab === "cuts") return product.variants?.length || 0;
+    if (activeTab === "layout") return product.variants?.length || 0;
+    if (activeTab === "alphabet") return product.variants?.length || 0;
     return 0;
   };
 
@@ -197,9 +196,6 @@ export default function ProductsPage() {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Variants
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
           </tr>
         );
       case "colorstone":
@@ -248,9 +244,6 @@ export default function ProductsPage() {
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Variants
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
             </th>
           </tr>
         );
@@ -302,9 +295,6 @@ export default function ProductsPage() {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Variants
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
           </tr>
         );
       case "layout":
@@ -354,9 +344,6 @@ export default function ProductsPage() {
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Diamonds
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
             </th>
           </tr>
         );
@@ -408,9 +395,6 @@ export default function ProductsPage() {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Variants
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Actions
-            </th>
           </tr>
         );
 
@@ -421,10 +405,20 @@ export default function ProductsPage() {
 
   const renderTableRows = () => {
     return paginatedProducts.map((product) => (
-      <tr key={product.sku} className="bg-white hover:bg-gray-50">
+      <tr
+        key={product.sku}
+        className="bg-white hover:bg-gray-100 cursor-pointer"
+        onClick={() => handleView(product.productId)}
+      >
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
-            <span className="text-xs text-gray-500">IMG</span>
+            <Image
+              objectFit="fill"
+              src={product.images[0]}
+              alt={product.name}
+              width={50}
+              height={50}
+            />
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
@@ -474,39 +468,15 @@ export default function ProductsPage() {
             {product.availability ? "Available" : "Unavailable"}
           </span>
         </td>
-        {activeTab === "layout"? (
+        {activeTab === "layout" ? (
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          {getVariantCount(product)} types
+            {getVariantCount(product)} types
           </td>
         ) : (
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-          {getVariantCount(product)} variants
-        </td>
+            {getVariantCount(product)} variants
+          </td>
         )}
-
-        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-          <button
-            onClick={() => handleView(product.productId)}
-            className="text-indigo-600 hover:text-indigo-900"
-            title="View"
-          >
-            <Eye className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => handleEdit(product.id)}
-            className="text-yellow-600 hover:text-yellow-900"
-            title="Edit"
-          >
-            <Edit className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => handleDelete(product.id)}
-            className="text-red-600 hover:text-red-900"
-            title="Delete"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </td>
       </tr>
     ));
   };

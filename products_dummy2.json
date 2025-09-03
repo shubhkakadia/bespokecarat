@@ -9,9 +9,17 @@
         "certification": "EGL",
         "description": "A premium quality asscher brilliant diamond certified by EGL. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Asscher%20Diamond.png",
+          "http://localhost:3000/placeholders/Asscher%20Diamond.png",
+          "http://localhost:3000/placeholders/Asscher%20Diamond.png"
+        ],
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "U",
@@ -58,9 +66,18 @@
         "certification": "GIA",
         "description": "A premium quality pear brilliant diamond certified by GIA. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Pear%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "Q",
@@ -107,9 +124,18 @@
         "certification": "IGI",
         "description": "A premium quality emerald brilliant diamond certified by IGI. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Emerald%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "Q",
@@ -156,9 +182,18 @@
         "certification": "IGI",
         "description": "A premium quality marquise brilliant diamond certified by IGI. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Marquise%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "Z",
@@ -205,15 +240,45 @@
         "certification": "GIA",
         "description": "A premium quality asscher brilliant diamond certified by GIA. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Asscher%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "K",
             "clarity": "SI2",
             "caratWeight": 1.13,
             "price": 6525
+          },
+          {
+            "id": 7,
+            "color": "K",
+            "clarity": "SI2",
+            "caratWeight": 1.5,
+            "price": 8025
+          },
+          {
+            "id": 8,
+            "color": "O",
+            "clarity": "SI2",
+            "caratWeight": 1.5,
+            "price": 8025
+          },
+          {
+            "id": 9,
+            "color": "K",
+            "clarity": "SI1",
+            "caratWeight": 1.5,
+            "price": 8025
           },
           {
             "id": 2,
@@ -261,9 +326,18 @@
         "certification": "IGI",
         "description": "A premium quality oval brilliant diamond certified by IGI. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Oval%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "W",
@@ -331,9 +405,18 @@
         "certification": "GIA",
         "description": "A premium quality emerald brilliant diamond certified by GIA. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Emerald%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "J",
@@ -394,9 +477,18 @@
         "certification": "IGI",
         "description": "A premium quality tapered baguette brilliant diamond certified by IGI. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Tapered%20Baguette%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "U",
@@ -450,9 +542,18 @@
         "certification": "EGL",
         "description": "A premium quality princess brilliant diamond certified by EGL. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Princess%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "E",
@@ -499,9 +600,18 @@
         "certification": "GIA",
         "description": "A premium quality princess brilliant diamond certified by GIA. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Princess%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "K",
@@ -569,9 +679,18 @@
         "certification": "IGI",
         "description": "A premium quality princess brilliant diamond certified by IGI. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Princess%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "U",
@@ -639,9 +758,18 @@
         "certification": "EGL",
         "description": "A premium quality heart brilliant diamond certified by EGL. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Heart%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "U",
@@ -709,9 +837,18 @@
         "certification": "EGL",
         "description": "A premium quality round brilliant diamond certified by EGL. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "https://4cs.gia.edu/wp-content/uploads/2016/12/GIA_diamond_faceup-hero.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "L",
@@ -779,9 +916,18 @@
         "certification": "EGL",
         "description": "A premium quality pear brilliant diamond certified by EGL. Perfect for fine jewelry.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Pear%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "N",
@@ -835,9 +981,18 @@
         "certification": "EGL",
         "description": "A premium quality emerald brilliant diamond certified by EGL. Perfect for fine jewelry.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "diamondVariants": [
+        "images": [
+          "http://localhost:3000/placeholders/Emerald%20Diamond.png",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "color": "L",
@@ -906,57 +1061,66 @@
         "sku": "MLR-MAR-001",
         "description": "Small melee marquise diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "S-T",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 327
+            "price": 327
           },
           {
             "id": 2,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "Q-R",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 765
+            "price": 765
           },
           {
             "id": 3,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 570
+            "price": 570
           },
           {
             "id": 4,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 246
+            "price": 246
           },
           {
             "id": 5,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 281
+            "price": 281
           },
           {
             "id": 6,
             "sieveSize": "3.1mm - 3.3mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 589
+            "price": 589
           },
           {
             "id": 7,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 366
+            "price": 366
           }
         ],
         "productType": "melee"
@@ -968,50 +1132,59 @@
         "sku": "MLR-PEA-002",
         "description": "Small melee pear diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 653
+            "price": 653
           },
           {
             "id": 2,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "U-V",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 251
+            "price": 251
           },
           {
             "id": 3,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "U-V",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 295
+            "price": 295
           },
           {
             "id": 4,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "K-L",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 616
+            "price": 616
           },
           {
             "id": 5,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "S-T",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 610
+            "price": 610
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 588
+            "price": 588
           }
         ],
         "productType": "melee"
@@ -1023,50 +1196,59 @@
         "sku": "MLR-ASS-003",
         "description": "Small melee asscher diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 536
+            "price": 536
           },
           {
             "id": 2,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "G-H",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 559
+            "price": 559
           },
           {
             "id": 3,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "U-V",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 749
+            "price": 749
           },
           {
             "id": 4,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "D-F",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 467
+            "price": 467
           },
           {
             "id": 5,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "W-X",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 239
+            "price": 239
           },
           {
             "id": 6,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "W-X",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 553
+            "price": 553
           }
         ],
         "productType": "melee"
@@ -1078,43 +1260,52 @@
         "sku": "MLR-HEA-004",
         "description": "Small melee heart diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "Q-R",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 751
+            "price": 751
           },
           {
             "id": 2,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "U-V",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 425
+            "price": 425
           },
           {
             "id": 3,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 646
+            "price": 646
           },
           {
             "id": 4,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "D-F",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 544
+            "price": 544
           },
           {
             "id": 5,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "Y-Z",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 369
+            "price": 369
           }
         ],
         "productType": "melee"
@@ -1126,57 +1317,66 @@
         "sku": "MLR-OVA-005",
         "description": "Small melee oval diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 322
+            "price": 322
           },
           {
             "id": 2,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "U-V",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 396
+            "price": 396
           },
           {
             "id": 3,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 737
+            "price": 737
           },
           {
             "id": 4,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "M-N",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 398
+            "price": 398
           },
           {
             "id": 5,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 383
+            "price": 383
           },
           {
             "id": 6,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "D-F",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 329
+            "price": 329
           },
           {
             "id": 7,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "D-F",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 766
+            "price": 766
           }
         ],
         "productType": "melee"
@@ -1188,57 +1388,66 @@
         "sku": "MLR-PRI-006",
         "description": "Small melee princess diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "U-V",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 202
+            "price": 202
           },
           {
             "id": 2,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "M-N",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 793
+            "price": 793
           },
           {
             "id": 3,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "S-T",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 657
+            "price": 657
           },
           {
             "id": 4,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 540
+            "price": 540
           },
           {
             "id": 5,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "U-V",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 666
+            "price": 666
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "O-P",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 444
+            "price": 444
           },
           {
             "id": 7,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "Q-R",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 620
+            "price": 620
           }
         ],
         "productType": "melee"
@@ -1250,64 +1459,73 @@
         "sku": "MLR-PRI-007",
         "description": "Small melee princess diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "U-V",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 665
+            "price": 665
           },
           {
             "id": 2,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "Y-Z",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 798
+            "price": 798
           },
           {
             "id": 3,
             "sieveSize": "1.7mm - 1.9mm",
             "colorRange": "Y-Z",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 310
+            "price": 310
           },
           {
             "id": 4,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 225
+            "price": 225
           },
           {
             "id": 5,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "U-V",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 426
+            "price": 426
           },
           {
             "id": 6,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "G-H",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 509
+            "price": 509
           },
           {
             "id": 7,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "Q-R",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 343
+            "price": 343
           },
           {
             "id": 8,
             "sieveSize": "0.5mm - 0.7mm",
             "colorRange": "D-F",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 704
+            "price": 704
           }
         ],
         "productType": "melee"
@@ -1319,43 +1537,52 @@
         "sku": "MLR-MAR-008",
         "description": "Small melee marquise diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 774
+            "price": 774
           },
           {
             "id": 2,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "W-X",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 770
+            "price": 770
           },
           {
             "id": 3,
             "sieveSize": "0.5mm - 0.7mm",
             "colorRange": "W-X",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 229
+            "price": 229
           },
           {
             "id": 4,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "M-N",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 547
+            "price": 547
           },
           {
             "id": 5,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 346
+            "price": 346
           }
         ],
         "productType": "melee"
@@ -1367,43 +1594,52 @@
         "sku": "MLR-EME-009",
         "description": "Small melee emerald diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "S-T",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 736
+            "price": 736
           },
           {
             "id": 2,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "W-X",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 572
+            "price": 572
           },
           {
             "id": 3,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "M-N",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 618
+            "price": 618
           },
           {
             "id": 4,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "O-P",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 253
+            "price": 253
           },
           {
             "id": 5,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 267
+            "price": 267
           }
         ],
         "productType": "melee"
@@ -1415,43 +1651,52 @@
         "sku": "MLR-TAP-010",
         "description": "Small melee tapered baguette diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "D-F",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 759
+            "price": 759
           },
           {
             "id": 2,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "Y-Z",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 675
+            "price": 675
           },
           {
             "id": 3,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "S-T",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 338
+            "price": 338
           },
           {
             "id": 4,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "S-T",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 500
+            "price": 500
           },
           {
             "id": 5,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 242
+            "price": 242
           }
         ],
         "productType": "melee"
@@ -1463,50 +1708,59 @@
         "sku": "MLR-PRI-011",
         "description": "Small melee princess diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 545
+            "price": 545
           },
           {
             "id": 2,
             "sieveSize": "3.1mm - 3.3mm",
             "colorRange": "W-X",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 229
+            "price": 229
           },
           {
             "id": 3,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "D-F",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 471
+            "price": 471
           },
           {
             "id": 4,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 626
+            "price": 626
           },
           {
             "id": 5,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 709
+            "price": 709
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 496
+            "price": 496
           }
         ],
         "productType": "melee"
@@ -1518,57 +1772,66 @@
         "sku": "MLR-PEA-012",
         "description": "Small melee pear diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "D-F",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 280
+            "price": 280
           },
           {
             "id": 2,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 690
+            "price": 690
           },
           {
             "id": 3,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "K-L",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 477
+            "price": 477
           },
           {
             "id": 4,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "U-V",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 340
+            "price": 340
           },
           {
             "id": 5,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "W-X",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 445
+            "price": 445
           },
           {
             "id": 6,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "D-F",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 431
+            "price": 431
           },
           {
             "id": 7,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 302
+            "price": 302
           }
         ],
         "productType": "melee"
@@ -1580,57 +1843,66 @@
         "sku": "MLR-EME-013",
         "description": "Small melee emerald diamonds ideal for pav\u00e9 and halo settings.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "U-V",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 741
+            "price": 741
           },
           {
             "id": 2,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 223
+            "price": 223
           },
           {
             "id": 3,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "S-T",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 634
+            "price": 634
           },
           {
             "id": 4,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "Q-R",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 453
+            "price": 453
           },
           {
             "id": 5,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "O-P",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 482
+            "price": 482
           },
           {
             "id": 6,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "G-H",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 629
+            "price": 629
           },
           {
             "id": 7,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 411
+            "price": 411
           }
         ],
         "productType": "melee"
@@ -1642,43 +1914,52 @@
         "sku": "MLR-ROU-014",
         "description": "Small melee round diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 269
+            "price": 269
           },
           {
             "id": 2,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "I-J",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 423
+            "price": 423
           },
           {
             "id": 3,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 261
+            "price": 261
           },
           {
             "id": 4,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 694
+            "price": 694
           },
           {
             "id": 5,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "S-T",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 206
+            "price": 206
           }
         ],
         "productType": "melee"
@@ -1690,57 +1971,66 @@
         "sku": "MLR-EME-015",
         "description": "Small melee emerald diamonds ideal for pav\u00e9 and halo settings.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "meleeVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 521
+            "price": 521
           },
           {
             "id": 2,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Q-R",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 498
+            "price": 498
           },
           {
             "id": 3,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "Y-Z",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 789
+            "price": 789
           },
           {
             "id": 4,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 585
+            "price": 585
           },
           {
             "id": 5,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "Q-R",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 316
+            "price": 316
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "W-X",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 758
+            "price": 758
           },
           {
             "id": 7,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 227
+            "price": 227
           }
         ],
         "productType": "melee"
@@ -1755,9 +2045,39 @@
         "certification": "IGI",
         "description": "A vibrant o sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
+          {
+            "id": 7,
+            "dimension": "8.1x4.4 mm",
+            "shape": "Round",
+            "caratWeight": 2.76,
+            "price": 1299
+          },
+          {
+            "id": 8,
+            "dimension": "8.1x4.4 mm",
+            "shape": "Oval",
+            "caratWeight": 3.57,
+            "price": 1287
+          },
+          {
+            "id": 9,
+            "dimension": "8.1x4.4 mm",
+            "shape": "Baguette",
+            "caratWeight": 3.57,
+            "price": 1275
+          },
           {
             "id": 1,
             "dimension": "8.1x4.4 mm",
@@ -1811,9 +2131,18 @@
         "certification": "IGI",
         "description": "A vibrant d sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.2x8.4 mm",
@@ -1874,9 +2203,18 @@
         "certification": "IGI",
         "description": "A vibrant n sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "5.1x4.3 mm",
@@ -1923,9 +2261,18 @@
         "certification": "GIA",
         "description": "A vibrant r sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.0x4.5 mm",
@@ -1972,9 +2319,18 @@
         "certification": "EGL",
         "description": "A vibrant m sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "4.1x5.7 mm",
@@ -2028,9 +2384,18 @@
         "certification": "IGI",
         "description": "A vibrant e sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.0x8.9 mm",
@@ -2098,9 +2463,18 @@
         "certification": "GIA",
         "description": "A vibrant g sapphire with excellent clarity, perfect for statement pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "6.2x9.7 mm",
@@ -2154,9 +2528,18 @@
         "certification": "EGL",
         "description": "A vibrant v sapphire with excellent clarity, perfect for statement pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "7.8x4.2 mm",
@@ -2224,9 +2607,18 @@
         "certification": "GIA",
         "description": "A vibrant n sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "9.1x9.8 mm",
@@ -2294,9 +2686,18 @@
         "certification": "IGI",
         "description": "A vibrant n sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.5x5.1 mm",
@@ -2364,9 +2765,18 @@
         "certification": "IGI",
         "description": "A vibrant x sapphire with excellent clarity, perfect for statement pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.1x5.8 mm",
@@ -2434,9 +2844,18 @@
         "certification": "IGI",
         "description": "A vibrant q sapphire with excellent clarity, perfect for statement pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "4.8x9.8 mm",
@@ -2504,9 +2923,18 @@
         "certification": "GIA",
         "description": "A vibrant f sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.2x4.3 mm",
@@ -2553,9 +2981,18 @@
         "certification": "EGL",
         "description": "A vibrant u sapphire with excellent clarity, perfect for statement pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "8.3x7.2 mm",
@@ -2623,9 +3060,18 @@
         "certification": "EGL",
         "description": "A vibrant r sapphire with excellent clarity, perfect for statement pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "colorStoneVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "dimension": "9.0x4.4 mm",
@@ -2683,9 +3129,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Expertly crafted emerald cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.74,
@@ -2735,9 +3190,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Expertly crafted cushion cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.16,
@@ -2793,9 +3257,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Expertly crafted emerald cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.04,
@@ -2845,9 +3318,18 @@
         "clarityRange": "VVS1-VVS2",
         "description": "Expertly crafted princess cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.05,
@@ -2891,9 +3373,18 @@
         "clarityRange": "I1-I3",
         "description": "Expertly crafted oval cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.02,
@@ -2955,9 +3446,18 @@
         "clarityRange": "FL-IF",
         "description": "Expertly crafted asscher cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.92,
@@ -3001,9 +3501,18 @@
         "clarityRange": "FL-IF",
         "description": "Expertly crafted baguette cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.11,
@@ -3053,9 +3562,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Expertly crafted asscher cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.52,
@@ -3105,9 +3623,18 @@
         "clarityRange": "VVS1-VVS2",
         "description": "Expertly crafted cushion cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.89,
@@ -3151,9 +3678,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Expertly crafted pear cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.78,
@@ -3209,9 +3745,18 @@
         "clarityRange": "FL-IF",
         "description": "Expertly crafted heart cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.76,
@@ -3267,9 +3812,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Expertly crafted cushion cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.98,
@@ -3331,9 +3885,18 @@
         "clarityRange": "I1-I3",
         "description": "Expertly crafted oval cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.06,
@@ -3389,9 +3952,18 @@
         "clarityRange": "VVS1-VVS2",
         "description": "Expertly crafted marquise cut offering optimal brilliance and fire.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.75,
@@ -3435,9 +4007,18 @@
         "clarityRange": "I1-I3",
         "description": "Expertly crafted marquise cut offering optimal brilliance and fire.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "cutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.92,
@@ -3487,9 +4068,18 @@
         "layoutPrice": 623,
         "description": "A anklet featuring an elegant arrangement of princess stones.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "https://ojproductvideopz.b-cdn.net/Diamond%20Jewelry/25-07-25/29-07-25/New/Certified_Round-EWV.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Round",
@@ -3573,9 +4163,18 @@
         "layoutPrice": 519,
         "description": "A anklet featuring an elegant arrangement of emerald stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Oval",
@@ -3632,9 +4231,18 @@
         "layoutPrice": 394,
         "description": "A necklace featuring an elegant arrangement of asscher stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Heart",
@@ -3691,9 +4299,18 @@
         "layoutPrice": 455,
         "description": "A tennis bracelet featuring an elegant arrangement of pear stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Princess",
@@ -3759,9 +4376,18 @@
         "layoutPrice": 1199,
         "description": "A tennis bracelet featuring an elegant arrangement of radiant stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Heart",
@@ -3836,9 +4462,18 @@
         "layoutPrice": 1947,
         "description": "A anklet featuring an elegant arrangement of heart stones.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Oval",
@@ -3895,9 +4530,18 @@
         "layoutPrice": 407,
         "description": "A necklace featuring an elegant arrangement of round stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Tapered Baguette",
@@ -3972,9 +4616,18 @@
         "layoutPrice": 1194,
         "description": "A anklet featuring an elegant arrangement of tapered baguette stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Asscher",
@@ -4031,9 +4684,18 @@
         "layoutPrice": 1893,
         "description": "A brooch featuring an elegant arrangement of heart stones.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Cushion",
@@ -4108,9 +4770,18 @@
         "layoutPrice": 836,
         "description": "A brooch featuring an elegant arrangement of cushion stones.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Tapered Baguette",
@@ -4167,9 +4838,18 @@
         "layoutPrice": 1064,
         "description": "A bracelet featuring an elegant arrangement of emerald stones.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Cushion",
@@ -4253,9 +4933,18 @@
         "layoutPrice": 1667,
         "description": "A necklace featuring an elegant arrangement of tapered baguette stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Heart",
@@ -4312,9 +5001,18 @@
         "layoutPrice": 1396,
         "description": "A anklet featuring an elegant arrangement of heart stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Round",
@@ -4371,9 +5069,18 @@
         "layoutPrice": 1086,
         "description": "A tennis bracelet featuring an elegant arrangement of pear stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Tapered Baguette",
@@ -4448,9 +5155,18 @@
         "layoutPrice": 1232,
         "description": "A anklet featuring an elegant arrangement of marquise stones.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "layoutVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "shape": "Cushion",
@@ -4528,9 +5244,18 @@
         "clarityRange": "FL-IF",
         "description": "Elegantly shaped diamond in the form of the letter 'U', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.23,
@@ -4573,9 +5298,18 @@
         "clarityRange": "FL-IF",
         "description": "Elegantly shaped diamond in the form of the letter 'D', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.5,
@@ -4623,9 +5357,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Elegantly shaped diamond in the form of the letter 'A', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.53,
@@ -4668,9 +5411,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Elegantly shaped diamond in the form of the letter 'I', ideal for personalized pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.03,
@@ -4708,9 +5460,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Elegantly shaped diamond in the form of the letter 'H', ideal for personalized pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.35,
@@ -4758,9 +5519,18 @@
         "clarityRange": "VVS1-VVS2",
         "description": "Elegantly shaped diamond in the form of the letter 'V', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.39,
@@ -4808,9 +5578,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Elegantly shaped diamond in the form of the letter 'E', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.49,
@@ -4858,9 +5637,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Elegantly shaped diamond in the form of the letter 'Y', ideal for personalized pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.94,
@@ -4908,9 +5696,18 @@
         "clarityRange": "FL-IF",
         "description": "Elegantly shaped diamond in the form of the letter 'R', ideal for personalized pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.14,
@@ -4963,9 +5760,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Elegantly shaped diamond in the form of the letter 'C', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 2.0,
@@ -5003,9 +5809,18 @@
         "clarityRange": "VVS1-VVS2",
         "description": "Elegantly shaped diamond in the form of the letter 'N', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.41,
@@ -5053,9 +5868,18 @@
         "clarityRange": "VS1-VS2",
         "description": "Elegantly shaped diamond in the form of the letter 'X', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.32,
@@ -5098,9 +5922,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Elegantly shaped diamond in the form of the letter 'O', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.84,
@@ -5153,9 +5986,18 @@
         "clarityRange": "FL-IF",
         "description": "Elegantly shaped diamond in the form of the letter 'B', ideal for personalized pieces.",
         "availability": true,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 0.77,
@@ -5208,9 +6050,18 @@
         "clarityRange": "SI1-SI2",
         "description": "Elegantly shaped diamond in the form of the letter 'S', ideal for personalized pieces.",
         "availability": false,
-        "images": [],
-        "video": [],
-        "alphabetVariants": [
+        "images": [
+          "/images/diamonds/diamond1.jpg",
+          "/images/diamonds/diamond2.jpg",
+          "/images/diamonds/diamond3.jpg"
+        ],
+
+        "video": [
+          "/videos/diamond1.mp4",
+          "/videos/diamond2.mp4",
+          "/videos/diamond3.mp4"
+        ],
+        "variants": [
           {
             "id": 1,
             "caratWeight": 1.22,

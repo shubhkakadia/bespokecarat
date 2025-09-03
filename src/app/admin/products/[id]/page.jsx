@@ -1,15 +1,19 @@
 "use client";
 
 import { AdminRoute } from "@/components/ProtectedRoute";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, use } from "react";
 import Sidebar from "../../components/sidebar";
 import Link from "next/link";
 import Image from "next/image";
-import { Edit, Trash, Trash2, X, Save, AlertTriangle } from "lucide-react";
+import { Edit, Trash2, X, Save, AlertTriangle } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import productsDataArray from "../../../../../products_dummy2.json";
 
-export default function page() {
+
+export default function page({params}) {
+  // Unwrap params Promise using React.use()
+  const unwrappedParams = use(params);
   const colorOptions = [
     "D",
     "E",
@@ -139,60 +143,68 @@ export default function page() {
   const [showProductDeletePopup, setShowProductDeletePopup] = useState(false);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
   const [deletingProduct, setDeletingProduct] = useState(false);
+     const productId = unwrappedParams.id;
+  const [productData, setProductData] = useState(null);
 
-  const productData = {
-    productId: "683d90f2-a18f-4ea5-9724-6a2dfc832ca3",
-    name: "Pear Diamond",
-    shape: "Pear",
-    sku: "DIA-PEA-002",
-    certification: "GIA",
-    description:
-      "A premium quality pear brilliant diamond certified by GIA. Perfect for fine jewelry.",
-    availability: true,
-    images: [""],
-    video: [""],
-    variants: [
-      {
-        id: 1,
-        color: "Q",
-        clarity: "SI1",
-        caratWeight: 1.42,
-        price: 7562,
-      },
-      {
-        id: 2,
-        color: "E",
-        clarity: "I3",
-        caratWeight: 1.09,
-        price: 6296,
-      },
-      {
-        id: 3,
-        color: "G",
-        clarity: "FL",
-        caratWeight: 1.41,
-        price: 7811,
-      },
-      {
-        id: 4,
-        color: "G",
-        clarity: "VVS2",
-        caratWeight: 0.98,
-        price: 5347,
-      },
-      {
-        id: 5,
-        color: "R",
-        clarity: "VVS1",
-        caratWeight: 0.63,
-        price: 3799,
-      },
-    ],
-    productType: "diamond",
-  };
+
+  // const productData = {
+  //   productId: "683d90f2-a18f-4ea5-9724-6a2dfc832ca3",
+  //   name: "Pear Diamond",
+  //   shape: "Pear",
+  //   sku: "DIA-PEA-002",
+  //   certification: "GIA",
+  //   description:
+  //     "A premium quality pear brilliant diamond certified by GIA. Perfect for fine jewelry.",
+  //   availability: true,
+  //   images: [""],
+  //   video: [""],
+  //   variants: [
+  //     {
+  //       id: 1,
+  //       color: "Q",
+  //       clarity: "SI1",
+  //       caratWeight: 1.42,
+  //       price: 7562,
+  //     },
+  //     {
+  //       id: 2,
+  //       color: "E",
+  //       clarity: "I3",
+  //       caratWeight: 1.09,
+  //       price: 6296,
+  //     },
+  //     {
+  //       id: 3,
+  //       color: "G",
+  //       clarity: "FL",
+  //       caratWeight: 1.41,
+  //       price: 7811,
+  //     },
+  //     {
+  //       id: 4,
+  //       color: "G",
+  //       clarity: "VVS2",
+  //       caratWeight: 0.98,
+  //       price: 5347,
+  //     },
+  //     {
+  //       id: 5,
+  //       color: "R",
+  //       clarity: "VVS1",
+  //       caratWeight: 0.63,
+  //       price: 3799,
+  //     },
+  //   ],
+  //   productType: "diamond",
+  // };
 
   // Sort diamond variants
+  
   const sortedVariants = useMemo(() => {
+    if (!productData || !productData.variants) {
+      return [];
+    }
+    
     const variants = [...productData.variants];
 
     variants.sort((a, b) => {
@@ -212,7 +224,31 @@ export default function page() {
     });
 
     return variants;
-  }, [productData.variants, sortBy, sortOrder]);
+  }, [productData, sortBy, sortOrder]);
+
+  // find the product data from the productsDataArray
+  const findProductById = (id) => {
+    for (const productType in productsDataArray.productTypes) {
+      const products = productsDataArray.productTypes[productType];
+      const product = products.find(p => p.productId === id);
+      if (product) {
+        return product;
+      }
+    }
+    return null;
+  };
+
+  // Get product data from API
+  useEffect(() => {
+    const product = findProductById(productId);
+    if (product) {
+      setProductData(product);
+    } else {
+      // Product not found - you could redirect or show error
+      console.error(`Product with ID ${productId} not found`);
+      setProductData(null);
+    }
+  }, [productId]);
 
   // Handle sorting
   const handleSort = (column) => {
@@ -246,7 +282,7 @@ export default function page() {
         sieveSize: variant.sieveSize,
         colorRange: variant.colorRange,
         clarityRange: variant.clarityRange,
-        pricePerCarat: variant.pricePerCarat,
+        price: variant.price,
       });
     } else if (productData.productType === "colorstone") {
       setEditedVariantData({
@@ -475,8 +511,7 @@ export default function page() {
       ...prev,
       [field]:
         field === "caratWeight" ||
-        field === "price" ||
-        field === "pricePerCarat"
+        field === "price"
           ? parseFloat(value) || 0
           : value,
     }));
@@ -489,6 +524,28 @@ export default function page() {
       [field]: value,
     }));
   };
+
+  // Loading state
+  if (!productData) {
+    return (
+      <div>
+        <AdminRoute>
+          <div className="flex h-screen">
+            <Sidebar />
+            <div className="flex-1 p-4 overflow-auto bg-whitesmoke">
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
+                  <p className="mt-4 text-lg text-gray-600">Loading product...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ToastContainer />
+        </AdminRoute>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -1164,10 +1221,10 @@ export default function page() {
                             </th>
                             <th
                               className="px-4 py-2 text-left text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 select-none"
-                              onClick={() => handleSort("pricePerCarat")}
+                              onClick={() => handleSort("price")}
                             >
                               Price Per Carat{" "}
-                              {sortBy === "pricePerCarat" &&
+                              {sortBy === "price" &&
                                 (sortOrder === "asc" ? "↑" : "↓")}
                             </th>
                             <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
@@ -1257,11 +1314,11 @@ export default function page() {
                                   <input
                                     type="number"
                                     value={
-                                      editedVariantData.pricePerCarat || ""
+                                      editedVariantData.price || ""
                                     }
                                     onChange={(e) =>
                                       handleVariantInputChange(
-                                        "pricePerCarat",
+                                        "price",
                                         e.target.value
                                       )
                                     }
@@ -1269,7 +1326,7 @@ export default function page() {
                                     placeholder="Price Per Carat"
                                   />
                                 ) : (
-                                  `$${variant.pricePerCarat.toLocaleString()}`
+                                  `$${variant.price.toLocaleString()}`
                                 )}
                               </td>
                               <td className="px-4 py-2">
