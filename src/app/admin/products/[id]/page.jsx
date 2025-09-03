@@ -282,7 +282,7 @@ export default function page({params}) {
         sieveSize: variant.sieveSize,
         colorRange: variant.colorRange,
         clarityRange: variant.clarityRange,
-        pricePerCarat: variant.pricePerCarat,
+        price: variant.price,
       });
     } else if (productData.productType === "colorstone") {
       setEditedVariantData({
@@ -511,8 +511,7 @@ export default function page({params}) {
       ...prev,
       [field]:
         field === "caratWeight" ||
-        field === "price" ||
-        field === "pricePerCarat"
+        field === "price"
           ? parseFloat(value) || 0
           : value,
     }));
@@ -1222,10 +1221,10 @@ export default function page({params}) {
                             </th>
                             <th
                               className="px-4 py-2 text-left text-sm font-medium text-gray-700 cursor-pointer hover:text-gray-900 select-none"
-                              onClick={() => handleSort("pricePerCarat")}
+                              onClick={() => handleSort("price")}
                             >
                               Price Per Carat{" "}
-                              {sortBy === "pricePerCarat" &&
+                              {sortBy === "price" &&
                                 (sortOrder === "asc" ? "↑" : "↓")}
                             </th>
                             <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
@@ -1315,11 +1314,11 @@ export default function page({params}) {
                                   <input
                                     type="number"
                                     value={
-                                      editedVariantData.pricePerCarat || ""
+                                      editedVariantData.price || ""
                                     }
                                     onChange={(e) =>
                                       handleVariantInputChange(
-                                        "pricePerCarat",
+                                        "price",
                                         e.target.value
                                       )
                                     }
@@ -1327,7 +1326,7 @@ export default function page({params}) {
                                     placeholder="Price Per Carat"
                                   />
                                 ) : (
-                                  `$${variant.pricePerCarat.toLocaleString()}`
+                                  `$${variant.price.toLocaleString()}`
                                 )}
                               </td>
                               <td className="px-4 py-2">

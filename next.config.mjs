@@ -1,11 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-<<<<<<< Updated upstream
   images: {
     domains: ["4cs.gia.edu", "localhost"],
   },
-=======
->>>>>>> Stashed changes
   api: {
     bodyParser: {
       sizeLimit: "50mb",
