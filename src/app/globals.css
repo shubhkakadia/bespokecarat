@@ -197,3 +197,112 @@
   0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.5); }
   100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
 }
+
+/* Custom Range Slider Styles */
+.slider-thumb {
+  /* Webkit browsers */
+  &::-webkit-slider-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #000080;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &::-webkit-slider-track {
+    background: #E1E1E1;
+    border-radius: 5px;
+    height: 8px;
+  }
+  
+  /* Firefox */
+  &::-moz-range-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #000080;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &::-moz-range-track {
+    background: #E1E1E1;
+    border-radius: 5px;
+    height: 8px;
+    border: none;
+  }
+  
+  /* Focus states */
+  &:focus {
+    outline: none;
+  }
+  
+  &:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2);
+  }
+  
+  &:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2);
+  }
+}
+
+/* Dual Range Slider Styles */
+.dual-range-slider {
+  pointer-events: all;
+  
+  /* Webkit browsers */
+  &::-webkit-slider-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #000080;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    pointer-events: all;
+    position: relative;
+  }
+  
+  &::-webkit-slider-track {
+    background: transparent;
+    height: 8px;
+  }
+  
+  /* Firefox */
+  &::-moz-range-thumb {
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #000080;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    pointer-events: all;
+  }
+  
+  &::-moz-range-track {
+    background: transparent;
+    height: 8px;
+    border: none;
+  }
+  
+  /* Focus states */
+  &:focus {
+    outline: none;
+  }
+  
+  &:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}

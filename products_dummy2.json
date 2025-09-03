@@ -260,6 +260,27 @@
             "price": 6525
           },
           {
+            "id": 7,
+            "color": "K",
+            "clarity": "SI2",
+            "caratWeight": 1.5,
+            "price": 8025
+          },
+          {
+            "id": 8,
+            "color": "O",
+            "clarity": "SI2",
+            "caratWeight": 1.5,
+            "price": 8025
+          },
+          {
+            "id": 9,
+            "color": "K",
+            "clarity": "SI1",
+            "caratWeight": 1.5,
+            "price": 8025
+          },
+          {
             "id": 2,
             "color": "R",
             "clarity": "FL",
@@ -1057,49 +1078,49 @@
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "S-T",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 327
+            "price": 327
           },
           {
             "id": 2,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "Q-R",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 765
+            "price": 765
           },
           {
             "id": 3,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 570
+            "price": 570
           },
           {
             "id": 4,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 246
+            "price": 246
           },
           {
             "id": 5,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 281
+            "price": 281
           },
           {
             "id": 6,
             "sieveSize": "3.1mm - 3.3mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 589
+            "price": 589
           },
           {
             "id": 7,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 366
+            "price": 366
           }
         ],
         "productType": "melee"
@@ -1128,42 +1149,42 @@
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 653
+            "price": 653
           },
           {
             "id": 2,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "U-V",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 251
+            "price": 251
           },
           {
             "id": 3,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "U-V",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 295
+            "price": 295
           },
           {
             "id": 4,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "K-L",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 616
+            "price": 616
           },
           {
             "id": 5,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "S-T",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 610
+            "price": 610
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 588
+            "price": 588
           }
         ],
         "productType": "melee"
@@ -1192,42 +1213,42 @@
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 536
+            "price": 536
           },
           {
             "id": 2,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "G-H",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 559
+            "price": 559
           },
           {
             "id": 3,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "U-V",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 749
+            "price": 749
           },
           {
             "id": 4,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "D-F",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 467
+            "price": 467
           },
           {
             "id": 5,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "W-X",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 239
+            "price": 239
           },
           {
             "id": 6,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "W-X",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 553
+            "price": 553
           }
         ],
         "productType": "melee"
@@ -1256,35 +1277,35 @@
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "Q-R",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 751
+            "price": 751
           },
           {
             "id": 2,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "U-V",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 425
+            "price": 425
           },
           {
             "id": 3,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 646
+            "price": 646
           },
           {
             "id": 4,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "D-F",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 544
+            "price": 544
           },
           {
             "id": 5,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "Y-Z",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 369
+            "price": 369
           }
         ],
         "productType": "melee"
@@ -1313,49 +1334,49 @@
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 322
+            "price": 322
           },
           {
             "id": 2,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "U-V",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 396
+            "price": 396
           },
           {
             "id": 3,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 737
+            "price": 737
           },
           {
             "id": 4,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "M-N",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 398
+            "price": 398
           },
           {
             "id": 5,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 383
+            "price": 383
           },
           {
             "id": 6,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "D-F",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 329
+            "price": 329
           },
           {
             "id": 7,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "D-F",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 766
+            "price": 766
           }
         ],
         "productType": "melee"
@@ -1384,49 +1405,49 @@
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "U-V",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 202
+            "price": 202
           },
           {
             "id": 2,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "M-N",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 793
+            "price": 793
           },
           {
             "id": 3,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "S-T",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 657
+            "price": 657
           },
           {
             "id": 4,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 540
+            "price": 540
           },
           {
             "id": 5,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "U-V",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 666
+            "price": 666
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "O-P",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 444
+            "price": 444
           },
           {
             "id": 7,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "Q-R",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 620
+            "price": 620
           }
         ],
         "productType": "melee"
@@ -1455,56 +1476,56 @@
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "U-V",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 665
+            "price": 665
           },
           {
             "id": 2,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "Y-Z",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 798
+            "price": 798
           },
           {
             "id": 3,
             "sieveSize": "1.7mm - 1.9mm",
             "colorRange": "Y-Z",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 310
+            "price": 310
           },
           {
             "id": 4,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 225
+            "price": 225
           },
           {
             "id": 5,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "U-V",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 426
+            "price": 426
           },
           {
             "id": 6,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "G-H",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 509
+            "price": 509
           },
           {
             "id": 7,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "Q-R",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 343
+            "price": 343
           },
           {
             "id": 8,
             "sieveSize": "0.5mm - 0.7mm",
             "colorRange": "D-F",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 704
+            "price": 704
           }
         ],
         "productType": "melee"
@@ -1533,35 +1554,35 @@
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 774
+            "price": 774
           },
           {
             "id": 2,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "W-X",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 770
+            "price": 770
           },
           {
             "id": 3,
             "sieveSize": "0.5mm - 0.7mm",
             "colorRange": "W-X",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 229
+            "price": 229
           },
           {
             "id": 4,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "M-N",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 547
+            "price": 547
           },
           {
             "id": 5,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 346
+            "price": 346
           }
         ],
         "productType": "melee"
@@ -1590,35 +1611,35 @@
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "S-T",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 736
+            "price": 736
           },
           {
             "id": 2,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "W-X",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 572
+            "price": 572
           },
           {
             "id": 3,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "M-N",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 618
+            "price": 618
           },
           {
             "id": 4,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "O-P",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 253
+            "price": 253
           },
           {
             "id": 5,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 267
+            "price": 267
           }
         ],
         "productType": "melee"
@@ -1647,35 +1668,35 @@
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "D-F",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 759
+            "price": 759
           },
           {
             "id": 2,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "Y-Z",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 675
+            "price": 675
           },
           {
             "id": 3,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "S-T",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 338
+            "price": 338
           },
           {
             "id": 4,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "S-T",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 500
+            "price": 500
           },
           {
             "id": 5,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 242
+            "price": 242
           }
         ],
         "productType": "melee"
@@ -1704,42 +1725,42 @@
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 545
+            "price": 545
           },
           {
             "id": 2,
             "sieveSize": "3.1mm - 3.3mm",
             "colorRange": "W-X",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 229
+            "price": 229
           },
           {
             "id": 3,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "D-F",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 471
+            "price": 471
           },
           {
             "id": 4,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 626
+            "price": 626
           },
           {
             "id": 5,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 709
+            "price": 709
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 496
+            "price": 496
           }
         ],
         "productType": "melee"
@@ -1768,49 +1789,49 @@
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "D-F",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 280
+            "price": 280
           },
           {
             "id": 2,
             "sieveSize": "1.5mm - 1.7mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 690
+            "price": 690
           },
           {
             "id": 3,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "K-L",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 477
+            "price": 477
           },
           {
             "id": 4,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "U-V",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 340
+            "price": 340
           },
           {
             "id": 5,
             "sieveSize": "0.7mm - 0.9mm",
             "colorRange": "W-X",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 445
+            "price": 445
           },
           {
             "id": 6,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "D-F",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 431
+            "price": 431
           },
           {
             "id": 7,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 302
+            "price": 302
           }
         ],
         "productType": "melee"
@@ -1839,49 +1860,49 @@
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "U-V",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 741
+            "price": 741
           },
           {
             "id": 2,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "K-L",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 223
+            "price": 223
           },
           {
             "id": 3,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "S-T",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 634
+            "price": 634
           },
           {
             "id": 4,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "Q-R",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 453
+            "price": 453
           },
           {
             "id": 5,
             "sieveSize": "1.9mm - 2.1mm",
             "colorRange": "O-P",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 482
+            "price": 482
           },
           {
             "id": 6,
             "sieveSize": "1.1mm - 1.3mm",
             "colorRange": "G-H",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 629
+            "price": 629
           },
           {
             "id": 7,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "D-F",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 411
+            "price": 411
           }
         ],
         "productType": "melee"
@@ -1910,35 +1931,35 @@
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 269
+            "price": 269
           },
           {
             "id": 2,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "I-J",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 423
+            "price": 423
           },
           {
             "id": 3,
             "sieveSize": "2.1mm - 2.3mm",
             "colorRange": "S-T",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 261
+            "price": 261
           },
           {
             "id": 4,
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 694
+            "price": 694
           },
           {
             "id": 5,
             "sieveSize": "2.5mm - 2.7mm",
             "colorRange": "S-T",
             "clarityRange": "FL-IF",
-            "pricePerCarat": 206
+            "price": 206
           }
         ],
         "productType": "melee"
@@ -1967,49 +1988,49 @@
             "sieveSize": "2.3mm - 2.5mm",
             "colorRange": "K-L",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 521
+            "price": 521
           },
           {
             "id": 2,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Q-R",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 498
+            "price": 498
           },
           {
             "id": 3,
             "sieveSize": "2.7mm - 2.9mm",
             "colorRange": "Y-Z",
             "clarityRange": "SI1-SI2",
-            "pricePerCarat": 789
+            "price": 789
           },
           {
             "id": 4,
             "sieveSize": "2.9mm - 3.1mm",
             "colorRange": "K-L",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 585
+            "price": 585
           },
           {
             "id": 5,
             "sieveSize": "1.3mm - 1.5mm",
             "colorRange": "Q-R",
             "clarityRange": "VS1-VS2",
-            "pricePerCarat": 316
+            "price": 316
           },
           {
             "id": 6,
             "sieveSize": "3.3mm - 3.5mm",
             "colorRange": "W-X",
             "clarityRange": "VVS1-VVS2",
-            "pricePerCarat": 758
+            "price": 758
           },
           {
             "id": 7,
             "sieveSize": "0.9mm - 1.1mm",
             "colorRange": "Y-Z",
             "clarityRange": "I1-I3",
-            "pricePerCarat": 227
+            "price": 227
           }
         ],
         "productType": "melee"
@@ -2036,6 +2057,27 @@
           "/videos/diamond3.mp4"
         ],
         "variants": [
+          {
+            "id": 7,
+            "dimension": "8.1x4.4 mm",
+            "shape": "Round",
+            "caratWeight": 2.76,
+            "price": 1299
+          },
+          {
+            "id": 8,
+            "dimension": "8.1x4.4 mm",
+            "shape": "Oval",
+            "caratWeight": 3.57,
+            "price": 1287
+          },
+          {
+            "id": 9,
+            "dimension": "8.1x4.4 mm",
+            "shape": "Baguette",
+            "caratWeight": 3.57,
+            "price": 1275
+          },
           {
             "id": 1,
             "dimension": "8.1x4.4 mm",
@@ -4033,7 +4075,7 @@
         ],
 
         "video": [
-          "/videos/diamond1.mp4",
+          "https://ojproductvideopz.b-cdn.net/Diamond%20Jewelry/25-07-25/29-07-25/New/Certified_Round-EWV.mp4",
           "/videos/diamond2.mp4",
           "/videos/diamond3.mp4"
         ],
