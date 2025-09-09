@@ -112,7 +112,7 @@ export default async function handler(req, res) {
 
         return res.status(200).send({
           status: false,
-          message: `An alphabet with sku "${sku}" already exists.`,
+          message: `An alphabet with sku ${isExist.sku} already exists.`,
         });
       }
 

@@ -109,7 +109,7 @@ export default async function handler(req, res) {
 
         return res.status(200).send({
           status: false,
-          message: `A layout with sku "${sku}" already exists.`,
+          message: `A layout with sku ${isExist.sku} already exists.`,
         });
       }
 

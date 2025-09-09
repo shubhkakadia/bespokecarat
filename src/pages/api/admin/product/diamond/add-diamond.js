@@ -107,7 +107,7 @@ export default async function handler(req, res) {
 
         return res.status(200).send({
           status: false,
-          message: `A diamond with sku "${sku}" already exists.`,
+          message: `A diamond with sku ${isExist.sku} already exists.`,
         });
       }
 
