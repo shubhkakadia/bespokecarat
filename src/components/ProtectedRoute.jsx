@@ -102,7 +102,7 @@ export function AdminRoute({ children, fallback, redirectTo = "/login" }) {
 export function CustomerRoute({ children, fallback, redirectTo = "/login" }) {
   return (
     <ProtectedRoute
-      requiredUserType="customer"
+      requiredUserType={["admin", "master-admin", "customer"]}
       fallback={fallback}
       redirectTo={redirectTo}
     >

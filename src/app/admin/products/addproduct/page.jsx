@@ -6,6 +6,17 @@ import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ImagePlus, Plus, Trash2, Video } from "lucide-react";
+import { getAuthToken } from "@/contexts/auth";
+import {
+  shapeOptions,
+  colorOptions,
+  clarityOptions,
+  colorRanges,
+  clarityRanges,
+  layoutTypeOptions,
+  cutTypeOptions,
+  sieveSizeOptions,
+} from "@/components/constants/order";
 
 export default function AddProductPage() {
   const [formData, setFormData] = useState({
@@ -89,6 +100,7 @@ export default function AddProductPage() {
   const [character, setCharacter] = useState("");
 
   const [activeProductTab, setActiveProductTab] = useState("diamond");
+  const [isLoading, setIsLoading] = useState(false);
 
   const resetFormData = () => {
     setFormData({
@@ -116,112 +128,18 @@ export default function AddProductPage() {
     }
   };
 
-  const shapeOptions = [
-    "Round",
-    "Princess",
-    "Emerald",
-    "Asscher",
-    "Oval",
-    "Marquise",
-    "Pear",
-    "Heart",
-    "Cushion",
-    "Radiant",
-    "Baguette",
-    "Tapered Baguette",
-  ];
+  // Price formatting helpers (UI only)
+  const formatPrice = (value) => {
+    if (value === undefined || value === null || value === "") return "";
+    const num = Number(value.toString().replace(/,/g, ""));
+    if (Number.isNaN(num)) return value;
+    return num.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  };
 
-  const colorOptions = [
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
-
-  const clarityOptions = [
-    "FL",
-    "IF",
-    "VVS1",
-    "VVS2",
-    "VS1",
-    "VS2",
-    "SI1",
-    "SI2",
-    "I1",
-    "I2",
-    "I3",
-  ];
-
-  const colorRanges = [
-    "D-F",
-    "G-H",
-    "I-J",
-    "K-L",
-    "M-N",
-    "O-P",
-    "Q-R",
-    "S-T",
-    "U-V",
-    "W-X",
-    "Y-Z",
-  ];
-
-  const clarityRanges = ["FL-IF", "VVS1-VVS2", "VS1-VS2", "SI1-SI2", "I1-I3"];
-
-  const layoutTypeOptions = [
-    "Bracelet",
-    "Necklace",
-    "Anklet",
-    "Brooch",
-    "Choker",
-    "Tennis Bracelet",
-  ];
-
-  const cutTypeOptions = [
-    "Cut",
-    "Portuguese Cut",
-    "Rose Cut",
-    "Old Mine Cut",
-    "Step Cut",
-  ];
-
-  // Sieve size options in mm
-  const sieveSizeOptions = [
-    "0.5mm - 0.7mm",
-    "0.7mm - 0.9mm",
-    "0.9mm - 1.1mm",
-    "1.1mm - 1.3mm",
-    "1.3mm - 1.5mm",
-    "1.5mm - 1.7mm",
-    "1.7mm - 1.9mm",
-    "1.9mm - 2.1mm",
-    "2.1mm - 2.3mm",
-    "2.3mm - 2.5mm",
-    "2.5mm - 2.7mm",
-    "2.7mm - 2.9mm",
-    "2.9mm - 3.1mm",
-    "3.1mm - 3.3mm",
-    "3.3mm - 3.5mm",
-  ];
+  const stripPriceFormatting = (value) => {
+    if (value === undefined || value === null) return "";
+    return value.toString().replace(/,/g, "");
+  };
 
   const validateDiamondForm = () => {
     const errors = [];
@@ -323,12 +241,7 @@ export default function AddProductPage() {
     }
 
     const validVariants = cutVariants.filter(
-      (variant) =>
-        variant.color &&
-        variant.clarity &&
-        variant.caratWeight &&
-        variant.dimension &&
-        variant.price
+      (variant) => variant.caratWeight && variant.dimension && variant.price
     );
 
     if (validVariants.length === 0) {
@@ -613,28 +526,574 @@ export default function AddProductPage() {
     }
   };
 
+  const saveDiamond = async () => {
+    setIsLoading(true);
+
+    try {
+      const authToken = getAuthToken();
+      console.log(authToken);
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return;
+      }
+
+      // Prepare FormData for the request
+      const formDataAPI = new FormData();
+
+      // Add basic form fields
+      formDataAPI.append("name", formData.name);
+      formDataAPI.append("shape", formData.shape);
+      formDataAPI.append("sku", formData.sku);
+      formDataAPI.append("certification", formData.certification || "");
+      formDataAPI.append("description", formData.description || "");
+      formDataAPI.append("is_available", formData.availability.toString());
+
+      // Prepare diamond variants
+      const validVariants = diamondVariants.filter(
+        (variant) =>
+          variant.color &&
+          variant.clarity &&
+          variant.caratWeight &&
+          variant.price
+      );
+
+      formDataAPI.append(
+        "diamond_variants",
+        JSON.stringify(
+          validVariants.map((variant) => ({
+            color: variant.color,
+            clarity: variant.clarity,
+            carat_weight: parseFloat(variant.caratWeight),
+            price: parseFloat(variant.price),
+          }))
+        )
+      );
+
+      // Add images
+      images.forEach((image) => {
+        formDataAPI.append("images", image.file);
+      });
+
+      // Add video
+      if (video) {
+        formDataAPI.append("videos", video.file);
+      }
+
+      // Make API request
+      const response = await fetch("/api/admin/product/diamond/add-diamond", {
+        method: "POST",
+        headers: {
+          Authorization: authToken,
+        },
+        body: formDataAPI,
+      });
+
+      const result = await response.json();
+
+      if (result.status) {
+        toast.success(formData.sku + " - Diamond saved successfully!");
+        // Reset form after successful save
+        resetFormData();
+        setDiamondVariants([
+          {
+            id: 1,
+            color: "",
+            clarity: "",
+            caratWeight: "",
+            price: "",
+          },
+        ]);
+      } else {
+        toast.error(result.message || "Failed to save diamond");
+        if (result.errors && Array.isArray(result.errors)) {
+          result.errors.forEach((error) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Error saving diamond:", error);
+      toast.error("An error occurred while saving the diamond");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveMelee = async () => {
+    setIsLoading(true);
+
+    try {
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return;
+      }
+
+      const formDataAPI = new FormData();
+
+      // Basic fields
+      formDataAPI.append("name", formData.name);
+      formDataAPI.append("shape", formData.shape);
+      formDataAPI.append("sku", formData.sku);
+      formDataAPI.append("description", formData.description || "");
+      formDataAPI.append("is_available", formData.availability.toString());
+
+      // Map sieve sizes
+      const validSieveSizes = meleeVariants.filter(
+        (variant) => variant.sieveSize && variant.pricePerCarat
+      );
+
+      formDataAPI.append(
+        "sieve_sizes",
+        JSON.stringify(
+          validSieveSizes.map((variant) => ({
+            size: variant.sieveSize,
+            color_range: variant.colorRange || "",
+            clarity_range: variant.clarityRange || "",
+            price_per_carat: variant.pricePerCarat,
+          }))
+        )
+      );
+
+      // Files
+      images.forEach((image) => {
+        formDataAPI.append("images", image.file);
+      });
+      if (video) {
+        formDataAPI.append("videos", video.file);
+      }
+
+      // API request
+      const response = await fetch("/api/admin/product/melee/add-melee", {
+        method: "POST",
+        headers: { Authorization: authToken },
+        body: formDataAPI,
+      });
+
+      const result = await response.json();
+
+      if (result.status) {
+        toast.success(formData.sku + " - Melee saved successfully!");
+        resetFormData();
+        setMeleeVariants([
+          {
+            id: 1,
+            sieveSize: "",
+            pricePerCarat: "",
+            colorRange: "",
+            clarityRange: "",
+          },
+        ]);
+      } else {
+        toast.error(result.message || "Failed to save melee");
+        if (result.errors && Array.isArray(result.errors)) {
+          result.errors.forEach((error) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Error saving melee:", error);
+      toast.error("An error occurred while saving the melee");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveColorStone = async () => {
+    setIsLoading(true);
+
+    try {
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return;
+      }
+
+      const formDataAPI = new FormData();
+
+      // Basic fields
+      formDataAPI.append("name", formData.name);
+      formDataAPI.append("color", formData.color);
+      formDataAPI.append("sku", formData.sku);
+      formDataAPI.append("certification", formData.certification || "");
+      formDataAPI.append("description", formData.description || "");
+      formDataAPI.append("is_available", formData.availability.toString());
+
+      // Variants
+      const validVariants = colorStoneVariants.filter(
+        (variant) =>
+          variant.shape &&
+          variant.caratWeight &&
+          variant.dimension &&
+          variant.price
+      );
+
+      formDataAPI.append(
+        "color_stone_variants",
+        JSON.stringify(
+          validVariants.map((variant) => ({
+            shape: variant.shape,
+            dimension: variant.dimension,
+            carat_weight: parseFloat(variant.caratWeight),
+            price: parseFloat(variant.price),
+          }))
+        )
+      );
+
+      // Files
+      images.forEach((image) => {
+        formDataAPI.append("images", image.file);
+      });
+      if (video) {
+        formDataAPI.append("videos", video.file);
+      }
+
+      // API request
+      const response = await fetch(
+        "/api/admin/product/color-stone/add-color-stone",
+        {
+          method: "POST",
+          headers: { Authorization: authToken },
+          body: formDataAPI,
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.status) {
+        toast.success(formData.sku + " - Color Stone saved successfully!");
+        resetFormData();
+        setColorStoneVariants([
+          { id: 1, shape: "", caratWeight: "", dimension: "", price: "" },
+        ]);
+      } else {
+        toast.error(result.message || "Failed to save color stone");
+        if (result.errors && Array.isArray(result.errors)) {
+          result.errors.forEach((error) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Error saving color stone:", error);
+      toast.error("An error occurred while saving the color stone");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveCut = async () => {
+    setIsLoading(true);
+
+    try {
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return;
+      }
+
+      const formDataAPI = new FormData();
+
+      // Basic fields
+      formDataAPI.append("name", formData.name);
+      formDataAPI.append("shape", formData.shape);
+      formDataAPI.append("sku", formData.sku);
+      formDataAPI.append("cut_type", cutType || "");
+      formDataAPI.append("color_range", formData.color || "");
+      formDataAPI.append("clarity_range", formData.dimension || "");
+      formDataAPI.append("description", formData.description || "");
+      formDataAPI.append("is_available", formData.availability.toString());
+
+      // Variants (dimension, carat_weight, price)
+      const validVariants = cutVariants.filter(
+        (variant) => variant.caratWeight && variant.dimension && variant.price
+      );
+
+      formDataAPI.append(
+        "cut_variants",
+        JSON.stringify(
+          validVariants.map((variant) => ({
+            dimension: variant.dimension,
+            carat_weight: parseFloat(variant.caratWeight),
+            price: parseFloat(variant.price),
+          }))
+        )
+      );
+
+      // Files
+      images.forEach((image) => {
+        formDataAPI.append("images", image.file);
+      });
+      if (video) {
+        formDataAPI.append("videos", video.file);
+      }
+
+      // API request
+      const response = await fetch("/api/admin/product/cut/add-cut", {
+        method: "POST",
+        headers: { Authorization: authToken },
+        body: formDataAPI,
+      });
+
+      const result = await response.json();
+
+      if (result.status) {
+        toast.success(formData.sku + " - By Cut saved successfully!");
+        resetFormData();
+        setCutVariants([
+          {
+            id: 1,
+            color: "",
+            clarity: "",
+            caratWeight: "",
+            dimension: "",
+            price: "",
+          },
+        ]);
+      } else {
+        toast.error(result.message || "Failed to save by cut");
+        if (result.errors && Array.isArray(result.errors)) {
+          result.errors.forEach((error) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Error saving by cut:", error);
+      toast.error("An error occurred while saving the by cut product");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveLayout = async () => {
+    setIsLoading(true);
+
+    try {
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return;
+      }
+
+      const formDataAPI = new FormData();
+
+      // Basic fields
+      formDataAPI.append("name", formData.name);
+      formDataAPI.append("sku", formData.sku);
+      formDataAPI.append("layout_type", layoutType || "");
+      formDataAPI.append("description", formData.description || "");
+      formDataAPI.append("is_available", formData.availability.toString());
+      formDataAPI.append("price", parseFloat(layoutPrice || 0));
+
+      // Diamond details
+      const validDetails = layoutVariants.filter(
+        (variant) =>
+          variant.shape &&
+          variant.totalPcs &&
+          variant.totalCaratWeight &&
+          variant.dimensions &&
+          variant.colorRange &&
+          variant.clarityRange
+      );
+
+      formDataAPI.append(
+        "diamond_details",
+        JSON.stringify(
+          validDetails.map((variant) => ({
+            shape: variant.shape,
+            pcs: parseInt(variant.totalPcs, 10),
+            carat_weight: parseFloat(variant.totalCaratWeight),
+            dimension: variant.dimensions,
+            color_range: variant.colorRange,
+            clarity_range: variant.clarityRange,
+          }))
+        )
+      );
+
+      // Files
+      images.forEach((image) => {
+        formDataAPI.append("images", image.file);
+      });
+      if (video) {
+        formDataAPI.append("videos", video.file);
+      }
+
+      // API request
+      const response = await fetch("/api/admin/product/layout/add-layout", {
+        method: "POST",
+        headers: { Authorization: authToken },
+        body: formDataAPI,
+      });
+
+      const result = await response.json();
+
+      if (result.status) {
+        toast.success(formData.sku + " - Layout saved successfully!");
+        resetFormData();
+        setLayoutVariants([
+          {
+            id: 1,
+            shape: "",
+            totalPcs: "",
+            totalCaratWeight: "",
+            dimensions: "",
+            colorRange: "",
+            clarityRange: "",
+          },
+        ]);
+        setLayoutPrice("");
+        setLayoutType("");
+      } else {
+        toast.error(result.message || "Failed to save layout");
+        if (result.errors && Array.isArray(result.errors)) {
+          result.errors.forEach((error) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Error saving layout:", error);
+      toast.error("An error occurred while saving the layout");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveAlphabet = async () => {
+    setIsLoading(true);
+
+    try {
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return;
+      }
+
+      const formDataAPI = new FormData();
+
+      // Basic fields
+      formDataAPI.append("name", formData.name);
+      formDataAPI.append("sku", formData.sku);
+      formDataAPI.append("character", character || "");
+      formDataAPI.append("color_range", formData.color || "");
+      formDataAPI.append("clarity_range", formData.dimension || "");
+      formDataAPI.append("description", formData.description || "");
+      formDataAPI.append("is_available", formData.availability.toString());
+
+      // Variants
+      const validVariants = alphabetVariants.filter(
+        (variant) => variant.caratWeight && variant.price
+      );
+
+      formDataAPI.append(
+        "alphabet_variants",
+        JSON.stringify(
+          validVariants.map((variant) => ({
+            carat_weight: parseFloat(variant.caratWeight),
+            price: parseFloat(variant.price),
+          }))
+        )
+      );
+
+      // Files
+      images.forEach((image) => {
+        formDataAPI.append("images", image.file);
+      });
+      if (video) {
+        formDataAPI.append("videos", video.file);
+      }
+
+      // API request
+      const response = await fetch("/api/admin/product/alphabet/add-alphabet", {
+        method: "POST",
+        headers: { Authorization: authToken },
+        body: formDataAPI,
+      });
+
+      const result = await response.json();
+
+      if (result.status) {
+        toast.success(formData.sku + " - Alphabet saved successfully!");
+        resetFormData();
+        setAlphabetVariants([
+          {
+            id: 1,
+            caratWeight: "",
+            price: "",
+          },
+        ]);
+      } else {
+        toast.error(result.message || "Failed to save alphabet");
+        if (result.errors && Array.isArray(result.errors)) {
+          result.errors.forEach((error) => toast.error(error));
+        }
+      }
+    } catch (error) {
+      console.error("Error saving alphabet:", error);
+      toast.error("An error occurred while saving the alphabet");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSave = () => {
+    console.log("handleSave");
     let errors = [];
 
     switch (activeProductTab) {
       case "diamond":
         errors = validateDiamondForm();
-        break;
+        if (errors.length > 0) {
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          return;
+        }
+        // Call the actual diamond save function
+        saveDiamond();
+        return;
       case "melee":
         errors = validateMeleeForm();
-        break;
+        if (errors.length > 0) {
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          return;
+        }
+        saveMelee();
+        return;
       case "colorstone":
         errors = validateColorStoneForm();
-        break;
+        if (errors.length > 0) {
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          return;
+        }
+        saveColorStone();
+        return;
       case "cut":
         errors = validateCutForm();
-        break;
+        if (errors.length > 0) {
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          return;
+        }
+        saveCut();
+        return;
       case "layout":
         errors = validateLayoutForm();
-        break;
+        if (errors.length > 0) {
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          return;
+        }
+        saveLayout();
+        return;
       case "alphabet":
         errors = validateAlphabetForm();
-        break;
+        if (errors.length > 0) {
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          return;
+        }
+        saveAlphabet();
+        return;
     }
 
     if (errors.length > 0) {
@@ -687,9 +1146,9 @@ export default function AddProductPage() {
       alphabet: "Alphabet",
     };
 
-    toast.success(
-      `${productNames[activeProductTab]} product saved successfully!`
-    );
+    // toast.success(
+    //   `${productNames[activeProductTab]} product saved successfully!`
+    // );
   };
 
   const renderProductDetailsForm = () => (
@@ -838,7 +1297,7 @@ export default function AddProductPage() {
               <input
                 type="text"
                 value={cutType}
-                onChange={(e) => setAntiqueType(e.target.value)}
+                onChange={(e) => setCutType(e.target.value)}
                 list="cutTypeOptions"
                 className="cursor-pointer w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Type or select cut type"
@@ -1179,17 +1638,17 @@ export default function AddProductPage() {
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
                       <input
-                        type="number"
-                        value={variant.price}
+                        type="text"
+                        value={formatPrice(variant.price)}
                         onChange={(e) =>
                           handleDiamondVariantChange(
                             variant.id,
                             "price",
-                            e.target.value
+                            stripPriceFormatting(e.target.value)
                           )
                         }
                         className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
-                        placeholder="1000"
+                        placeholder="1,000"
                       />
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
@@ -1313,14 +1772,13 @@ export default function AddProductPage() {
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
                       <input
-                        type="number"
-                        step="0.01"
-                        value={variant.pricePerCarat}
+                        type="text"
+                        value={formatPrice(variant.pricePerCarat)}
                         onChange={(e) =>
                           handleMeleeVariantChange(
                             variant.id,
                             "pricePerCarat",
-                            e.target.value
+                            stripPriceFormatting(e.target.value)
                           )
                         }
                         className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
@@ -1439,17 +1897,17 @@ export default function AddProductPage() {
 
                     <td className="border border-gray-300 px-2 py-2">
                       <input
-                        type="number"
-                        value={variant.price}
+                        type="text"
+                        value={formatPrice(variant.price)}
                         onChange={(e) =>
                           handleColorStoneVariantChange(
                             variant.id,
                             "price",
-                            e.target.value
+                            stripPriceFormatting(e.target.value)
                           )
                         }
                         className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
-                        placeholder="1000"
+                        placeholder="1,000"
                       />
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
@@ -1539,17 +1997,17 @@ export default function AddProductPage() {
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
                       <input
-                        type="number"
-                        value={variant.price}
+                        type="text"
+                        value={formatPrice(variant.price)}
                         onChange={(e) =>
                           handleCutVariantChange(
                             variant.id,
                             "price",
-                            e.target.value
+                            stripPriceFormatting(e.target.value)
                           )
                         }
                         className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
-                        placeholder="1000"
+                        placeholder="1,000"
                       />
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
@@ -1771,14 +2229,21 @@ export default function AddProductPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Layout Price <span className="text-red-500">*</span>
             </label>
-            <input
-              type="number"
-              value={layoutPrice}
-              onChange={(e) => setLayoutPrice(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-              placeholder="Enter layout price"
-              required
-            />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-3 pl-3 flex items-center pointer-events-none z-10 text-gray-500">
+                USD
+              </div>
+              <input
+                type="text"
+                value={formatPrice(layoutPrice)}
+                onChange={(e) =>
+                  setLayoutPrice(stripPriceFormatting(e.target.value))
+                }
+                className="pl-16 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="Enter layout price"
+                required
+              />
+            </div>
           </div>
         </div>
       )}
@@ -1825,17 +2290,17 @@ export default function AddProductPage() {
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
                       <input
-                        type="number"
-                        value={variant.price}
+                        type="text"
+                        value={formatPrice(variant.price)}
                         onChange={(e) =>
                           handleAlphabetVariantChange(
                             variant.id,
                             "price",
-                            e.target.value
+                            stripPriceFormatting(e.target.value)
                           )
                         }
                         className="w-full px-2 py-1 text-sm border-0 focus:outline-none"
-                        placeholder="1000"
+                        placeholder="1,000"
                       />
                     </td>
                     <td className="border border-gray-300 px-2 py-2">
@@ -2003,20 +2468,53 @@ export default function AddProductPage() {
                 <div className="flex justify-end">
                   <button
                     onClick={handleSave}
-                    className="cursor-pointer px-4 py-2 gap-2 bg-primary-600 text-white rounded-lg flex items-center hover:bg-primary-700 transition-colors"
+                    disabled={isLoading}
+                    className={`px-4 py-2 gap-2 text-white rounded-lg flex items-center transition-colors ${
+                      isLoading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-primary-600 hover:bg-primary-700 cursor-pointer"
+                    }`}
                   >
-                    Save{" "}
-                    {activeProductTab === "diamond"
-                      ? "Diamond"
-                      : activeProductTab === "melee"
-                      ? "Melee"
-                      : activeProductTab === "colorstone"
-                      ? "Color Stone"
-                      : activeProductTab === "cut"
-                      ? "By Cut"
-                      : activeProductTab === "layout"
-                      ? "Layout"
-                      : "Alphabet"}
+                    {isLoading ? (
+                      <>
+                        <svg
+                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        Save{" "}
+                        {activeProductTab === "diamond"
+                          ? "Diamond"
+                          : activeProductTab === "melee"
+                          ? "Melee"
+                          : activeProductTab === "colorstone"
+                          ? "Color Stone"
+                          : activeProductTab === "cut"
+                          ? "By Cut"
+                          : activeProductTab === "layout"
+                          ? "Layout"
+                          : "Alphabet"}
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

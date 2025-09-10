@@ -12,6 +12,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
+import SearchCard from "./SearchCard";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -146,7 +147,7 @@ export default function Navbar() {
                           <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
                             Shop by Shape
                           </h3>
-                          <div className="space-y-2">
+                          <div className="space-y-1">
                             <Link
                               href="/collections/round"
                               className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
@@ -221,7 +222,7 @@ export default function Navbar() {
                           <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
                             Shop by Cut
                           </h3>
-                          <div className="space-y-2">
+                          <div className="space-y-1">
                             <Link
                               href="/collections/oldcut"
                               className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
@@ -272,7 +273,7 @@ export default function Navbar() {
                           <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
                             Color Diamonds
                           </h3>
-                          <div className="space-y-2">
+                          <div className="space-y-1">
                             <Link
                               href="/collections/pink"
                               className="block text-gray-700 hover:text-primary-600 transition-colors py-1"
@@ -309,7 +310,7 @@ export default function Navbar() {
                         {/* Lab Gemstones & Melee */}
                         <div className="space-y-4">
                           {/* Melee */}
-                          <div className="space-y-2">
+                          <div className="space-y-1">
                             <h3 className="text-gray-900 font-semibold text-lg border-b border-gray-200 pb-2">
                               Melee
                             </h3>
@@ -380,8 +381,15 @@ export default function Navbar() {
                   placeholder="Search diamonds..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="text-gray-700 w-64 pl-10 pr-4 py-2 border border-border rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 outline-none transition duration-200 bg-surface-50"
+                  className="text-gray-700 w-64 pl-10 pr-4 py-2 rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 outline-none transition duration-200 bg-surface-400"
                 />
+                <div className="absolute inset-y-0 pl-3 top-20 flex items-center">
+                  <SearchCard
+                    image="/placeholders/heart diamond.png"
+                    title="Diamond"
+                    description="A diamond is a mineral..."
+                  />
+                </div>
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <svg
                     className="h-5 w-5 text-secondary"
