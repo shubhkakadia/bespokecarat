@@ -16,9 +16,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  Mail,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import productsData from "../../../../products_dummy2.json";
+import { CustomerRoute } from "@/components/ProtectedRoute";
 
 export default function ProductPage({ params }) {
   const { id } = use(params);
@@ -634,571 +636,606 @@ export default function ProductPage({ params }) {
     );
   }
 
+  const getWhatsAppMessage = () => {
+    const message =
+      product.name +
+      ", \n" +
+      product.sku +
+      ", \n" +
+      quantity +
+      ", \n" +
+      currentVariant +
+      ", \n" +
+      product.price;
+    return message;
+  };
+
   // Get the currently selected variant for pricing
   const currentVariant = getSelectedVariant();
 
   return (
-    <div>
-      <Navbar />
+    <CustomerRoute>
+      <div>
+        <Navbar />
 
-      {/* Back Button */}
-      <div className="container mx-auto px-4 pt-4">
-        <button
-          onClick={handleBack}
-          className="cursor-pointer flex items-center space-x-2 text-secondary-700 hover:text-primary-600 transition-colors mb-4"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Search</span>
-        </button>
-      </div>
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-4">
+          <button
+            onClick={handleBack}
+            className="cursor-pointer flex items-center space-x-2 text-secondary-700 hover:text-primary-600 transition-colors mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Search</span>
+          </button>
+        </div>
 
-      {/* Main Product Section */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left Side - Images */}
-          <div className="space-y-4">
-            {/* Main Media Display */}
-            <div className="relative aspect-square bg-surface-100 rounded-lg overflow-hidden">
-              {currentMediaList.length > 0 &&
-              currentMediaIndex >= 0 &&
-              currentMediaIndex < currentMediaList.length &&
-              currentMediaList[currentMediaIndex] ? (
-                <>
-                  {isVideo(currentMediaList[currentMediaIndex]) ? (
-                    <video
-                      src={currentMediaList[currentMediaIndex]}
-                      controls
-                      className="w-full h-full object-cover"
-                      poster="" // You can add a poster image here if available
-                    >
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : (
-                    <Image
-                      src={currentMediaList[currentMediaIndex]}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  )}
+        {/* Main Product Section */}
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Left Side - Images */}
+            <div className="space-y-4">
+              {/* Main Media Display */}
+              <div className="relative aspect-square bg-surface-100 rounded-lg overflow-hidden">
+                {currentMediaList.length > 0 &&
+                currentMediaIndex >= 0 &&
+                currentMediaIndex < currentMediaList.length &&
+                currentMediaList[currentMediaIndex] ? (
+                  <>
+                    {isVideo(currentMediaList[currentMediaIndex]) ? (
+                      <video
+                        src={currentMediaList[currentMediaIndex]}
+                        controls
+                        className="w-full h-full object-cover"
+                        poster="" // You can add a poster image here if available
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <Image
+                        src={currentMediaList[currentMediaIndex]}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        priority
+                      />
+                    )}
 
-                  {/* Navigation arrows */}
-                  {currentMediaList.filter((media) => media).length > 1 && (
-                    <>
-                      <button
-                        onClick={prevMedia}
-                        className="cursor-pointer absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
-                      <button
-                        onClick={nextMedia}
-                        className="cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    </>
-                  )}
-                </>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-surface-400">
-                  <p>No media available</p>
-                </div>
-              )}
-            </div>
-            {/* Media Thumbnails */}
-            {currentMediaList.filter((media) => media).length > 1 && (
-              <div className="flex justify-center space-x-2">
-                {currentMediaList.map(
-                  (media, index) =>
-                    media && (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentMediaIndex(index)}
-                        className={`cursor-pointer w-16 h-16 rounded-lg border-2 overflow-hidden ${
-                          currentMediaIndex === index
-                            ? "border-primary-600"
-                            : "border-surface-300 hover:border-surface-400"
-                        }`}
-                      >
-                        {isVideo(media) ? (
-                          <div className="w-full h-full bg-surface-200 flex items-center justify-center relative">
-                            <Video className="w-8 h-8 text-surface-600" />
-                            <div className="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white text-xs px-1 rounded">
-                              VIDEO
-                            </div>
-                          </div>
-                        ) : (
-                          <Image
-                            src={media}
-                            alt={`${product.name} ${index + 1}`}
-                            width={64}
-                            height={64}
-                            className="object-cover w-full h-full"
-                          />
-                        )}
-                      </button>
-                    )
+                    {/* Navigation arrows */}
+                    {currentMediaList.filter((media) => media).length > 1 && (
+                      <>
+                        <button
+                          onClick={prevMedia}
+                          className="cursor-pointer absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={nextMedia}
+                          className="cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-surface-400">
+                    <p>No media available</p>
+                  </div>
                 )}
               </div>
-            )}
-          </div>
-
-          {/* Right Side - Product Information */}
-          <div className="space-y-6">
-            {/* Product Title and Basic Info */}
-            <div>
-              <h1 className="text-3xl font-bold text-text-dark mb-2">
-                {product.name}
-              </h1>
-              <p className="text-secondary-700 mb-1">SKU: {product.sku}</p>
-              {product.productType === "layout" ? (
-                <p className="text-secondary-700 mb-4">
-                  Layout Type: {product.layoutType}
-                </p>
-              ) : (
-                <p className="text-secondary-700 mb-4">
-                  Shape: {product.shape}
-                </p>
+              {/* Media Thumbnails */}
+              {currentMediaList.filter((media) => media).length > 1 && (
+                <div className="flex justify-center space-x-2">
+                  {currentMediaList.map(
+                    (media, index) =>
+                      media && (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentMediaIndex(index)}
+                          className={`cursor-pointer w-16 h-16 rounded-lg border-2 overflow-hidden ${
+                            currentMediaIndex === index
+                              ? "border-primary-600"
+                              : "border-surface-300 hover:border-surface-400"
+                          }`}
+                        >
+                          {isVideo(media) ? (
+                            <div className="w-full h-full bg-surface-200 flex items-center justify-center relative">
+                              <Video className="w-8 h-8 text-surface-600" />
+                              <div className="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white text-xs px-1 rounded">
+                                VIDEO
+                              </div>
+                            </div>
+                          ) : (
+                            <Image
+                              src={media}
+                              alt={`${product.name} ${index + 1}`}
+                              width={64}
+                              height={64}
+                              className="object-cover w-full h-full"
+                            />
+                          )}
+                        </button>
+                      )
+                  )}
+                </div>
               )}
-              <p className="text-lg text-text-dark">{product.description}</p>
             </div>
 
-            {/* Variants Selection */}
-            {product?.variants &&
-              product.variants.length > 0 &&
-              product.productType !== "layout" && (
-                <div className="space-y-4 border-b border-surface-300 pb-6">
-                  <h3 className="text-lg font-semibold text-text-dark">
-                    Select Options
-                  </h3>
-
-                  {product.productType === "diamond" && (
-                    <>
-                      {/* Color Selection */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Color: {selectedColor}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctColors().map((color) => (
-                            <button
-                              key={color}
-                              onClick={() => handleOptionSelect("color", color)}
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedColor === color
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled("color", color)
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {color}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Clarity Selection */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Clarity: {selectedClarity}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctClarities().map((clarity) => (
-                            <button
-                              key={clarity}
-                              onClick={() =>
-                                handleOptionSelect("clarity", clarity)
-                              }
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedClarity === clarity
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled("clarity", clarity)
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {clarity}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  {product.productType === "colorstone" && (
-                    <>
-                      {/* Color Selection */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Shape: {selectedShape}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctShape().map((shape) => (
-                            <button
-                              key={shape}
-                              onClick={() => handleOptionSelect("shape", shape)}
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedShape === shape
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled("shape", shape)
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {shape}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  {product.productType === "melee" && (
-                    <>
-                      {/* Color Range Selection */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Color Range: {selectedColorRange}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctColorRange().map((colorRange) => (
-                            <button
-                              key={colorRange}
-                              onClick={() =>
-                                handleOptionSelect("colorRange", colorRange)
-                              }
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedColorRange === colorRange
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled("colorRange", colorRange)
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {colorRange}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Clarity Range Selection */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Clarity Range: {selectedClarityRange}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctClarityRange().map((clarityRange) => (
-                            <button
-                              key={clarityRange}
-                              onClick={() =>
-                                handleOptionSelect("clarityRange", clarityRange)
-                              }
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedClarityRange === clarityRange
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled(
-                                      "clarityRange",
-                                      clarityRange
-                                    )
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {clarityRange}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Sieve Size Selection for Melee */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Sieve Size: {selectedCaratWeight}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctSieveSizes().map((size) => (
-                            <button
-                              key={size}
-                              onClick={() =>
-                                handleOptionSelect("sieveSize", size)
-                              }
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedCaratWeight === size
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled("sieveSize", size)
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {size}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  {(product.productType === "diamond" ||
-                    product.productType === "colorstone" ||
-                    product.productType === "alphabet" ||
-                    product.productType === "cuts") && (
-                    <>
-                      {/* Carat Weight Selection */}
-                      <div>
-                        <label className="block text-sm font-medium text-text-dark mb-2">
-                          Carat Weight: {selectedCaratWeight}
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {getDistinctCaratWeights().map((weight) => (
-                            <button
-                              key={weight}
-                              onClick={() =>
-                                handleOptionSelect("caratWeight", weight)
-                              }
-                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                selectedCaratWeight === weight
-                                  ? "bg-primary-600 text-white border-primary-600"
-                                  : isOptionDisabled("caratWeight", weight)
-                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                              }`}
-                            >
-                              {weight} ct
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-            {/* Layout Variants Display */}
-            {product?.productType === "layout" &&
-              product?.variants &&
-              product.variants.length > 0 && (
-                <div className="space-y-4 border-b border-surface-300 pb-6">
-                  <h3 className="text-lg font-semibold text-text-dark">
-                    Layout Variants
-                  </h3>
-                  <p className="text-sm text-secondary-700 mb-4">
-                    This layout includes all the following variants:
-                  </p>
-                  <div className="overflow-x-auto">
-                    <table className="w-full border border-surface-300 rounded-lg">
-                      <thead className="bg-surface-100">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
-                            Shape
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
-                            Pieces
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
-                            Carat Weight
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
-                            Dimensions
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
-                            Color Range
-                          </th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
-                            Clarity Range
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white">
-                        {product.variants.map((variant, index) => (
-                          <tr
-                            key={variant.id || index}
-                            className={`${
-                              index % 2 === 0 ? "bg-white" : "bg-surface-50"
-                            } hover:bg-surface-100 transition-colors`}
-                          >
-                            <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                              {variant.shape}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                              {variant.totalPcs}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                              {variant.totalCaratWeight} ct
-                            </td>
-                            <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                              {variant.dimensions}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                              {variant.colorRange}
-                            </td>
-                            <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                              {variant.clarityRange}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-            {/* Price */}
-            {(currentVariant.price ||
-              (product.productType === "layout" && product.layoutPrice)) && (
-              <div className="border-b border-surface-300 pb-4">
-                <div className="text-3xl font-bold text-primary-600">
-                  {product.productType === "layout"
-                    ? `$${product.layoutPrice?.toLocaleString()}`
-                    : product.productType === "melee"
-                    ? `$${currentVariant.price?.toLocaleString()} per piece`
-                    : `$${currentVariant.price?.toLocaleString()}`}
-                </div>
+            {/* Right Side - Product Information */}
+            <div className="space-y-6">
+              {/* Product Title and Basic Info */}
+              <div>
+                <h1 className="text-3xl font-bold text-text-dark mb-2">
+                  {product.name}
+                </h1>
+                <p className="text-secondary-700 mb-1">SKU: {product.sku}</p>
                 {product.productType === "layout" ? (
-                  <div className="space-y-1">
-                    <p className="text-secondary-700">
-                      {product.layoutType} Layout •{" "}
-                      {product.variants?.length || 0} variants included
+                  <p className="text-secondary-700 mb-4">
+                    Layout Type: {product.layoutType}
+                  </p>
+                ) : (
+                  <p className="text-secondary-700 mb-4">
+                    Shape: {product.shape}
+                  </p>
+                )}
+                <p className="text-lg text-text-dark">{product.description}</p>
+              </div>
+
+              {/* Variants Selection */}
+              {product?.variants &&
+                product.variants.length > 0 &&
+                product.productType !== "layout" && (
+                  <div className="space-y-4 border-b border-surface-300 pb-6">
+                    <h3 className="text-lg font-semibold text-text-dark">
+                      Select Options
+                    </h3>
+
+                    {product.productType === "diamond" && (
+                      <>
+                        {/* Color Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Color: {selectedColor}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctColors().map((color) => (
+                              <button
+                                key={color}
+                                onClick={() =>
+                                  handleOptionSelect("color", color)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedColor === color
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("color", color)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {color}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Clarity Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Clarity: {selectedClarity}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctClarities().map((clarity) => (
+                              <button
+                                key={clarity}
+                                onClick={() =>
+                                  handleOptionSelect("clarity", clarity)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedClarity === clarity
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("clarity", clarity)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {clarity}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {product.productType === "colorstone" && (
+                      <>
+                        {/* Color Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Shape: {selectedShape}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctShape().map((shape) => (
+                              <button
+                                key={shape}
+                                onClick={() =>
+                                  handleOptionSelect("shape", shape)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedShape === shape
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("shape", shape)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {shape}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {product.productType === "melee" && (
+                      <>
+                        {/* Color Range Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Color Range: {selectedColorRange}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctColorRange().map((colorRange) => (
+                              <button
+                                key={colorRange}
+                                onClick={() =>
+                                  handleOptionSelect("colorRange", colorRange)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedColorRange === colorRange
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("colorRange", colorRange)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {colorRange}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Clarity Range Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Clarity Range: {selectedClarityRange}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctClarityRange().map((clarityRange) => (
+                              <button
+                                key={clarityRange}
+                                onClick={() =>
+                                  handleOptionSelect(
+                                    "clarityRange",
+                                    clarityRange
+                                  )
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedClarityRange === clarityRange
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled(
+                                        "clarityRange",
+                                        clarityRange
+                                      )
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {clarityRange}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Sieve Size Selection for Melee */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Sieve Size: {selectedCaratWeight}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctSieveSizes().map((size) => (
+                              <button
+                                key={size}
+                                onClick={() =>
+                                  handleOptionSelect("sieveSize", size)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedCaratWeight === size
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("sieveSize", size)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {size}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {(product.productType === "diamond" ||
+                      product.productType === "colorstone" ||
+                      product.productType === "alphabet" ||
+                      product.productType === "cuts") && (
+                      <>
+                        {/* Carat Weight Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Carat Weight: {selectedCaratWeight}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctCaratWeights().map((weight) => (
+                              <button
+                                key={weight}
+                                onClick={() =>
+                                  handleOptionSelect("caratWeight", weight)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedCaratWeight === weight
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("caratWeight", weight)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {weight} ct
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+              {/* Layout Variants Display */}
+              {product?.productType === "layout" &&
+                product?.variants &&
+                product.variants.length > 0 && (
+                  <div className="space-y-4 border-b border-surface-300 pb-6">
+                    <h3 className="text-lg font-semibold text-text-dark">
+                      Layout Variants
+                    </h3>
+                    <p className="text-sm text-secondary-700 mb-4">
+                      This layout includes all the following variants:
                     </p>
-                    <div className="flex items-center space-x-4 text-sm text-secondary-600">
-                      <span className="bg-surface-100 px-3 py-1 rounded-full">
-                        <strong>Pieces:</strong>{" "}
-                        {product.variants?.reduce(
-                          (sum, variant) => sum + (variant.totalPcs || 0),
-                          0
-                        )}
-                      </span>
-                      <span className="bg-surface-100 px-3 py-1 rounded-full">
-                        <strong>Carat Weight:</strong>{" "}
-                        {product.variants
-                          ?.reduce(
-                            (sum, variant) =>
-                              sum + (variant.totalCaratWeight || 0),
-                            0
-                          )
-                          .toFixed(2)}{" "}
-                        ct
-                      </span>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border border-surface-300 rounded-lg">
+                        <thead className="bg-surface-100">
+                          <tr>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                              Shape
+                            </th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                              Pieces
+                            </th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                              Carat Weight
+                            </th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                              Dimensions
+                            </th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                              Color Range
+                            </th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                              Clarity Range
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white">
+                          {product.variants.map((variant, index) => (
+                            <tr
+                              key={variant.id || index}
+                              className={`${
+                                index % 2 === 0 ? "bg-white" : "bg-surface-50"
+                              } hover:bg-surface-100 transition-colors`}
+                            >
+                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                                {variant.shape}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                                {variant.totalPcs}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                                {variant.totalCaratWeight} ct
+                              </td>
+                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                                {variant.dimensions}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                                {variant.colorRange}
+                              </td>
+                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                                {variant.clarityRange}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
-                ) : (
-                  (currentVariant.caratWeight || currentVariant.sieveSize) && (
-                    <p className="text-secondary-700">
-                      {product.productType === "melee" ? (
-                        <>
-                          {currentVariant.sieveSize}
-                          {currentVariant.colorRange &&
-                            currentVariant.clarityRange && (
-                              <>
-                                {" "}
-                                • {currentVariant.colorRange} •{" "}
-                                {currentVariant.clarityRange}
-                              </>
-                            )}
-                        </>
-                      ) : (
-                        <>
-                          {currentVariant.caratWeight} carats
-                          {product.productType === "diamond" &&
-                            currentVariant.color &&
-                            currentVariant.clarity && (
-                              <>
-                                {" "}
-                                • {currentVariant.color} •{" "}
-                                {currentVariant.clarity}
-                              </>
-                            )}
-                          {product.productType === "colorstone" &&
-                            currentVariant.shape && (
-                              <> • {currentVariant.shape}</>
-                            )}
-                        </>
-                      )}
-                    </p>
-                  )
                 )}
+
+              {/* Price */}
+              {(currentVariant.price ||
+                (product.productType === "layout" && product.layoutPrice)) && (
+                <div className="border-b border-surface-300 pb-4">
+                  <div className="text-3xl font-bold text-primary-600">
+                    {product.productType === "layout"
+                      ? `$${product.layoutPrice?.toLocaleString()}`
+                      : product.productType === "melee"
+                      ? `$${currentVariant.price?.toLocaleString()} per piece`
+                      : `$${currentVariant.price?.toLocaleString()}`}
+                  </div>
+                  {product.productType === "layout" ? (
+                    <div className="space-y-1">
+                      <p className="text-secondary-700">
+                        {product.layoutType} Layout •{" "}
+                        {product.variants?.length || 0} variants included
+                      </p>
+                      <div className="flex items-center space-x-4 text-sm text-secondary-600">
+                        <span className="bg-surface-100 px-3 py-1 rounded-full">
+                          <strong>Pieces:</strong>{" "}
+                          {product.variants?.reduce(
+                            (sum, variant) => sum + (variant.totalPcs || 0),
+                            0
+                          )}
+                        </span>
+                        <span className="bg-surface-100 px-3 py-1 rounded-full">
+                          <strong>Carat Weight:</strong>{" "}
+                          {product.variants
+                            ?.reduce(
+                              (sum, variant) =>
+                                sum + (variant.totalCaratWeight || 0),
+                              0
+                            )
+                            .toFixed(2)}{" "}
+                          ct
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    (currentVariant.caratWeight ||
+                      currentVariant.sieveSize) && (
+                      <p className="text-secondary-700">
+                        {product.productType === "melee" ? (
+                          <>
+                            {currentVariant.sieveSize}
+                            {currentVariant.colorRange &&
+                              currentVariant.clarityRange && (
+                                <>
+                                  {" "}
+                                  • {currentVariant.colorRange} •{" "}
+                                  {currentVariant.clarityRange}
+                                </>
+                              )}
+                          </>
+                        ) : (
+                          <>
+                            {currentVariant.caratWeight} carats
+                            {product.productType === "diamond" &&
+                              currentVariant.color &&
+                              currentVariant.clarity && (
+                                <>
+                                  {" "}
+                                  • {currentVariant.color} •{" "}
+                                  {currentVariant.clarity}
+                                </>
+                              )}
+                            {product.productType === "colorstone" &&
+                              currentVariant.shape && (
+                                <> • {currentVariant.shape}</>
+                              )}
+                          </>
+                        )}
+                      </p>
+                    )
+                  )}
+                </div>
+              )}
+
+              {/* Certification */}
+              <div className="bg-accent-50 p-4 rounded-lg">
+                <p className="text-sm font-semibold text-accent-800">
+                  Certified by {product.certification}
+                </p>
+                <p className="text-sm text-accent-700">
+                  Comes with official certification documentation
+                </p>
               </div>
-            )}
 
-            {/* Certification */}
-            <div className="bg-accent-50 p-4 rounded-lg">
-              <p className="text-sm font-semibold text-accent-800">
-                Certified by {product.certification}
-              </p>
-              <p className="text-sm text-accent-700">
-                Comes with official certification documentation
-              </p>
-            </div>
+              {/* Quantity Selector */}
+              <div className="flex items-center space-x-4">
+                <label className="text-sm font-medium text-text-dark">
+                  Quantity:
+                </label>
+                <div className="flex items-center border border-surface-300 rounded-md">
+                  <button
+                    onClick={() => handleQuantityChange("decrease")}
+                    disabled={quantity <= 1}
+                    className="cursor-pointer p-2 hover:bg-surface-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="px-4 py-2 min-w-[60px] text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => handleQuantityChange("increase")}
+                    className="cursor-pointer p-2 hover:bg-surface-100"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
 
-            {/* Quantity Selector */}
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-text-dark">
-                Quantity:
-              </label>
-              <div className="flex items-center border border-surface-300 rounded-md">
+              {/* Action Buttons */}
+              <div className="flex space-x-4">
                 <button
-                  onClick={() => handleQuantityChange("decrease")}
-                  disabled={quantity <= 1}
-                  className="cursor-pointer p-2 hover:bg-surface-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleAddToCart}
+                  className="cursor-pointer flex-1 bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
                 >
-                  <Minus className="w-4 h-4" />
+                  <ShoppingCart className="w-5 h-5" />
+                  <span>Add to Cart</span>
                 </button>
-                <span className="px-4 py-2 min-w-[60px] text-center">
-                  {quantity}
-                </span>
                 <button
-                  onClick={() => handleQuantityChange("increase")}
-                  className="cursor-pointer p-2 hover:bg-surface-100"
+                  onClick={handleLike}
+                  className={`cursor-pointer p-3 rounded-md border transition-colors ${
+                    isLiked
+                      ? "bg-red-50 border-red-300 text-red-600"
+                      : "bg-surface-50 border-surface-300 text-secondary-700 hover:bg-surface-100"
+                  }`}
                 >
-                  <Plus className="w-4 h-4" />
+                  <Heart
+                    className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`}
+                  />
                 </button>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div className="flex space-x-4">
-              <button
-                onClick={handleAddToCart}
-                className="cursor-pointer flex-1 bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
-              >
-                <ShoppingCart className="w-5 h-5" />
-                <span>Add to Cart</span>
-              </button>
-              <button
-                onClick={handleLike}
-                className={`cursor-pointer p-3 rounded-md border transition-colors ${
-                  isLiked
-                    ? "bg-red-50 border-red-300 text-red-600"
-                    : "bg-surface-50 border-surface-300 text-secondary-700 hover:bg-surface-100"
-                }`}
-              >
-                <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
-              </button>
-            </div>
+              {/* Quick Contact Buttons */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-text-dark">
+                  Quick Contact
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  {/* Email */}
 
-            {/* Quick Contact Buttons */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-text-dark">
-                Quick Contact
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <button className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-primary-200 text-primary-600 rounded-md hover:bg-primary-50 transition-colors">
-                  <Video className="w-4 h-4" />
-                  <span className="text-sm">Virtual Appointment</span>
-                </button>
-                <button className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-primary-200 text-primary-600 rounded-md hover:bg-primary-50 transition-colors">
-                  <Phone className="w-4 h-4" />
-                  <span className="text-sm">Order on Call</span>
-                </button>
-                <button className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-green-200 text-green-600 rounded-md hover:bg-green-50 transition-colors">
-                  <MessageCircle className="w-4 h-4" />
-                  <span className="text-sm">WhatsApp Us</span>
-                </button>
+                  {/* message: hello */}
+
+                  <a
+                    href="mailto:sales@khodalgems.com"
+                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-primary-200 text-primary-600 rounded-md hover:bg-primary-50 transition-colors"
+                  >
+                    <Mail className="w-4 h-4" />
+                    <span className="text-sm">Email Us</span>
+                  </a>
+
+                  {/* message: [productname], [sku], [quantity], [selected variant], [price] */}
+                  <a
+                    href={`https://wa.me/+919409658456text=${getWhatsAppMessage()}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-green-200 text-green-600 rounded-md hover:bg-green-50 transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span className="text-sm">WhatsApp Us</span>
+                  </a>
+                </div>
               </div>
-            </div>
 
-            {/* Reviews Section */}
-            <div className="border-t border-surface-300 pt-6">
+              {/* Reviews Section */}
+              {/* <div className="border-t border-surface-300 pt-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-1">
@@ -1217,63 +1254,64 @@ export default function ProductPage({ params }) {
                   Write a Review
                 </button>
               </div>
+            </div> */}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* You May Also Like Section */}
-      {recommendedProducts.length > 0 && (
-        <div className="container mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold text-text-dark mb-8 text-center">
-            You May Also Like
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {recommendedProducts.map((recProduct) => (
-              <div key={recProduct.productId} className="group">
-                <div className="bg-surface-50 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                  {/* Product Image */}
-                  <div className="aspect-square bg-surface-100 rounded-md mb-4 overflow-hidden">
-                    {recProduct.images?.[0] ? (
-                      <Image
-                        src={recProduct.images[0]}
-                        alt={recProduct.name}
-                        width={200}
-                        height={200}
-                        className="object-cover w-full h-full group-hover:scale-105 transition-transform"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-surface-400">
-                        <p className="text-sm">No image</p>
-                      </div>
-                    )}
-                  </div>
+        {/* You May Also Like Section */}
+        {recommendedProducts.length > 0 && (
+          <div className="container mx-auto px-4 py-12">
+            <h2 className="text-2xl font-bold text-text-dark mb-8 text-center">
+              You May Also Like
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {recommendedProducts.map((recProduct) => (
+                <div key={recProduct.productId} className="group">
+                  <div className="bg-surface-50 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                    {/* Product Image */}
+                    <div className="aspect-square bg-surface-100 rounded-md mb-4 overflow-hidden">
+                      {recProduct.images?.[0] ? (
+                        <Image
+                          src={recProduct.images[0]}
+                          alt={recProduct.name}
+                          width={200}
+                          height={200}
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-surface-400">
+                          <p className="text-sm">No image</p>
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Product Info */}
-                  <div className="space-y-2">
-                    <h3 className="font-medium text-text-dark truncate">
-                      {recProduct.name}
-                    </h3>
-                    <p className="text-sm text-secondary-700">
-                      {recProduct.shape}
-                    </p>
-                    {recProduct.variants?.[0]?.price && (
-                      <p className="text-lg font-semibold text-primary-600">
-                        ${recProduct.variants[0].price.toLocaleString()}
+                    {/* Product Info */}
+                    <div className="space-y-2">
+                      <h3 className="font-medium text-text-dark truncate">
+                        {recProduct.name}
+                      </h3>
+                      <p className="text-sm text-secondary-700">
+                        {recProduct.shape}
                       </p>
-                    )}
-                    <button className="cursor-pointer w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors text-sm">
-                      View Details
-                    </button>
+                      {recProduct.variants?.[0]?.price && (
+                        <p className="text-lg font-semibold text-primary-600">
+                          ${recProduct.variants[0].price.toLocaleString()}
+                        </p>
+                      )}
+                      <button className="cursor-pointer w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors text-sm">
+                        View Details
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </CustomerRoute>
   );
 }

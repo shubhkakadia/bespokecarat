@@ -122,19 +122,44 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Products</h4>
             <ul className="space-y-2 text-gray-400">
+            <li>
+                <Link href="/collections/diamond" className="hover:text-white">
+                  Brilliant Cut
+                </Link>
+              </li>
               <li>
-                <Link href="/products/melee" className="hover:text-white">
+                <Link href="/collections/melee" className="hover:text-white">
                   Star Melee
                 </Link>
               </li>
               <li>
-                <Link href="/products/colored" className="hover:text-white">
-                  Colored Diamonds
+                <Link href="/collections/colorstone" className="hover:text-white">
+                  Colore Stones
                 </Link>
               </li>
               <li>
-                <Link href="/products/antique" className="hover:text-white">
+                <Link href="/collections/portuguese" className="hover:text-white">
+                  Portuguese Cut
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections/oldcut" className="hover:text-white">
+                  Old Cut
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections/alphabet" className="hover:text-white">
+                  Alphabets
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections/antiquecut" className="hover:text-white">
                   Antique Shapes
+                </Link>
+              </li>
+              <li>
+                <Link href="/collections/layout" className="hover:text-white">
+                  Layouts
                 </Link>
               </li>
             </ul>
@@ -149,12 +174,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/contact" className="hover:text-white">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/certifications" className="hover:text-white">
-                  Certifications
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -167,16 +187,16 @@ export default function Footer() {
                   Customer Support
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/shipping" className="hover:text-white">
                   Shipping Info
                 </Link>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <Link href="/returns" className="hover:text-white">
                   Returns
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
