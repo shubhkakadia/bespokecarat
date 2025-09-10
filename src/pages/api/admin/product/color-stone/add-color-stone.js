@@ -111,7 +111,7 @@ export default async function handler(req, res) {
 
         return res.status(200).send({
           status: false,
-          message: `A Color Stone with sku "${sku}" already exists.`,
+          message: `A Color Stone with sku ${isExist.sku} already exists.`,
         });
       }
 

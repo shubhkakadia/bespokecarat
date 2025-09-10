@@ -101,7 +101,7 @@ export default async function handler(req, res) {
         await cleanupUploadedFiles(req.files);
         return res.status(200).send({
           status: false,
-          message: `A melee with sku "${sku}" already exists.`,
+          message: `A melee with sku ${isExist.sku} already exists.`,
         });
       }
 

@@ -109,6 +109,7 @@ db.customers.hasMany(db.sessions, {
 
 db.diamonds.hasMany(db.diamondVariants, {
   foreignKey: "diamondId",
+  as: "variants",
 });
 db.diamondVariants.belongsTo(db.diamonds, {
   foreignKey: "diamondId",
@@ -116,6 +117,7 @@ db.diamondVariants.belongsTo(db.diamonds, {
 
 db.melees.hasMany(db.sieveSize, {
   foreignKey: "meleeId",
+  as: "sieve_sizes",
 });
 db.sieveSize.belongsTo(db.melees, {
   foreignKey: "meleeId",
@@ -123,6 +125,7 @@ db.sieveSize.belongsTo(db.melees, {
 
 db.colorStone.hasMany(db.colorStoneVariants, {
   foreignKey: "colorStoneId",
+  as: "variants",
 });
 db.colorStoneVariants.belongsTo(db.colorStone, {
   foreignKey: "colorStoneId",
@@ -130,6 +133,7 @@ db.colorStoneVariants.belongsTo(db.colorStone, {
 
 db.cuts.hasMany(db.cutVariants, {
   foreignKey: "cutId",
+  as: "variants",
 });
 db.cutVariants.belongsTo(db.cuts, {
   foreignKey: "cutId",
@@ -137,6 +141,7 @@ db.cutVariants.belongsTo(db.cuts, {
 
 db.layout.hasMany(db.diamondDetails, {
   foreignKey: "layoutId",
+  as: "diamond_details",
 });
 db.diamondDetails.belongsTo(db.layout, {
   foreignKey: "layoutId",
@@ -144,6 +149,7 @@ db.diamondDetails.belongsTo(db.layout, {
 
 db.alphabets.hasMany(db.alphabetVariants, {
   foreignKey: "alphabetId",
+  as: "variants",
 });
 db.alphabetVariants.belongsTo(db.alphabets, {
   foreignKey: "alphabetId",
@@ -151,7 +157,83 @@ db.alphabetVariants.belongsTo(db.alphabets, {
 
 // ASSOCIATIONS END
 
-db.sequelize.sync({ alter: true }).then(() => {
+// MEDIA ASSOCIATIONS START
+
+// Diamonds ↔ Medias
+db.diamonds.hasMany(db.medias, {
+  foreignKey: "product_slug", // column in medias
+  sourceKey: "slug", // column in diamonds
+  as: "medias",
+});
+db.medias.belongsTo(db.diamonds, {
+  foreignKey: "product_slug",
+  targetKey: "slug",
+  constraints: false,
+});
+
+// Melees ↔ Medias
+db.melees.hasMany(db.medias, {
+  foreignKey: "product_slug",
+  sourceKey: "slug",
+  as: "medias",
+});
+db.medias.belongsTo(db.melees, {
+  foreignKey: "product_slug",
+  targetKey: "slug",
+  constraints: false,
+});
+
+// Cuts ↔ Medias
+db.cuts.hasMany(db.medias, {
+  foreignKey: "product_slug",
+  sourceKey: "slug",
+  as: "medias",
+});
+db.medias.belongsTo(db.cuts, {
+  foreignKey: "product_slug",
+  targetKey: "slug",
+  constraints: false,
+});
+
+// ColorStones ↔ Medias
+db.colorStone.hasMany(db.medias, {
+  foreignKey: "product_slug",
+  sourceKey: "slug",
+  as: "medias",
+});
+db.medias.belongsTo(db.colorStone, {
+  foreignKey: "product_slug",
+  targetKey: "slug",
+  constraints: false,
+});
+
+// Layouts ↔ Medias
+db.layout.hasMany(db.medias, {
+  foreignKey: "product_slug",
+  sourceKey: "slug",
+  as: "medias",
+});
+db.medias.belongsTo(db.layout, {
+  foreignKey: "product_slug",
+  targetKey: "slug",
+  constraints: false,
+});
+
+// Alphabets ↔ Medias
+db.alphabets.hasMany(db.medias, {
+  foreignKey: "product_slug",
+  sourceKey: "slug",
+  as: "medias",
+});
+db.medias.belongsTo(db.alphabets, {
+  foreignKey: "product_slug",
+  targetKey: "slug",
+  constraints: false,
+});
+
+// MEDIA ASSOCIATIONS END
+
+db.sequelize.sync({ alter: false }).then(() => {
   console.log("### RESYNCED ###");
 });
 
