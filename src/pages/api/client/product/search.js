@@ -1,12 +1,13 @@
 import { Op } from "sequelize";
 import db from "../../../../../config/dbConfig";
 import { SEARCH_MAP } from "../../../../../lib/mappers";
-import { isClient } from "../../../../../lib/authFromToken";
+import { isAdmin, isClient } from "../../../../../lib/authFromToken";
 
 export default async function handler(req, res) {
   const client = await isClient(req);
+  const admin = await isAdmin(req);
 
-  if (!client) {
+  if (!client || !admin) {
     return res
       .status(200)
       .send({ status: false, message: "Authorization failed" });
