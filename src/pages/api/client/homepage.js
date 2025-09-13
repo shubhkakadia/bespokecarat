@@ -1,4 +1,4 @@
-import { isClient } from "../../../../lib/authFromToken";
+import { isAdmin, isClient } from "../../../../lib/authFromToken";
 
 const db = require("../../../../config/dbConfig");
 const { SEARCH_MAP } = require("../../../../lib/mappers");
@@ -7,8 +7,9 @@ const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export default async function handler(req, res) {
   const client = await isClient(req);
+  const admin = await isAdmin(req);
 
-  if (!client) {
+  if (!client || !admin) {
     return res
       .status(200)
       .send({ status: false, message: "Authorization failed" });
