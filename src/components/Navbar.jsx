@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import {
   ShoppingBagIcon,
   ChevronDownIcon,
@@ -9,20 +10,44 @@ import {
   LogOutIcon,
   SettingsIcon,
   ShoppingCartIcon,
-  UsersIcon,
+  Gem,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import SearchCard from "./SearchCard";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const searchAbortRef = useRef(null);
+  const searchBoxRef = useRef(null);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const avatarDropdownRef = useRef(null);
   const dropdownTimeoutRef = useRef(null);
+  const debounceRef = useRef(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const { isAuthenticated, isAdmin, isCustomer, userData, logout } = useAuth();
+  const isActivePath = (path) => {
+    if (!pathname) return false;
+    if (path === "/") return pathname === "/";
+    return pathname.startsWith(path);
+  };
+
+  const isDiamondsActive = () => {
+    if (!pathname) return false;
+    return (
+      pathname.startsWith("/products") || pathname.startsWith("/collections")
+    );
+  };
+
+  const { isAuthenticated, isAdmin, isCustomer, userData, logout, getToken } =
+    useAuth();
 
   // Dropdown hover handlers with delay
   const handleDropdownEnter = () => {
@@ -47,6 +72,12 @@ export default function Navbar() {
       ) {
         setIsAvatarDropdownOpen(false);
       }
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(event.target)
+      ) {
+        setSearchOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -56,8 +87,61 @@ export default function Navbar() {
       if (dropdownTimeoutRef.current) {
         clearTimeout(dropdownTimeoutRef.current);
       }
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+      if (searchAbortRef.current) {
+        searchAbortRef.current.abort();
+      }
     };
   }, []);
+
+  // Debounced search
+  useEffect(() => {
+    if (!searchQuery || searchQuery.trim().length === 0) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        // Abort previous request if any
+        if (searchAbortRef.current) searchAbortRef.current.abort();
+        const controller = new AbortController();
+        searchAbortRef.current = controller;
+
+        const token = getToken?.();
+        const res = await axios.get(`/api/client/product/search`, {
+          params: { q: searchQuery.trim() },
+          headers: token ? { Authorization: token } : {},
+          signal: controller.signal,
+        });
+        const data = Array.isArray(res?.data?.data) ? res.data.data : [];
+        setSearchResults(data.slice(0, 5));
+      } catch (err) {
+        if (axios.isCancel?.(err)) return;
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 350);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [searchQuery, getToken]);
+
+  const navigateToProduct = (item) => {
+    if (!item) return;
+    const sku = item.sku || item.id;
+    setSearchOpen(false);
+    setSearchQuery("");
+    router.push(`/products/${sku}`);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -111,7 +195,9 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center space-x-8">
             <Link
               href="/"
-              className="text-primary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+              className={`${
+                isActivePath("/") ? "text-primary" : "text-secondary"
+              } hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200`}
             >
               Home
             </Link>
@@ -122,7 +208,11 @@ export default function Navbar() {
               onMouseEnter={handleDropdownEnter}
               onMouseLeave={handleDropdownLeave}
             >
-              <button className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200 flex items-center">
+              <button
+                className={`${
+                  isDiamondsActive() ? "text-primary" : "text-secondary"
+                } hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200 flex items-center`}
+              >
                 Diamonds
                 <ChevronDownIcon className="ml-1 h-4 w-4" />
               </button>
@@ -333,11 +423,15 @@ export default function Navbar() {
 
                     {/* Right Side - Image */}
                     <div className="col-span-4">
-                      <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg h-96 flex items-center justify-center">
-                        <div className="text-center text-gray-500">
-                          <div className="text-4xl mb-2">💎</div>
-                          <p className="text-sm">Diamond Shapes Image</p>
-                          <p className="text-xs mt-1">400 x 384px</p>
+                      <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-80 flex items-center justify-center">
+                        <div className="text-center text-gray-500 shadow-lg">
+                          <Image
+                            src="/layout.jpg"
+                            alt="Diamond Shapes"
+                            className="w-full h-full object-cover rounded-lg"
+                            width={400}
+                            height={400}
+                          />
                         </div>
                       </div>
                     </div>
@@ -348,7 +442,9 @@ export default function Navbar() {
 
             <Link
               href="/aboutus"
-              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+              className={`${
+                isActivePath("/aboutus") ? "text-primary" : "text-secondary"
+              } hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200`}
             >
               About Us
             </Link>
@@ -356,7 +452,9 @@ export default function Navbar() {
             {/* Contact Us moved to left side */}
             <Link
               href="/contactus"
-              className="text-secondary hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200"
+              className={`${
+                isActivePath("/contactus") ? "text-primary" : "text-secondary"
+              } hover:text-primary-600 px-3 py-2 text-sm font-medium transition duration-200`}
             >
               Contact Us
             </Link>
@@ -374,25 +472,125 @@ export default function Navbar() {
           {/* Right Side - Search, Cart, Sign In */}
           <div className="hidden lg:flex items-center space-x-4">
             {/* Search Bar */}
-            <form onSubmit={handleSearch} className="relative">
-              <div className="relative">
+            <form
+              onSubmit={handleSearch}
+              className="relative"
+              ref={searchBoxRef}
+            >
+              <div className="relative group">
                 <input
                   type="text"
                   placeholder="Search diamonds..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="text-gray-700 w-64 pl-10 pr-4 py-2 rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 outline-none transition duration-200 bg-surface-400"
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setSearchOpen(true);
+                  }}
+                  onFocus={() => setSearchOpen(true)}
+                  className="text-gray-800 w-72 pl-12 pr-4 py-3 rounded-xl bg-gray-50 border border-gray-200 hover:border-gray-300 focus:border-primary-500 focus:bg-white focus:ring-4 focus:ring-primary-500/10 outline-none transition-all duration-300 placeholder-gray-400 text-sm shadow-sm hover:shadow-md focus:shadow-lg"
                 />
-                <div className="absolute inset-y-0 pl-3 top-20 flex items-center">
-                  <SearchCard
-                    image="/placeholders/heart diamond.png"
-                    title="Diamond"
-                    description="A diamond is a mineral..."
-                  />
-                </div>
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {searchOpen && searchQuery.length > 0 && (
+                  <div className="absolute left-0 right-0 mt-3 w-[30rem] max-h-[32rem] overflow-auto rounded-2xl border border-gray-100 bg-white shadow-2xl ring-1 ring-black/5 backdrop-blur-sm animate-in slide-in-from-top-2 duration-300">
+                    <div>
+                      <div className="p-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10 rounded-t-2xl">
+                        <div className="flex items-center justify-between">
+                          <div className="text-xs font-medium text-gray-600">
+                            {searchLoading
+                              ? "Searching diamonds..."
+                              : searchResults.length > 0
+                              ? `${searchResults.length} result${
+                                  searchResults.length === 1 ? "" : "s"
+                                } found`
+                              : searchQuery
+                              ? "No diamonds found"
+                              : "Start typing to search"}
+                          </div>
+                          {searchLoading && (
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-500 border-t-transparent"></div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="p-3 space-y-1">
+                        {!searchLoading &&
+                          searchResults.map((item) => {
+                            const firstImage =
+                              item?.medias?.find((m) => m.file_type === "image")
+                                ?.filelink || "/placeholders/Heart Diamond.png";
+                            const subtitle =
+                              item?.shape ||
+                              item?.color ||
+                              item?.description ||
+                              "";
+                            let price;
+                            if (
+                              Array.isArray(item?.variants) &&
+                              item.variants.length
+                            ) {
+                              price = item.variants[0]?.price;
+                            }
+                            if (
+                              price == null &&
+                              Array.isArray(item?.sieve_sizes) &&
+                              item.sieve_sizes.length
+                            ) {
+                              price = item.sieve_sizes[0]?.price_per_carat;
+                            }
+                            if (
+                              item?.product_type.toLowerCase() === "layouts" &&
+                              item?.price
+                            ) {
+                              price = item?.price;
+                            }
+                            return (
+                              <SearchCard
+                                key={`${item.product_type}-${item.id}`}
+                                image={firstImage}
+                                title={item?.name || item?.sku}
+                                subtitle={subtitle}
+                                badge={item?.product_type}
+                                price={price}
+                                onClick={() => navigateToProduct(item)}
+                                onAddToCart={() => {
+                                  console.log(
+                                    "Added to cart:",
+                                    item?.name || item?.sku
+                                  );
+                                  // Add to cart logic here
+                                }}
+                                onToggleLike={(isCurrentlyLiked) => {
+                                  console.log(
+                                    "Toggle like:",
+                                    item?.name || item?.sku,
+                                    !isCurrentlyLiked
+                                  );
+                                  // Toggle wishlist logic here
+                                }}
+                                isLiked={false} // This would come from your wishlist state
+                              />
+                            );
+                          })}
+                        {!searchLoading &&
+                          searchResults.length === 0 &&
+                          searchQuery && (
+                            <div className="p-6 text-center">
+                              <div className="text-gray-400 text-4xl mb-3 flex items-center justify-center">
+                                <Gem className="h-8 w-8" />
+                              </div>
+                              <div className="text-sm font-medium text-gray-600 mb-1">
+                                No diamonds found
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                Try different keywords or browse our collections
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg
-                    className="h-5 w-5 text-secondary"
+                    className="h-5 w-5 text-gray-400 group-focus-within:text-primary-500 transition-colors duration-200"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -409,13 +607,12 @@ export default function Navbar() {
             </form>
 
             {/* Cart Button */}
-            <button className="cursor-pointer relative p-2 text-secondary">
+            {/* <button className="cursor-pointer relative p-2 text-secondary">
               <ShoppingBagIcon className="h-5 w-5 hover:text-primary-600" />
-              {/* Cart Badge */}
               <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
                 3
               </span>
-            </button>
+            </button> */}
 
             {/* Sign In Button or Avatar */}
             {isAuthenticated ? (
@@ -523,20 +720,24 @@ export default function Navbar() {
           <div className="lg:hidden">
             <div className="absolute inset-x-0 top-full p-4 space-y-2 bg-background-secondary border-t border-border rounded-xl shadow-lg">
               {/* Mobile Search */}
-              <form onSubmit={handleSearch} className="px-3 py-2">
-                <div className="flex justify-between items-center">
-                  <div className="relative">
+              <form onSubmit={handleSearch} className="px-3 py-3">
+                <div className="flex justify-between items-center gap-3">
+                  <div className="relative flex-1">
                     <input
                       type="text"
                       placeholder="Search diamonds..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="text-gray-700 w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:ring-1 focus:ring-primary-600 focus:border-primary-600 outline-none bg-surface-50"
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setSearchOpen(true);
+                      }}
+                      onFocus={() => setSearchOpen(true)}
+                      className="text-gray-700 w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 outline-none bg-gray-50 hover:bg-white transition-all duration-200 placeholder-gray-400"
                     />
 
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <svg
-                        className="h-5 w-5 text-secondary"
+                        className="h-5 w-5 text-gray-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -550,10 +751,10 @@ export default function Navbar() {
                       </svg>
                     </div>
                   </div>
-                  <button className="cursor-pointer relative p-2 text-secondary">
-                    <ShoppingBagIcon className="h-5 w-6 hover:text-primary-600" />
+                  <button className="cursor-pointer relative p-2.5 text-gray-600 hover:text-primary-600 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
+                    <ShoppingBagIcon className="h-5 w-5" />
                     {/* Cart Badge */}
-                    <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-[10px] rounded-full h-5 w-5 flex items-center justify-center font-medium shadow-sm">
                       3
                     </span>
                   </button>
@@ -563,25 +764,33 @@ export default function Navbar() {
               {/* Mobile Navigation Links */}
               <Link
                 href="/"
-                className="text-primary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+                className={`${
+                  isActivePath("/") ? "text-primary" : "text-secondary"
+                } hover:text-primary-600 block px-3 py-2 text-base font-medium`}
               >
                 Home
               </Link>
               <Link
                 href="/products"
-                className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+                className={`${
+                  isDiamondsActive() ? "text-primary" : "text-secondary"
+                } hover:text-primary-600 block px-3 py-2 text-base font-medium`}
               >
                 Diamonds
               </Link>
               <Link
                 href="/aboutus"
-                className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+                className={`${
+                  isActivePath("/aboutus") ? "text-primary" : "text-secondary"
+                } hover:text-primary-600 block px-3 py-2 text-base font-medium`}
               >
                 About Us
               </Link>
               <Link
                 href="/contactus"
-                className="text-secondary hover:text-primary-600 block px-3 py-2 text-base font-medium"
+                className={`${
+                  isActivePath("/contactus") ? "text-primary" : "text-secondary"
+                } hover:text-primary-600 block px-3 py-2 text-base font-medium`}
               >
                 Contact Us
               </Link>

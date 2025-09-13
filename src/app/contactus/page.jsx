@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
+import Footer from "@/components/Footer";
+import { Mail, Phone } from "lucide-react";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +15,46 @@ export default function ContactPage() {
     message: "",
     inquiryType: "general",
   });
+
+  const [openFAQ, setOpenFAQ] = useState(null);
+
+  const FAQData = [
+    {
+      question: "Can we create custom shapes or send designs for production?",
+      answer:
+        "Yes. We accept custom shapes, drawings, and detailed designs. Our team produces every type of lab-grown diamond—including colored and small diamonds by precise measurements—to suit your requirements.",
+    },
+    {
+      question: "What types and sizes of diamonds do you supply?",
+      answer:
+        "We offer a full range of lab-grown diamonds, including white and colored stones. Certified diamonds from 1ct to 50ct are available on request, and we also supply small diamonds by measurement for custom settings.",
+    },
+    {
+      question: "Do you provide certification?",
+      answer:
+        "Certification is available upon request. We supply IGI-certified diamonds from 1ct to 50ct, ensuring verified quality for wholesale and retail use.",
+    },
+    {
+      question: "What is the lead time for made-to-order diamonds?",
+      answer:
+        "Standard orders are typically completed within 7-10 days, while bulk orders take 15-20 days, depending on volume and complexity.",
+    },
+    {
+      question: "Are lab-grown diamonds cost-effective?",
+      answer:
+        "Yes. As direct rough growers with in-house polishing, we offer competitive pricing without middlemen—giving you better margins and consistent supply.",
+    },
+    {
+      question: "Are lab-grown diamonds reliable and ethical?",
+      answer:
+        "Absolutely. Our diamonds meet the highest industry standards for durability and sustainability, with minimal environmental impact and no mining-related issues.",
+    },
+    {
+      question: "What is your return and warranty policy?",
+      answer:
+        "We stand by the quality of our products. Returns are accepted only in cases of manufacturing defects, damage during transit, or incorrect orders. Custom or made-to-order diamonds are non-returnable unless there is a verified fault.",
+    },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -28,16 +70,20 @@ export default function ContactPage() {
     // Handle form submission here
   };
 
+  const toggleFAQ = (index) => {
+    setOpenFAQ(openFAQ === index ? null : index);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+      <section className="relative bg-gradient-to-br from-primary-50 to-indigo-100 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Get in <span className="text-blue-600">Touch</span>
+              Get in <span className="text-primary-600">Touch</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
               Were here to help you find the perfect lab-grown diamonds. Contact
@@ -75,7 +121,7 @@ export default function ContactPage() {
                         required
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition duration-200"
                         placeholder="Your full name"
                       />
                     </div>
@@ -94,7 +140,7 @@ export default function ContactPage() {
                         required
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition duration-200"
                         placeholder="your.email@example.com"
                       />
                     </div>
@@ -114,7 +160,7 @@ export default function ContactPage() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition duration-200"
                         placeholder="+1 (555) 123-4567"
                       />
                     </div>
@@ -131,7 +177,7 @@ export default function ContactPage() {
                         name="inquiryType"
                         value={formData.inquiryType}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition duration-200"
                       >
                         <option value="general">General Inquiry</option>
                         <option value="star-melee">Star Melee Diamonds</option>
@@ -157,7 +203,7 @@ export default function ContactPage() {
                       required
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition duration-200"
                       placeholder="Brief subject of your inquiry"
                     />
                   </div>
@@ -176,14 +222,14 @@ export default function ContactPage() {
                       rows={6}
                       value={formData.message}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200 resize-none"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition duration-200 resize-none"
                       placeholder="Tell us more about your requirements or questions..."
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-medium transition duration-200"
+                    className="cursor-pointer w-full bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg text-lg font-medium transition duration-200"
                   >
                     Send Message
                   </button>
@@ -200,9 +246,9 @@ export default function ContactPage() {
 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
                       <svg
-                        className="w-6 h-6 text-blue-600"
+                        className="w-6 h-6 text-primary-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -225,13 +271,17 @@ export default function ContactPage() {
                       <h4 className="text-lg font-semibold text-gray-900 mb-1">
                         Our Location
                       </h4>
-                      <p className="text-gray-600">
-                        123 Diamond District
+                      <a
+                        href="https://maps.app.goo.gl/HPmzhoztUct9oVXr6"
+                        target="_blank"
+                        className="text-gray-600 hover:text-primary-600"
+                      >
+                        4th Floor,
                         <br />
-                        New York, NY 10036
+                        Heng Ngai Jewellery Centre
                         <br />
-                        United States
-                      </p>
+                        Hong Kong
+                      </a>
                     </div>
                   </div>
 
@@ -255,11 +305,12 @@ export default function ContactPage() {
                       <h4 className="text-lg font-semibold text-gray-900 mb-1">
                         Phone
                       </h4>
-                      <p className="text-gray-600">
-                        +1 (555) 123-4567
-                        <br />
-                        +1 (555) 123-4568
-                      </p>
+                      <a
+                        href="tel:+85267473252"
+                        className="text-gray-600 hover:text-primary-600"
+                      >
+                        +852 6747 3252
+                      </a>
                     </div>
                   </div>
 
@@ -283,11 +334,13 @@ export default function ContactPage() {
                       <h4 className="text-lg font-semibold text-gray-900 mb-1">
                         Email
                       </h4>
-                      <p className="text-gray-600">
-                        info@bespokecarat.com
-                        <br />
-                        support@bespokecarat.com
-                      </p>
+                      <a
+                        href="mailto:bespokecarat@gmail.com"
+                        target="_blank"
+                        className="text-gray-600 hover:text-primary-600"
+                      >
+                        bespokecarat@gmail.com
+                      </a>
                     </div>
                   </div>
 
@@ -312,9 +365,7 @@ export default function ContactPage() {
                         Business Hours
                       </h4>
                       <p className="text-gray-600">
-                        Monday - Friday: 9:00 AM - 6:00 PM
-                        <br />
-                        Saturday: 10:00 AM - 4:00 PM
+                        Monday - Saturday: 9:00 AM - 7:00 PM
                         <br />
                         Sunday: Closed
                       </p>
@@ -330,34 +381,40 @@ export default function ContactPage() {
                 </h3>
                 <div className="space-y-3">
                   <Link
-                    href="/products/melee"
-                    className="block text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                    href="/collections/melee"
+                    className="block text-primary-500 hover:text-primary-700 font-medium transition duration-200"
                   >
                     → Star Melee Collection
                   </Link>
                   <Link
-                    href="/products/colored"
-                    className="block text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                    href="/collections/colorstone"
+                    className="block text-primary-500 hover:text-primary-700 font-medium transition duration-200"
                   >
                     → Colored Diamonds
                   </Link>
                   <Link
-                    href="/certifications"
-                    className="block text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                    href="/collections/diamond"
+                    className="block text-primary-500 hover:text-primary-700 font-medium transition duration-200"
                   >
-                    → Certification Process
+                    → Diamond
                   </Link>
                   <Link
-                    href="/shipping"
-                    className="block text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                    href="/collections/layout"
+                    className="block text-primary-500 hover:text-primary-700 font-medium transition duration-200"
                   >
-                    → Shipping Information
+                    → Layout
                   </Link>
                   <Link
-                    href="/returns"
-                    className="block text-blue-600 hover:text-blue-700 font-medium transition duration-200"
+                    href="/collections/alphabet"
+                    className="block text-primary-500 hover:text-primary-700 font-medium transition duration-200"
                   >
-                    → Returns & Exchanges
+                    → Alphabet
+                  </Link>
+                  <Link
+                    href="/collections/cuts"
+                    className="block text-primary-500 hover:text-primary-700 font-medium transition duration-200"
+                  >
+                    → Antique Cuts
                   </Link>
                 </div>
               </div>
@@ -367,147 +424,101 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Frequently Asked Questions
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Quick answers to common questions about our lab-grown diamonds and
-              services.
+              Find answers to common questions about our lab-grown diamonds,
+              custom orders, and services.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                What are lab-grown diamonds?
-              </h3>
-              <p className="text-gray-600">
-                Lab-grown diamonds are real diamonds created in controlled
-                laboratory environments using advanced technology that
-                replicates the natural diamond formation process. They have
-                identical physical, chemical, and optical properties to mined
-                diamonds.
-              </p>
-            </div>
+          <div className="space-y-4">
+            {FAQData.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+              >
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="cursor-pointer w-full px-8 py-6 text-left flex justify-between items-center hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                    {faq.question}
+                  </h3>
+                  <div className="flex-shrink-0">
+                    <svg
+                      className={`w-6 h-6 text-primary-600 transition-transform duration-200 ${
+                        openFAQ === index ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    openFAQ === index
+                      ? "max-h-96 opacity-100"
+                      : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="px-8 pb-6">
+                    <div className="border-t border-gray-100 pt-4">
+                      <p className="text-gray-600 leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
 
-            <div className="bg-white rounded-xl p-8 shadow-sm">
+          {/* Additional CTA */}
+          <div className="mt-12 text-center">
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                How do I place a custom order?
+                Still have questions?
               </h3>
-              <p className="text-gray-600">
-                Contact our team with your specific requirements including size,
-                clarity, color preferences, and intended use. We ll provide
-                personalized recommendations and pricing for your custom diamond
-                selection.
+              <p className="text-gray-600 mb-6">
+                Our expert team is here to help you with any specific
+                requirements or questions about our lab-grown diamonds.
               </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Do you provide certifications?
-              </h3>
-              <p className="text-gray-600">
-                Yes, all our diamonds come with detailed certifications from
-                recognized gemological institutions, ensuring quality,
-                authenticity, and providing complete transparency about each
-                stones characteristics.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                What is your return policy?
-              </h3>
-              <p className="text-gray-600">
-                We offer a 30-day return policy for all purchases. Items must be
-                in original condition with all documentation. Custom orders may
-                have different terms - please contact us for details.
-              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="mailto:bespokecarat@gmail.com"
+                  className="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors duration-200"
+                >
+                  <Mail size={20} />
+                  &nbsp; Email Us
+                </a>
+                <a
+                  href="tel:+85267473252"
+                  className="inline-flex items-center px-6 py-3 border border-primary-600 text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition-colors duration-200"
+                >
+                  <Phone size={20} />
+                  &nbsp; Call Us
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Bespoke Carat</h3>
-              <p className="text-gray-400">
-                Premium lab-grown diamonds with uncompromising quality and
-                transparency.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Products</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/products/melee" className="hover:text-white">
-                    Star Melee
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/products/colored" className="hover:text-white">
-                    Colored Diamonds
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/products/antique" className="hover:text-white">
-                    Antique Shapes
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/about" className="hover:text-white">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-white">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/certifications" className="hover:text-white">
-                    Certifications
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="/support" className="hover:text-white">
-                    Customer Support
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/shipping" className="hover:text-white">
-                    Shipping Info
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/returns" className="hover:text-white">
-                    Returns
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Bespoke Carat. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
