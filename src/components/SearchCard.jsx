@@ -30,14 +30,14 @@ export default function SearchCard({
   };
   return (
     <div className="relative group">
-      <button 
-        type="button" 
-        onClick={onClick} 
-        className="w-full text-left bg-white hover:bg-gray-100 transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-300 rounded-xl p-3 group-hover:scale-[0.99] transform"
+      <button
+        type="button"
+        onClick={onClick}
+        className="w-full text-left bg-white hover:bg-gray-100 transition-all duration-300 cursor-pointer border border-gray-100 hover:border-gray-300 rounded-lg sm:rounded-xl p-2.5 sm:p-3 group-hover:scale-[0.99] transform"
       >
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-3 sm:gap-4 items-center">
           {/* Enhanced Image Container */}
-          <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 ring-1 ring-gray-200/50">
+          <div className="relative h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0 overflow-hidden rounded-lg sm:rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 ring-1 ring-gray-200/50">
             {image ? (
               <Image
                 src={image}
@@ -53,70 +53,87 @@ export default function SearchCard({
             {/* Subtle overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
-          
+
           {/* Content */}
           <div className="min-w-0 flex-1 space-y-1">
-            <div className="flex items-center gap-2">
-              <h3 className="truncate text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h3 className="truncate text-xs sm:text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                 {title}
               </h3>
               {badge && (
-                <span className="inline-flex items-center rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700 ring-1 ring-primary-200">
+                <span className="inline-flex items-center rounded-full bg-primary-50 px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-xs font-medium text-primary-700 ring-1 ring-primary-200 flex-shrink-0">
                   {badge}
                 </span>
               )}
             </div>
             {subtitle && (
-              <p className="truncate text-xs text-gray-500 font-medium">{subtitle}</p>
+              <p className="truncate text-[10px] sm:text-xs text-gray-500 font-medium">
+                {subtitle}
+              </p>
             )}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1">
-                {badge?.toLowerCase() === "melees" ? (
-                  price !== undefined && price !== null && (
-                    <p className="text-sm font-bold text-primary-600">$ {price}/ct</p>
-                  )
-                ) : (
-                  price && (
-                    <p className="text-sm font-bold text-primary-600">$ {price?.toLocaleString()}</p>
-                  )
-                )}
+                {badge?.toLowerCase() === "melees"
+                  ? price !== undefined &&
+                    price !== null && (
+                      <p className="text-xs sm:text-sm font-bold text-primary-600">
+                        $ {price}/ct
+                      </p>
+                    )
+                  : price && (
+                      <p className="text-xs sm:text-sm font-bold text-primary-600">
+                        $ {price?.toLocaleString()}
+                      </p>
+                    )}
               </div>
             </div>
           </div>
         </div>
       </button>
-      
+
       {/* Action buttons overlay */}
-      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+      <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 flex gap-0.5 sm:gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
         {/* Like Button */}
         <button
           onClick={handleLike}
-          className={`cursor-pointer p-1.5 rounded-full shadow-sm border transition-all duration-200 hover:scale-110 ${
-            liked 
-              ? 'bg-red-50 border-red-200 text-red-500 hover:bg-red-100' 
-              : 'bg-white/90 border-gray-200 text-gray-400 hover:text-red-400 hover:bg-red-50'
+          className={`cursor-pointer p-1 sm:p-1.5 rounded-full shadow-sm border transition-all duration-200 hover:scale-110 ${
+            liked
+              ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100"
+              : "bg-white/90 border-gray-200 text-gray-400 hover:text-red-400 hover:bg-red-50"
           }`}
-          title={liked ? 'Remove from wishlist' : 'Add to wishlist'}
+          title={liked ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <HeartIcon className={`h-3.5 w-3.5 transition-all ${liked ? 'fill-current' : ''}`} />
+          <HeartIcon
+            className={`h-3 w-3 sm:h-3.5 sm:w-3.5 transition-all ${
+              liked ? "fill-current" : ""
+            }`}
+          />
         </button>
-        
+
         {/* Cart Button */}
         <button
           onClick={handleAddToCart}
-          className={`cursor-pointer p-1.5 rounded-full shadow-sm border transition-all duration-200 hover:scale-110 ${
+          className={`cursor-pointer p-1 sm:p-1.5 rounded-full shadow-sm border transition-all duration-200 hover:scale-110 ${
             cartAdded
-              ? 'bg-green-50 border-green-200 text-green-600'
-              : 'bg-white/90 border-gray-200 text-gray-600 hover:text-primary-600 hover:bg-primary-50 hover:border-primary-200'
+              ? "bg-green-50 border-green-200 text-green-600"
+              : "bg-white/90 border-gray-200 text-gray-600 hover:text-primary-600 hover:bg-primary-50 hover:border-primary-200"
           }`}
-          title={cartAdded ? 'Added to cart!' : 'Add to cart'}
+          title={cartAdded ? "Added to cart!" : "Add to cart"}
         >
           {cartAdded ? (
-            <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            <svg
+              className="h-3 w-3 sm:h-3.5 sm:w-3.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
             </svg>
           ) : (
-            <ShoppingCartIcon className="h-3.5 w-3.5" />
+            <ShoppingCartIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
           )}
         </button>
       </div>

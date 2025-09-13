@@ -11,13 +11,13 @@ import {
   Plus,
   Minus,
   MessageCircle,
-  Video,
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
   Mail,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CustomerRoute } from "@/components/ProtectedRoute";
 import { getAuthToken } from "@/contexts/auth";
 import { toast } from "react-toastify";
@@ -55,14 +55,6 @@ export default function ProductPage({ params }) {
 
       const mediaList = sortedMedia.map((media) => media.filelink);
 
-      // Debug: Log the media list to console
-      console.log("Media list created:", {
-        totalMedia: mediaList.length,
-        images: product.medias.filter((m) => m.file_type === "image").length,
-        videos: product.medias.filter((m) => m.file_type === "video").length,
-        mediaList,
-      });
-
       // Only set currentMediaIndex if we have valid media
       if (mediaList.length > 0 && mediaList[0]) {
         setCurrentMediaIndex(0);
@@ -71,11 +63,62 @@ export default function ProductPage({ params }) {
     }
   }, [product]);
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      const productData = await getProductById(id);
+      const recommended = await getRecommendedProducts(id);
+
+      setProduct(productData);
+      setRecommendedProducts(recommended);
+
+      // Set initial variant selection based on product type
+      if (productData?.variants?.length > 0) {
+        setAvailableVariants(productData.variants);
+        const firstVariant = productData.variants[0];
+
+        // For diamonds, set color and clarity
+        if (productData.product_type === "diamonds") {
+          setSelectedColor(firstVariant.color);
+          setSelectedClarity(firstVariant.clarity);
+          setSelectedCaratWeight(firstVariant.carat_weight);
+        }
+        // For colorstones, set shape
+        else if (productData.product_type === "colorstones") {
+          setSelectedShape(firstVariant.shape);
+          setSelectedCaratWeight(firstVariant.carat_weight);
+        }
+        // For cuts and alphabets, set carat weight
+        else if (
+          productData.product_type === "cuts" ||
+          productData.product_type === "alphabets"
+        ) {
+          setSelectedCaratWeight(firstVariant.carat_weight);
+        }
+      }
+
+      // Handle melee with sieve_sizes - set initial defaults
+      if (
+        productData?.sieve_sizes?.length > 0 &&
+        productData.product_type === "melees"
+      ) {
+        // Find the first valid combination instead of setting options independently
+        const firstValidSieve = productData.sieve_sizes[0];
+        setSelectedColorRange(firstValidSieve.color_range);
+        setSelectedClarityRange(firstValidSieve.clarity_range);
+        setSelectedCaratWeight(firstValidSieve.size);
+      }
+
+      setLoading(false);
+    };
+
+    fetchProduct();
+  }, [id]);
+
   // Function to get product data from API
   const getProductById = async (id) => {
     try {
       const authToken = getAuthToken();
-      console.log(authToken);
       if (!authToken) {
         toast.error("Authorization failed. Please login again.");
         return null;
@@ -83,10 +126,9 @@ export default function ProductPage({ params }) {
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://localhost:3000/api/client/product/search?q=${id}`,
+        url: `http://localhost:3000/api/product-id?sku=${id}`,
         headers: {
-          Authorization:
-            authToken,
+          Authorization: authToken,
         },
       };
 
@@ -96,10 +138,16 @@ export default function ProductPage({ params }) {
         response.data &&
         response.data.status &&
         response.data.data &&
-        response.data.data.length > 0
+        response.data.data.product
       ) {
-        // Return the first product from the search results
-        return response.data.data[0];
+        // Return the complete data structure including product_type
+        const apiData = response.data.data;
+        const productData = {
+          ...apiData.product,
+          product_type: apiData.product_type,
+        };
+
+        return productData;
       }
 
       return null;
@@ -113,7 +161,6 @@ export default function ProductPage({ params }) {
   const getRecommendedProducts = async (currentProductId, limit = 5) => {
     try {
       const authToken = getAuthToken();
-      console.log(authToken);
       if (!authToken) {
         toast.error("Authorization failed. Please login again.");
         return null;
@@ -127,70 +174,13 @@ export default function ProductPage({ params }) {
     }
   };
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      setLoading(true);
-      const productData = await getProductById(id);
-      const recommended = await getRecommendedProducts(id);
-      setProduct(productData);
-      setRecommendedProducts(recommended);
-
-      // Set initial variant selection based on product type
-      if (productData?.variants?.length > 0) {
-        setAvailableVariants(productData.variants);
-        const firstVariant = productData.variants[0];
-
-        // For diamonds, set color and clarity
-        if (productData.product_type === "Diamonds") {
-          setSelectedColor(firstVariant.color);
-          setSelectedClarity(firstVariant.clarity);
-          setSelectedCaratWeight(firstVariant.carat_weight);
-        }
-        // For colorstones, set shape
-        else if (productData.product_type === "Colorstones") {
-          setSelectedShape(firstVariant.shape);
-          setSelectedCaratWeight(firstVariant.carat_weight);
-        }
-        // For cuts and alphabets, set carat weight
-        else if (
-          productData.product_type === "Cuts" ||
-          productData.product_type === "Alphabets"
-        ) {
-          setSelectedCaratWeight(firstVariant.carat_weight);
-        }
-      }
-
-      // Handle melee with sieve_sizes - set initial defaults
-      if (
-        productData?.sieve_sizes?.length > 0 &&
-        productData.product_type === "Melees"
-      ) {
-        const allColorRanges = [
-          ...new Set(productData.sieve_sizes.map((s) => s.color_range)),
-        ].sort();
-        const allClarityRanges = [
-          ...new Set(productData.sieve_sizes.map((s) => s.clarity_range)),
-        ].sort();
-        const allSizes = [
-          ...new Set(productData.sieve_sizes.map((s) => s.size)),
-        ].sort();
-
-        // Set first available options
-        setSelectedColorRange(allColorRanges[0]);
-        setSelectedClarityRange(allClarityRanges[0]);
-        setSelectedCaratWeight(allSizes[0]);
-      }
-
-      setLoading(false);
-    };
-
-    fetchProduct();
-  }, [id]);
-
   // Helper functions for variant management
   const getDistinctColors = () => {
-    if (!product?.variants) return [];
-    return [...new Set(product.variants.map((v) => v.color))].sort();
+    if (!product?.variants) {
+      return [];
+    }
+    const colors = [...new Set(product.variants.map((v) => v.color))].sort();
+    return colors;
   };
 
   const getDistinctClarities = () => {
@@ -214,7 +204,7 @@ export default function ProductPage({ params }) {
 
   // get distinct colorrange
   const getDistinctColorRange = () => {
-    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+    if (product?.product_type === "melees" && product?.sieve_sizes) {
       return [...new Set(product.sieve_sizes.map((s) => s.color_range))].sort();
     }
     if (!product?.variants) return [];
@@ -223,7 +213,7 @@ export default function ProductPage({ params }) {
 
   // get distinct clarityrange
   const getDistinctClarityRange = () => {
-    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+    if (product?.product_type === "melees" && product?.sieve_sizes) {
       return [
         ...new Set(product.sieve_sizes.map((s) => s.clarity_range)),
       ].sort();
@@ -234,7 +224,7 @@ export default function ProductPage({ params }) {
 
   // get distinct sieve sizes for melee
   const getDistinctSieveSizes = () => {
-    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+    if (product?.product_type === "melees" && product?.sieve_sizes) {
       return [...new Set(product.sieve_sizes.map((s) => s.size))].sort();
     }
     return [];
@@ -251,7 +241,7 @@ export default function ProductPage({ params }) {
   // Get the currently selected variant
   const getSelectedVariant = () => {
     // For Melees, handle sieve_sizes differently
-    if (product?.product_type === "Melees") {
+    if (product?.product_type === "melees") {
       if (
         !product?.sieve_sizes ||
         selectedCaratWeight === null ||
@@ -260,18 +250,19 @@ export default function ProductPage({ params }) {
       ) {
         return product?.sieve_sizes?.[0] || {};
       }
-      return (
-        product.sieve_sizes.find(
-          (s) =>
-            s.size === selectedCaratWeight &&
-            s.color_range === selectedColorRange &&
-            s.clarity_range === selectedClarityRange
-        ) || product.sieve_sizes[0]
+
+      const selectedSieve = product.sieve_sizes.find(
+        (s) =>
+          s.size === selectedCaratWeight &&
+          s.color_range === selectedColorRange &&
+          s.clarity_range === selectedClarityRange
       );
+
+      return selectedSieve || product.sieve_sizes[0];
     }
 
     // For Layouts, return the product itself as it has price at product level
-    if (product?.product_type === "Layouts") {
+    if (product?.product_type === "layouts") {
       return product;
     }
 
@@ -280,42 +271,42 @@ export default function ProductPage({ params }) {
       return {};
     }
 
-    if (product.product_type === "Diamonds") {
+    if (product.product_type === "diamonds") {
       // For diamonds, check color, clarity, and carat weight
       if (!selectedColor || !selectedClarity || selectedCaratWeight === null) {
         return product.variants[0];
       }
-      return (
+      const selectedVariant =
         product.variants.find(
           (v) =>
             v.color === selectedColor &&
             v.clarity === selectedClarity &&
             v.carat_weight === selectedCaratWeight
-        ) || product.variants[0]
-      );
-    } else if (product.product_type === "Colorstones") {
+        ) || product.variants[0];
+      return selectedVariant;
+    } else if (product.product_type === "colorstones") {
       // For color stones, check shape and carat weight
       if (!selectedShape || selectedCaratWeight === null) {
         return product.variants[0];
       }
-      return (
+      const selectedVariant =
         product.variants.find(
           (v) =>
             v.shape === selectedShape && v.carat_weight === selectedCaratWeight
-        ) || product.variants[0]
-      );
+        ) || product.variants[0];
+      return selectedVariant;
     } else if (
-      product.product_type === "Cuts" ||
-      product.product_type === "Alphabets"
+      product.product_type === "cuts" ||
+      product.product_type === "alphabets"
     ) {
       // For cuts and alphabets, just check carat weight
       if (selectedCaratWeight === null) {
         return product.variants[0];
       }
-      return (
+      const selectedVariant =
         product.variants.find((v) => v.carat_weight === selectedCaratWeight) ||
-        product.variants[0]
-      );
+        product.variants[0];
+      return selectedVariant;
     }
 
     return product.variants[0];
@@ -330,7 +321,7 @@ export default function ProductPage({ params }) {
     colorRange = null,
     clarityRange = null
   ) => {
-    if (product.product_type === "Diamonds") {
+    if (product.product_type === "diamonds") {
       if (!product?.variants) return false;
       return product.variants.some(
         (v) =>
@@ -338,12 +329,12 @@ export default function ProductPage({ params }) {
           v.clarity === clarity &&
           v.carat_weight === caratWeight
       );
-    } else if (product.product_type === "Colorstones") {
+    } else if (product.product_type === "colorstones") {
       if (!product?.variants) return false;
       return product.variants.some(
         (v) => v.shape === shape && v.carat_weight === caratWeight
       );
-    } else if (product.product_type === "Melees") {
+    } else if (product.product_type === "melees") {
       if (!product?.sieve_sizes) return false;
       return product.sieve_sizes.some(
         (s) =>
@@ -352,8 +343,8 @@ export default function ProductPage({ params }) {
           s.size === caratWeight
       );
     } else if (
-      product.product_type === "Cuts" ||
-      product.product_type === "Alphabets"
+      product.product_type === "cuts" ||
+      product.product_type === "alphabets"
     ) {
       if (!product?.variants) return false;
       return product.variants.some((v) => v.carat_weight === caratWeight);
@@ -364,7 +355,7 @@ export default function ProductPage({ params }) {
 
   // Check if an option should be disabled based on current selections
   const isOptionDisabled = (type, value) => {
-    if (product.product_type === "Diamonds") {
+    if (product.product_type === "diamonds") {
       if (!product?.variants) return false;
       const currentColor = type === "color" ? value : selectedColor;
       const currentClarity = type === "clarity" ? value : selectedClarity;
@@ -381,7 +372,7 @@ export default function ProductPage({ params }) {
         currentClarity,
         currentCaratWeight
       );
-    } else if (product.product_type === "Colorstones") {
+    } else if (product.product_type === "colorstones") {
       if (!product?.variants) return false;
       const currentShape = type === "shape" ? value : selectedShape;
       const currentCaratWeight =
@@ -393,7 +384,7 @@ export default function ProductPage({ params }) {
       }
 
       return !isVariantAvailable(null, null, currentCaratWeight, currentShape);
-    } else if (product.product_type === "Melees") {
+    } else if (product.product_type === "melees") {
       if (!product?.sieve_sizes) return false;
       const currentColorRange =
         type === "colorRange" ? value : selectedColorRange;
@@ -420,8 +411,8 @@ export default function ProductPage({ params }) {
         currentClarityRange
       );
     } else if (
-      product.product_type === "Cuts" ||
-      product.product_type === "Alphabets"
+      product.product_type === "cuts" ||
+      product.product_type === "alphabets"
     ) {
       // For cuts and alphabets, no options are disabled (simple structure)
       return false;
@@ -433,7 +424,7 @@ export default function ProductPage({ params }) {
   // Find the first available variant based on a new selection
   const findDefaultVariant = (type, value) => {
     // For melee products, search in sieve_sizes
-    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+    if (product?.product_type === "melees" && product?.sieve_sizes) {
       const matchingSieves = product.sieve_sizes.filter((sieve) => {
         switch (type) {
           case "colorRange":
@@ -517,16 +508,16 @@ export default function ProductPage({ params }) {
       // If this selection would result in an unavailable combination, find a default
       let wouldBeUnavailable = false;
 
-      if (product.product_type === "Diamonds") {
+      if (product.product_type === "diamonds") {
         wouldBeUnavailable =
           selectedColor &&
           selectedClarity &&
           !isVariantAvailable(selectedColor, selectedClarity, value);
-      } else if (product.product_type === "Colorstones") {
+      } else if (product.product_type === "colorstones") {
         wouldBeUnavailable =
           selectedShape &&
           !isVariantAvailable(null, null, value, selectedShape);
-      } else if (product.product_type === "Melees") {
+      } else if (product.product_type === "melees") {
         wouldBeUnavailable =
           selectedColorRange &&
           selectedClarityRange &&
@@ -543,12 +534,12 @@ export default function ProductPage({ params }) {
       if (wouldBeUnavailable) {
         const defaultVariant = findDefaultVariant("caratWeight", value);
         if (defaultVariant) {
-          if (product.product_type === "Diamonds") {
+          if (product.product_type === "diamonds") {
             setSelectedColor(defaultVariant.color);
             setSelectedClarity(defaultVariant.clarity);
-          } else if (product.product_type === "Colorstones") {
+          } else if (product.product_type === "colorstones") {
             setSelectedShape(defaultVariant.shape);
-          } else if (product.product_type === "Melees") {
+          } else if (product.product_type === "melees") {
             setSelectedColorRange(defaultVariant.color_range);
             setSelectedClarityRange(defaultVariant.clarity_range);
           }
@@ -572,7 +563,7 @@ export default function ProductPage({ params }) {
       setSelectedColorRange(value);
 
       // For melee products, find a compatible sieve size and clarity range
-      if (product.product_type === "Melees" && product.sieve_sizes) {
+      if (product.product_type === "melees" && product.sieve_sizes) {
         // Find compatible combinations
         const compatibleSieves = product.sieve_sizes.filter(
           (s) => s.color_range === value
@@ -604,7 +595,7 @@ export default function ProductPage({ params }) {
       setSelectedClarityRange(value);
 
       // For melee products, find a compatible sieve size and color range
-      if (product.product_type === "Melees" && product.sieve_sizes) {
+      if (product.product_type === "melees" && product.sieve_sizes) {
         // Find compatible combinations
         const compatibleSieves = product.sieve_sizes.filter(
           (s) => s.clarity_range === value
@@ -636,7 +627,7 @@ export default function ProductPage({ params }) {
       setSelectedCaratWeight(value);
 
       // For melee products, find a compatible color range and clarity range
-      if (product.product_type === "Melees" && product.sieve_sizes) {
+      if (product.product_type === "melees" && product.sieve_sizes) {
         // Find compatible combinations
         const compatibleSieves = product.sieve_sizes.filter(
           (s) => s.size === value
@@ -727,11 +718,19 @@ export default function ProductPage({ params }) {
 
   if (loading) {
     return (
-      <div>
+      <div className="min-h-screen bg-whitesmoke">
         <Navbar />
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg">Loading...</div>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-12 lg:py-16">
+          <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-primary-600"></div>
+            <div className="text-center">
+              <h3 className="text-lg sm:text-xl font-semibold text-text-dark mb-2">
+                Loading Product Details...
+              </h3>
+              <p className="text-sm sm:text-base text-secondary-600">
+                Please wait while we fetch the latest information
+              </p>
+            </div>
           </div>
         </div>
         <Footer />
@@ -741,21 +740,116 @@ export default function ProductPage({ params }) {
 
   if (!product) {
     return (
-      <div>
+      <div className="min-h-screen bg-gradient-to-br from-surface-50 to-surface-100">
         <Navbar />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-            <p>The product you're looking for doesn't exist.</p>
+
+        {/* Hero Section */}
+        <div className="container mx-auto px-4 py-10">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Error Message */}
+            <div className="mb-8">
+              <h1 className="text-5xl lg:text-6xl font-bold text-text-dark mb-4">
+                Oops!
+              </h1>
+              <h2 className="text-2xl lg:text-3xl font-semibold text-secondary-700 mb-4">
+                Product Not Found
+              </h2>
+              <p className="text-lg text-secondary-600 max-w-2xl mx-auto leading-relaxed">
+                We're sorry, but the product you're looking for doesn't exist or
+                may have been removed from our collection.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <button
+                onClick={() => router.back()}
+                className="cursor-pointer w-full sm:w-auto bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>Go Back</span>
+              </button>
+
+              <Link
+                href="/collections/all"
+                className="cursor-pointer w-full sm:w-auto bg-white text-primary-600 border-2 border-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200 flex items-center justify-center space-x-2"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>Browse Products</span>
+              </Link>
+            </div>
+
+            {/* Help Section */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
+              <h3 className="text-xl font-semibold text-text-dark mb-4">
+                Need Help Finding Something?
+              </h3>
+              <p className="text-secondary-600 mb-6">
+                Our team is here to help you find exactly what you're looking
+                for.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Search Again */}
+                <div className="bg-surface-50 rounded-lg p-4 text-center">
+                  <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg
+                      className="w-6 h-6 text-primary-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <h4 className="font-semibold text-text-dark mb-2">
+                    Search Again
+                  </h4>
+                  <p className="text-sm text-secondary-600 mb-3">
+                    Try searching with different keywords
+                  </p>
+                  <Link
+                    href="/collections/all"
+                    className="text-primary-600 hover:text-primary-700 font-medium text-sm"
+                  >
+                    Browse All Products →
+                  </Link>
+                </div>
+
+                {/* Contact Support */}
+                <div className="bg-surface-50 rounded-lg p-4 text-center">
+                  <div className="w-12 h-12 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <MessageCircle className="w-6 h-6 text-accent-600" />
+                  </div>
+                  <h4 className="font-semibold text-text-dark mb-2">
+                    Contact Us
+                  </h4>
+                  <p className="text-sm text-secondary-600 mb-3">
+                    Get personalized assistance
+                  </p>
+                  <a
+                    href="mailto:sales@khodalgems.com"
+                    className="text-accent-600 hover:text-accent-700 font-medium text-sm"
+                  >
+                    Email Support →
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
         <Footer />
       </div>
     );
   }
 
   const getWhatsAppMessage = () => {
-    console.log(product, quantity, currentVariant);
     const message =
       product?.name?.toString() +
       ", \n" +
@@ -777,23 +871,25 @@ export default function ProductPage({ params }) {
         <Navbar />
 
         {/* Back Button */}
-        <div className="container mx-auto px-4 pt-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 pt-3 sm:pt-4">
           <button
             onClick={handleBack}
-            className="cursor-pointer flex items-center space-x-2 text-secondary-700 hover:text-primary-600 transition-colors mb-4"
+            className="cursor-pointer flex items-center space-x-2 text-secondary-700 hover:text-primary-600 transition-colors mb-3 sm:mb-4 group"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Search</span>
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+            <span className="text-sm sm:text-base font-medium">
+              Back to Search
+            </span>
           </button>
         </div>
 
         {/* Main Product Section */}
-        <div className="container mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-12">
             {/* Left Side - Images */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Main Media Display */}
-              <div className="relative aspect-square bg-surface-100 rounded-lg overflow-hidden">
+              <div className="relative aspect-square bg-surface-100 rounded-lg overflow-hidden shadow-sm">
                 {currentMediaList.length > 0 &&
                 currentMediaIndex >= 0 &&
                 currentMediaIndex < currentMediaList.length &&
@@ -824,15 +920,15 @@ export default function ProductPage({ params }) {
                       <>
                         <button
                           onClick={prevMedia}
-                          className="cursor-pointer absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors"
+                          className="cursor-pointer absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-1.5 sm:p-2 transition-all duration-200 shadow-lg hover:shadow-xl"
                         >
-                          <ChevronLeft className="w-5 h-5" />
+                          <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                         <button
                           onClick={nextMedia}
-                          className="cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 transition-colors"
+                          className="cursor-pointer absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-1.5 sm:p-2 transition-all duration-200 shadow-lg hover:shadow-xl"
                         >
-                          <ChevronRight className="w-5 h-5" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       </>
                     )}
@@ -845,17 +941,17 @@ export default function ProductPage({ params }) {
               </div>
               {/* Media Thumbnails */}
               {currentMediaList.filter((media) => media).length > 1 && (
-                <div className="flex justify-center space-x-2">
+                <div className="flex justify-center space-x-2 overflow-x-auto pb-2">
                   {currentMediaList.map(
                     (media, index) =>
                       media && (
                         <button
                           key={index}
                           onClick={() => setCurrentMediaIndex(index)}
-                          className={`cursor-pointer w-16 h-16 rounded-lg border-2 overflow-hidden ${
+                          className={`cursor-pointer w-12 h-12 sm:w-16 sm:h-16 rounded-lg border-2 overflow-hidden flex-shrink-0 transition-all duration-200 ${
                             currentMediaIndex === index
-                              ? "border-primary-600"
-                              : "border-surface-300 hover:border-surface-400"
+                              ? "border-primary-600 ring-2 ring-primary-200"
+                              : "border-surface-300 hover:border-surface-400 hover:scale-105"
                           }`}
                         >
                           {isVideo(media) ? (
@@ -891,392 +987,394 @@ export default function ProductPage({ params }) {
             </div>
 
             {/* Right Side - Product Information */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Product Title and Basic Info */}
               <div>
-                <h1 className="text-3xl font-bold text-text-dark mb-2">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-dark mb-2 sm:mb-3">
                   {product.name}
                 </h1>
-                <p className="text-secondary-700 mb-1">SKU: {product.sku}</p>
+                <p className="text-sm sm:text-base text-secondary-700 mb-1 sm:mb-2">
+                  SKU: {product.sku}
+                </p>
                 {/* Product-specific information based on type */}
-                {product.product_type === "Layouts" ? (
-                  <p className="text-secondary-700 mb-4">
-                    Layout Type: {product.layout_type}
-                  </p>
-                ) : product.product_type === "Cuts" ? (
-                  <>
-                    <p className="text-secondary-700 mb-1">
+                <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
+                  {product.product_type === "layouts" ? (
+                    <p className="text-sm sm:text-base text-secondary-700">
+                      Layout Type: {product.layout_type}
+                    </p>
+                  ) : product.product_type === "cuts" ? (
+                    <>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Shape: {product.shape}
+                      </p>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Cut Type: {product.cut_type}
+                      </p>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Color Range: {product.color_range}
+                      </p>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Clarity Range: {product.clarity_range}
+                      </p>
+                    </>
+                  ) : product.product_type === "alphabets" ? (
+                    <>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Character: {product.character}
+                      </p>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Color Range: {product.color_range}
+                      </p>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Clarity Range: {product.clarity_range}
+                      </p>
+                    </>
+                  ) : product.product_type === "colorstones" ? (
+                    <>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Shape: {product.shape || "N/A"}
+                      </p>
+                      <p className="text-sm sm:text-base text-secondary-700">
+                        Color: {product.color}
+                      </p>
+                    </>
+                  ) : product.product_type === "melees" ? (
+                    <p className="text-sm sm:text-base text-secondary-700">
                       Shape: {product.shape}
                     </p>
-                    <p className="text-secondary-700 mb-1">
-                      Cut Type: {product.cut_type}
+                  ) : (
+                    <p className="text-sm sm:text-base text-secondary-700">
+                      Shape: {product.shape}
                     </p>
-                    <p className="text-secondary-700 mb-1">
-                      Color Range: {product.color_range}
-                    </p>
-                    <p className="text-secondary-700 mb-4">
-                      Clarity Range: {product.clarity_range}
-                    </p>
-                  </>
-                ) : product.product_type === "Alphabets" ? (
-                  <>
-                    <p className="text-secondary-700 mb-1">
-                      Character: {product.character}
-                    </p>
-                    <p className="text-secondary-700 mb-1">
-                      Color Range: {product.color_range}
-                    </p>
-                    <p className="text-secondary-700 mb-4">
-                      Clarity Range: {product.clarity_range}
-                    </p>
-                  </>
-                ) : product.product_type === "Colorstones" ? (
-                  <>
-                    <p className="text-secondary-700 mb-1">
-                      Shape: {product.shape || "N/A"}
-                    </p>
-                    <p className="text-secondary-700 mb-4">
-                      Color: {product.color}
-                    </p>
-                  </>
-                ) : product.product_type === "Melees" ? (
-                  <p className="text-secondary-700 mb-4">
-                    Shape: {product.shape}
-                  </p>
-                ) : (
-                  <p className="text-secondary-700 mb-4">
-                    Shape: {product.shape}
-                  </p>
-                )}
-                <p className="text-lg text-text-dark">{product.description}</p>
+                  )}
+                </div>
+                <p className="text-sm sm:text-base lg:text-lg text-text-dark leading-relaxed">
+                  {product.description}
+                </p>
               </div>
 
               {/* Variants Selection */}
-              {((product?.variants && product.variants.length > 0) ||
-                (product?.sieve_sizes && product.sieve_sizes.length > 0)) &&
-                product.product_type !== "Layouts" && (
-                  <div className="space-y-4 border-b border-surface-300 pb-6">
-                    <h3 className="text-lg font-semibold text-text-dark">
-                      Select Options
-                    </h3>
+              {(() => {
+                const hasVariants =
+                  product?.variants && product.variants.length > 0;
+                const hasSieveSizes =
+                  product?.sieve_sizes && product.sieve_sizes.length > 0;
+                const isNotLayout = product.product_type !== "layouts";
+                return (hasVariants || hasSieveSizes) && isNotLayout;
+              })() && (
+                <div className="space-y-3 sm:space-y-4 border-b border-surface-300 pb-4 sm:pb-6">
+                  <h3 className="text-base sm:text-lg font-semibold text-text-dark">
+                    Select Options
+                  </h3>
 
-                    {/* Diamond Variants */}
-                    {product.product_type === "Diamonds" && (
-                      <>
-                        {/* Color Selection */}
+                  {/* Diamond Variants */}
+                  {(() => {
+                    return product.product_type === "diamonds";
+                  })() && (
+                    <>
+                      {/* Color Selection */}
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-text-dark mb-2">
+                          Color: {selectedColor}
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                          {getDistinctColors().map((color) => (
+                            <button
+                              key={color}
+                              onClick={() => handleOptionSelect("color", color)}
+                              className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                selectedColor === color
+                                  ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                  : isOptionDisabled("color", color)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                              }`}
+                            >
+                              {color}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Clarity Selection */}
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-text-dark mb-2">
+                          Clarity: {selectedClarity}
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                          {getDistinctClarities().map((clarity) => (
+                            <button
+                              key={clarity}
+                              onClick={() =>
+                                handleOptionSelect("clarity", clarity)
+                              }
+                              className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                selectedClarity === clarity
+                                  ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                  : isOptionDisabled("clarity", clarity)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                              }`}
+                            >
+                              {clarity}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Carat Weight Selection */}
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-text-dark mb-2">
+                          Carat Weight: {selectedCaratWeight}
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                          {getDistinctCaratWeights().map((weight) => (
+                            <button
+                              key={weight}
+                              onClick={() =>
+                                handleOptionSelect("caratWeight", weight)
+                              }
+                              className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                selectedCaratWeight === weight
+                                  ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                  : isOptionDisabled("caratWeight", weight)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                              }`}
+                            >
+                              {weight} ct
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Colorstone Variants */}
+                  {product.product_type === "colorstones" && (
+                    <>
+                      {/* Shape Selection */}
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-text-dark mb-2">
+                          Shape: {selectedShape}
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                          {getDistinctShape().map((shape) => (
+                            <button
+                              key={shape}
+                              onClick={() => handleOptionSelect("shape", shape)}
+                              className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                selectedShape === shape
+                                  ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                  : isOptionDisabled("shape", shape)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                              }`}
+                            >
+                              {shape}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Carat Weight Selection */}
+                      <div>
+                        <label className="block text-xs sm:text-sm font-medium text-text-dark mb-2">
+                          Carat Weight: {selectedCaratWeight}
+                        </label>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                          {getDistinctCaratWeights().map((weight) => (
+                            <button
+                              key={weight}
+                              onClick={() =>
+                                handleOptionSelect("caratWeight", weight)
+                              }
+                              className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                selectedCaratWeight === weight
+                                  ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                  : isOptionDisabled("caratWeight", weight)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                              }`}
+                            >
+                              {weight} ct
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Dimension Display */}
+                      {getSelectedVariant()?.dimension && (
                         <div>
                           <label className="block text-sm font-medium text-text-dark mb-2">
-                            Color: {selectedColor}
+                            Dimension: {getSelectedVariant().dimension}
                           </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctColors().map((color) => (
-                              <button
-                                key={color}
-                                onClick={() =>
-                                  handleOptionSelect("color", color)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedColor === color
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("color", color)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {color}
-                              </button>
-                            ))}
-                          </div>
                         </div>
+                      )}
+                    </>
+                  )}
 
-                        {/* Clarity Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Clarity: {selectedClarity}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctClarities().map((clarity) => (
-                              <button
-                                key={clarity}
-                                onClick={() =>
-                                  handleOptionSelect("clarity", clarity)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedClarity === clarity
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("clarity", clarity)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {clarity}
-                              </button>
-                            ))}
-                          </div>
+                  {/* Melee Variants */}
+                  {product.product_type === "melees" && product.sieve_sizes && (
+                    <>
+                      {/* Color Range Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-text-dark mb-2">
+                          Color Range: {selectedColorRange}
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {getDistinctColorRange().map((colorRange) => (
+                            <button
+                              key={colorRange}
+                              onClick={() =>
+                                handleOptionSelect("colorRange", colorRange)
+                              }
+                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                selectedColorRange === colorRange
+                                  ? "bg-primary-600 text-white border-primary-600"
+                                  : isOptionDisabled("colorRange", colorRange)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                              }`}
+                            >
+                              {colorRange}
+                            </button>
+                          ))}
                         </div>
+                      </div>
 
-                        {/* Carat Weight Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Carat Weight: {selectedCaratWeight}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctCaratWeights().map((weight) => (
-                              <button
-                                key={weight}
-                                onClick={() =>
-                                  handleOptionSelect("caratWeight", weight)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedCaratWeight === weight
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("caratWeight", weight)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {weight} ct
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* Colorstone Variants */}
-                    {product.product_type === "Colorstones" && (
-                      <>
-                        {/* Shape Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Shape: {selectedShape}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctShape().map((shape) => (
-                              <button
-                                key={shape}
-                                onClick={() =>
-                                  handleOptionSelect("shape", shape)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedShape === shape
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("shape", shape)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {shape}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Carat Weight Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Carat Weight: {selectedCaratWeight}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctCaratWeights().map((weight) => (
-                              <button
-                                key={weight}
-                                onClick={() =>
-                                  handleOptionSelect("caratWeight", weight)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedCaratWeight === weight
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("caratWeight", weight)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {weight} ct
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Dimension Display */}
-                        {getSelectedVariant()?.dimension && (
-                          <div>
-                            <label className="block text-sm font-medium text-text-dark mb-2">
-                              Dimension: {getSelectedVariant().dimension}
-                            </label>
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    {/* Melee Variants */}
-                    {product.product_type === "Melees" &&
-                      product.sieve_sizes && (
-                        <>
-                          {/* Color Range Selection */}
-                          <div>
-                            <label className="block text-sm font-medium text-text-dark mb-2">
-                              Color Range: {selectedColorRange}
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                              {getDistinctColorRange().map((colorRange) => (
-                                <button
-                                  key={colorRange}
-                                  onClick={() =>
-                                    handleOptionSelect("colorRange", colorRange)
-                                  }
-                                  className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                    selectedColorRange === colorRange
-                                      ? "bg-primary-600 text-white border-primary-600"
-                                      : isOptionDisabled(
-                                          "colorRange",
-                                          colorRange
-                                        )
-                                      ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                  }`}
-                                >
-                                  {colorRange}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Clarity Range Selection */}
-                          <div>
-                            <label className="block text-sm font-medium text-text-dark mb-2">
-                              Clarity Range: {selectedClarityRange}
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                              {getDistinctClarityRange().map((clarityRange) => (
-                                <button
-                                  key={clarityRange}
-                                  onClick={() =>
-                                    handleOptionSelect(
+                      {/* Clarity Range Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-text-dark mb-2">
+                          Clarity Range: {selectedClarityRange}
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {getDistinctClarityRange().map((clarityRange) => (
+                            <button
+                              key={clarityRange}
+                              onClick={() =>
+                                handleOptionSelect("clarityRange", clarityRange)
+                              }
+                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                selectedClarityRange === clarityRange
+                                  ? "bg-primary-600 text-white border-primary-600"
+                                  : isOptionDisabled(
                                       "clarityRange",
                                       clarityRange
                                     )
-                                  }
-                                  className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                    selectedClarityRange === clarityRange
-                                      ? "bg-primary-600 text-white border-primary-600"
-                                      : isOptionDisabled(
-                                          "clarityRange",
-                                          clarityRange
-                                        )
-                                      ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                  }`}
-                                >
-                                  {clarityRange}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                              }`}
+                            >
+                              {clarityRange}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
 
-                          {/* Sieve Size Selection */}
-                          <div>
-                            <label className="block text-sm font-medium text-text-dark mb-2">
-                              Sieve Size: {selectedCaratWeight}
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                              {getDistinctSieveSizes().map((size) => (
-                                <button
-                                  key={size}
-                                  onClick={() =>
-                                    handleOptionSelect("sieveSize", size)
-                                  }
-                                  className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                    selectedCaratWeight === size
-                                      ? "bg-primary-600 text-white border-primary-600"
-                                      : isOptionDisabled("sieveSize", size)
-                                      ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                  }`}
-                                >
-                                  {size}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </>
+                      {/* Sieve Size Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-text-dark mb-2">
+                          Sieve Size: {selectedCaratWeight}
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {getDistinctSieveSizes().map((size) => (
+                            <button
+                              key={size}
+                              onClick={() =>
+                                handleOptionSelect("sieveSize", size)
+                              }
+                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                selectedCaratWeight === size
+                                  ? "bg-primary-600 text-white border-primary-600"
+                                  : isOptionDisabled("sieveSize", size)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                              }`}
+                            >
+                              {size}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Cuts Variants */}
+                  {product.product_type === "cuts" && (
+                    <>
+                      {/* Carat Weight Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-text-dark mb-2">
+                          Carat Weight: {selectedCaratWeight}
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {getDistinctCaratWeights().map((weight) => (
+                            <button
+                              key={weight}
+                              onClick={() =>
+                                handleOptionSelect("caratWeight", weight)
+                              }
+                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                selectedCaratWeight === weight
+                                  ? "bg-primary-600 text-white border-primary-600"
+                                  : isOptionDisabled("caratWeight", weight)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                              }`}
+                            >
+                              {weight} ct
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Dimension Display */}
+                      {getSelectedVariant()?.dimension && (
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Dimension: {getSelectedVariant().dimension}
+                          </label>
+                        </div>
                       )}
+                    </>
+                  )}
 
-                    {/* Cuts Variants */}
-                    {product.product_type === "Cuts" && (
-                      <>
-                        {/* Carat Weight Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Carat Weight: {selectedCaratWeight}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctCaratWeights().map((weight) => (
-                              <button
-                                key={weight}
-                                onClick={() =>
-                                  handleOptionSelect("caratWeight", weight)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedCaratWeight === weight
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("caratWeight", weight)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {weight} ct
-                              </button>
-                            ))}
-                          </div>
+                  {/* Alphabets Variants */}
+                  {product.product_type === "alphabets" && (
+                    <>
+                      {/* Carat Weight Selection */}
+                      <div>
+                        <label className="block text-sm font-medium text-text-dark mb-2">
+                          Carat Weight: {selectedCaratWeight}
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {getDistinctCaratWeights().map((weight) => (
+                            <button
+                              key={weight}
+                              onClick={() =>
+                                handleOptionSelect("caratWeight", weight)
+                              }
+                              className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                selectedCaratWeight === weight
+                                  ? "bg-primary-600 text-white border-primary-600"
+                                  : isOptionDisabled("caratWeight", weight)
+                                  ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                  : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                              }`}
+                            >
+                              {weight} ct
+                            </button>
+                          ))}
                         </div>
-
-                        {/* Dimension Display */}
-                        {getSelectedVariant()?.dimension && (
-                          <div>
-                            <label className="block text-sm font-medium text-text-dark mb-2">
-                              Dimension: {getSelectedVariant().dimension}
-                            </label>
-                          </div>
-                        )}
-                      </>
-                    )}
-
-                    {/* Alphabets Variants */}
-                    {product.product_type === "Alphabets" && (
-                      <>
-                        {/* Carat Weight Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Carat Weight: {selectedCaratWeight}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctCaratWeights().map((weight) => (
-                              <button
-                                key={weight}
-                                onClick={() =>
-                                  handleOptionSelect("caratWeight", weight)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedCaratWeight === weight
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("caratWeight", weight)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {weight} ct
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
 
               {/* Layout Diamond Details Display */}
-              {product?.product_type === "Layouts" &&
+              {product?.product_type === "layouts" &&
                 product?.diamond_details &&
                 product.diamond_details.length > 0 && (
                   <div className="space-y-4 border-b border-surface-300 pb-6">
@@ -1286,26 +1384,26 @@ export default function ProductPage({ params }) {
                     <p className="text-sm text-secondary-700 mb-4">
                       This layout includes the following diamond specifications:
                     </p>
-                    <div className="overflow-x-auto">
-                      <table className="w-full border border-surface-300 rounded-lg">
+                    <div className="overflow-x-auto shadow-sm rounded-lg border border-surface-200">
+                      <table className="w-full min-w-[600px]">
                         <thead className="bg-surface-100">
                           <tr>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                            <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-text-dark border-b border-surface-300">
                               Shape
                             </th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                            <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-text-dark border-b border-surface-300">
                               Pieces
                             </th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                            <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-text-dark border-b border-surface-300">
                               Carat Weight
                             </th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                            <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-text-dark border-b border-surface-300">
                               Dimensions
                             </th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                            <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-text-dark border-b border-surface-300">
                               Color Range
                             </th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold text-text-dark border-b border-surface-300">
+                            <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-text-dark border-b border-surface-300">
                               Clarity Range
                             </th>
                           </tr>
@@ -1318,22 +1416,22 @@ export default function ProductPage({ params }) {
                                 index % 2 === 0 ? "bg-white" : "bg-surface-50"
                               } hover:bg-surface-100 transition-colors`}
                             >
-                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                              <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-dark border-b border-surface-200">
                                 {detail.shape}
                               </td>
-                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                              <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-dark border-b border-surface-200">
                                 {detail.pcs}
                               </td>
-                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                              <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-dark border-b border-surface-200">
                                 {detail.carat_weight} ct
                               </td>
-                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                              <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-dark border-b border-surface-200">
                                 {detail.dimension}
                               </td>
-                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                              <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-dark border-b border-surface-200">
                                 {detail.color_range}
                               </td>
-                              <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
+                              <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-text-dark border-b border-surface-200">
                                 {detail.clarity_range}
                               </td>
                             </tr>
@@ -1347,17 +1445,17 @@ export default function ProductPage({ params }) {
               {/* Price */}
               {(currentVariant.price ||
                 currentVariant.price_per_carat ||
-                (product.product_type === "Layouts" && product.price)) && (
-                <div className="border-b border-surface-300 pb-4">
-                  <div className="text-3xl font-bold text-primary-600">
-                    {product.product_type === "Layouts"
+                (product.product_type === "layouts" && product.price)) && (
+                <div className="border-b border-surface-300 pb-4 sm:pb-6">
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-600">
+                    {product.product_type === "layouts"
                       ? `$${product.price?.toLocaleString()}`
-                      : product.product_type === "Melees"
+                      : product.product_type === "melees"
                       ? `$${currentVariant.price_per_carat?.toLocaleString()} per carat`
                       : `$${currentVariant.price?.toLocaleString()}`}
                   </div>
 
-                  {product.product_type === "Layouts" ? (
+                  {product.product_type === "layouts" ? (
                     <div className="space-y-1">
                       <p className="text-secondary-700">
                         {product.layout_type} Layout •{" "}
@@ -1384,7 +1482,7 @@ export default function ProductPage({ params }) {
                         </span>
                       </div>
                     </div>
-                  ) : product.product_type === "Melees" ? (
+                  ) : product.product_type === "melees" ? (
                     <p className="text-secondary-700">
                       {currentVariant.size}
                       {currentVariant.color_range &&
@@ -1400,7 +1498,7 @@ export default function ProductPage({ params }) {
                     currentVariant.carat_weight && (
                       <p className="text-secondary-700">
                         {currentVariant.carat_weight} carats
-                        {product.product_type === "Diamonds" &&
+                        {product.product_type === "diamonds" &&
                           currentVariant.color &&
                           currentVariant.clarity && (
                             <>
@@ -1409,7 +1507,7 @@ export default function ProductPage({ params }) {
                               {currentVariant.clarity}
                             </>
                           )}
-                        {product.product_type === "Colorstones" &&
+                        {product.product_type === "colorstones" &&
                           currentVariant.shape && (
                             <> • {currentVariant.shape}</>
                           )}
@@ -1433,24 +1531,24 @@ export default function ProductPage({ params }) {
               </div>
 
               {/* Quantity Selector */}
-              <div className="flex items-center space-x-4">
-                <label className="text-sm font-medium text-text-dark">
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <label className="text-sm sm:text-base font-medium text-text-dark">
                   Quantity:
                 </label>
                 <div className="flex items-center border border-surface-300 rounded-md">
                   <button
                     onClick={() => handleQuantityChange("decrease")}
                     disabled={quantity <= 1}
-                    className="cursor-pointer p-2 hover:bg-surface-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer p-2 sm:p-3 hover:bg-surface-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-4 py-2 min-w-[60px] text-center">
+                  <span className="px-3 sm:px-4 py-2 min-w-[50px] sm:min-w-[60px] text-center text-sm sm:text-base font-medium">
                     {quantity}
                   </span>
                   <button
                     onClick={() => handleQuantityChange("increase")}
-                    className="cursor-pointer p-2 hover:bg-surface-100"
+                    className="cursor-pointer p-2 sm:p-3 hover:bg-surface-100 transition-colors"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -1458,44 +1556,50 @@ export default function ProductPage({ params }) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex space-x-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={handleAddToCart}
-                  className="cursor-pointer flex-1 bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 transition-colors flex items-center justify-center space-x-2"
+                  className="cursor-pointer flex-1 bg-primary-600 text-white py-3 sm:py-4 px-6 rounded-lg hover:bg-primary-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  <span>Add to Cart</span>
+                  <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base font-medium">
+                    Add to Cart
+                  </span>
                 </button>
                 <button
                   onClick={handleLike}
-                  className={`cursor-pointer p-3 rounded-md border transition-colors ${
+                  className={`cursor-pointer p-3 sm:p-4 rounded-lg border transition-all duration-200 ${
                     isLiked
-                      ? "bg-red-50 border-red-300 text-red-600"
-                      : "bg-surface-50 border-surface-300 text-secondary-700 hover:bg-surface-100"
+                      ? "bg-red-50 border-red-300 text-red-600 shadow-md"
+                      : "bg-surface-50 border-surface-300 text-secondary-700 hover:bg-surface-100 hover:shadow-sm"
                   }`}
                 >
                   <Heart
-                    className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      isLiked ? "fill-current" : ""
+                    }`}
                   />
                 </button>
               </div>
 
               {/* Quick Contact Buttons */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-text-dark">
+              <div className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-semibold text-text-dark">
                   Quick Contact
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Email */}
 
                   {/* message: hello */}
 
                   <a
                     href="mailto:sales@khodalgems.com"
-                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-primary-200 text-primary-600 rounded-md hover:bg-primary-50 transition-colors"
+                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 sm:py-4 px-4 border border-primary-200 text-primary-600 rounded-lg hover:bg-primary-50 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     <Mail className="w-4 h-4" />
-                    <span className="text-sm">Email Us</span>
+                    <span className="text-sm sm:text-base font-medium">
+                      Email Us
+                    </span>
                   </a>
 
                   {/* message: [productname], [sku], [quantity], [selected variant], [price] */}
@@ -1503,10 +1607,12 @@ export default function ProductPage({ params }) {
                     href={`https://wa.me/+919409658456?text=${getWhatsAppMessage()}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-green-200 text-green-600 rounded-md hover:bg-green-50 transition-colors"
+                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 sm:py-4 px-4 border border-green-200 text-green-600 rounded-lg hover:bg-green-50 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span className="text-sm">WhatsApp Us</span>
+                    <span className="text-sm sm:text-base font-medium">
+                      WhatsApp Us
+                    </span>
                   </a>
                 </div>
               </div>
@@ -1538,45 +1644,45 @@ export default function ProductPage({ params }) {
 
         {/* You May Also Like Section */}
         {recommendedProducts.length > 0 && (
-          <div className="container mx-auto px-4 py-12">
-            <h2 className="text-2xl font-bold text-text-dark mb-8 text-center">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-12 lg:py-16">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text-dark mb-6 sm:mb-8 text-center">
               You May Also Like
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
               {recommendedProducts.map((recProduct) => (
                 <div key={recProduct.productId} className="group">
-                  <div className="bg-surface-50 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                  <div className="bg-white rounded-lg p-3 sm:p-4 hover:shadow-lg transition-all duration-300 border border-surface-200 hover:border-primary-200">
                     {/* Product Image */}
-                    <div className="aspect-square bg-surface-100 rounded-md mb-4 overflow-hidden">
+                    <div className="aspect-square bg-surface-100 rounded-md mb-3 sm:mb-4 overflow-hidden">
                       {recProduct.images?.[0] ? (
                         <Image
                           src={recProduct.images[0]}
                           alt={recProduct.name}
                           width={200}
                           height={200}
-                          className="object-cover w-full h-full group-hover:scale-105 transition-transform"
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-surface-400">
-                          <p className="text-sm">No image</p>
+                          <p className="text-xs sm:text-sm">No image</p>
                         </div>
                       )}
                     </div>
 
                     {/* Product Info */}
                     <div className="space-y-2">
-                      <h3 className="font-medium text-text-dark truncate">
+                      <h3 className="font-medium text-text-dark truncate text-sm sm:text-base">
                         {recProduct.name}
                       </h3>
-                      <p className="text-sm text-secondary-700">
+                      <p className="text-xs sm:text-sm text-secondary-700">
                         {recProduct.shape}
                       </p>
                       {recProduct.variants?.[0]?.price && (
-                        <p className="text-lg font-semibold text-primary-600">
+                        <p className="text-base sm:text-lg font-semibold text-primary-600">
                           ${recProduct.variants[0].price.toLocaleString()}
                         </p>
                       )}
-                      <button className="cursor-pointer w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors text-sm">
+                      <button className="cursor-pointer w-full bg-primary-600 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-lg hover:bg-primary-700 transition-all duration-200 text-xs sm:text-sm font-medium shadow-sm hover:shadow-md">
                         View Details
                       </button>
                     </div>

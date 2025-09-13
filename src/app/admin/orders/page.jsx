@@ -7,16 +7,17 @@ import Sidebar from "@/app/admin/components/sidebar";
 export default function page() {
   return (
     <AdminRoute>
-        <div className="flex h-screen">
-          <Sidebar />
-    
-          <div className="flex-1 p-8 overflow-auto bg-whitesmoke">
-            <h1 className="text-2xl font-bold">Orders</h1>
-            <p>
-              Welcome to the orders management page. Here you can manage your application orders.
-            </p>
-          </div>
+      <div className="flex h-screen">
+        <Sidebar />
+
+        <div className="flex-1 p-8 overflow-auto bg-whitesmoke">
+          <h1 className="text-2xl font-bold">Orders</h1>
+          <p>
+            Welcome to the orders management page. Here you can manage your
+            application orders.
+          </p>
         </div>
+      </div>
     </AdminRoute>
   );
 }
