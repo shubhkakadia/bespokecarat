@@ -42,7 +42,7 @@ export default async function handler(req, res) {
       }
 
       const rows = await entry.model.findAll({
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+        attributes: { exclude: ["updatedAt"] },
         include: [
           entry.relation && entry.relAs
             ? {

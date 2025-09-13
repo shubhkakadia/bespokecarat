@@ -288,7 +288,7 @@ export default function LoginPage() {
 
               <div className="text-sm float-right">
                 <Link
-                  href="/forgot-password"
+                  href="/contactus"
                   className="text-primary-600 hover:text-primary-500 font-medium cursor-pointer"
                 >
                   Forgot password?

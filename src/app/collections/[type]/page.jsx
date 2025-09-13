@@ -10,28 +10,128 @@ import {
   ChevronRight,
   Filter,
   ChevronDown,
+  Grid3X3,
+  Grid2X2,
 } from "lucide-react";
-import productsData from "../../../../products_dummy2.json";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CustomerRoute } from "@/components/ProtectedRoute";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProductSearchPage({ params }) {
   const { type } = use(params);
   const router = useRouter();
+  const { getToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [wishlist, setWishlist] = useState(new Set());
   const [cart, setCart] = useState(new Set());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("relevance");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 50000 });
   const [showFilters, setShowFilters] = useState(false);
   const [searchMaxPrice, setSearchMaxPrice] = useState(100000);
+  const [apiError, setApiError] = useState(null);
+  const [mobileGridView, setMobileGridView] = useState(2); // 1 or 2 products per row on mobile
   const hasSetInitialPriceRange = useRef(false);
 
   const productsPerPage = 24;
+
+  // Define which types should use API 1 (collection API)
+  const collectionTypes = [
+    "diamond",
+    "melee",
+    "colorstone",
+    "alphabet",
+    "cuts",
+    "layout",
+  ];
+
+  // Map collection types to API collection parameter for API 1
+  const getCollectionType = (type) => {
+    const typeMap = {
+      diamond: "diamonds",
+      melee: "melees",
+      colorstone: "colorstones",
+      alphabet: "alphabets",
+      cuts: "cuts",
+      layout: "layouts",
+    };
+    return typeMap[type] || type;
+  };
+
+  // Check if type should use API 1 (collection API) or API 2 (search API)
+  const shouldUseCollectionAPI = (type) => {
+    return collectionTypes.includes(type);
+  };
+
+  // Fetch products from API
+  const fetchProducts = async (type) => {
+    try {
+      setLoading(true);
+      setApiError(null);
+
+      const authToken = getToken();
+      if (!authToken) {
+        throw new Error("Authentication required");
+      }
+
+      // Use API 1 (collection API) for specific collection types
+      if (shouldUseCollectionAPI(type)) {
+        const collectionType = getCollectionType(type);
+        const response = await fetch(
+          `/api/client/product/collection?c=${collectionType}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: authToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+        if (data.status && data.data?.products) {
+          return data.data.products;
+        }
+        return [];
+      } else {
+        // Use API 2 (search API) for all other types
+        const response = await fetch(
+          `/api/client/product/search?q=${type.replaceAll("cut", "")}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: authToken,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const data = await response.json();
+        if (data.status && data.data) {
+          // Search API returns data as direct array
+          return Array.isArray(data.data) ? data.data : [];
+        }
+        return [];
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setApiError(error.message);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Sort products based on selected option
   const sortProducts = (products, sortOption) => {
@@ -48,8 +148,8 @@ export default function ProductSearchPage({ params }) {
         );
       case "latest":
         return sortedProducts.sort((a, b) => {
-          const dateA = new Date(a.dateAdded || "2023-01-01");
-          const dateB = new Date(b.dateAdded || "2023-01-01");
+          const dateA = new Date(a.createdAt || "2023-01-01");
+          const dateB = new Date(b.createdAt || "2023-01-01");
           return dateB - dateA;
         });
       case "best-selling":
@@ -89,49 +189,49 @@ export default function ProductSearchPage({ params }) {
 
   // Get products for the current type
   useEffect(() => {
-    let products = [];
-    if (type === "all") {
-      // Show all products from all types
-      Object.values(productsData.productTypes || {}).forEach((typeProducts) => {
-        products = [...products, ...typeProducts];
-      });
-    } else if (productsData.productTypes && productsData.productTypes[type]) {
-      // Show products from specific type
-      products = productsData.productTypes[type];
-    } else {
-      // If type doesn't exist, show all products from all types
-      Object.values(productsData.productTypes || {}).forEach((typeProducts) => {
-        products = [...products, ...typeProducts];
-      });
-    }
+    const loadProducts = async () => {
+      const products = await fetchProducts(type);
 
-    // Set initial price range based on available products (only once)
-    if (!hasSetInitialPriceRange.current) {
-      const availablePriceRange = getPriceRange(products);
-      if (!isNaN(availablePriceRange.min) && !isNaN(availablePriceRange.max)) {
-        setPriceRange(availablePriceRange);
-        hasSetInitialPriceRange.current = true;
+      // Set initial price range based on available products (only once)
+      if (!hasSetInitialPriceRange.current) {
+        const availablePriceRange = getPriceRange(products);
+        if (
+          !isNaN(availablePriceRange.min) &&
+          !isNaN(availablePriceRange.max)
+        ) {
+          setPriceRange(availablePriceRange);
+          hasSetInitialPriceRange.current = true;
+        }
       }
-    }
 
-    // Filter products based on search query
-    if (searchQuery.trim()) {
-      products = products.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.shape?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      // Filter products based on search query
+      let filteredProducts = products;
+      if (searchQuery.trim()) {
+        filteredProducts = products.filter(
+          (product) =>
+            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.shape?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            product.description
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase())
+        );
+      }
+
+      // Filter by price range
+      filteredProducts = filterByPrice(
+        filteredProducts,
+        priceRange.min,
+        priceRange.max
       );
-    }
 
-    // Filter by price range
-    products = filterByPrice(products, priceRange.min, priceRange.max);
+      // Sort products
+      filteredProducts = sortProducts(filteredProducts, sortBy);
 
-    // Sort products
-    products = sortProducts(products, sortBy);
+      setFilteredProducts(filteredProducts);
+      setCurrentPage(1); // Reset to first page when filtering
+    };
 
-    setFilteredProducts(products);
-    setCurrentPage(1); // Reset to first page when filtering
+    loadProducts();
   }, [type, searchQuery, sortBy, priceRange]);
 
   // Get current page products
@@ -171,18 +271,43 @@ export default function ProductSearchPage({ params }) {
     setCart(newCart);
   };
 
-  // Get product price (lowest variant price)
+  // Get product price based on product type
   const getProductPrice = (product) => {
-    if (product.productType === "layout") {
-      return product.layoutPrice;
+    // For layout products, use the direct price field
+    if (product.price !== undefined) {
+      return parseFloat(product.price) || 0;
     }
-    if (!product.variants || product.variants.length === 0) return 0;
-    const prices = product.variants
-      .map((variant) => variant.price)
-      .filter(
-        (price) => typeof price === "number" && !isNaN(price) && price > 0
+
+    // For melee products, find the lowest price from sieve_sizes
+    if (product.sieve_sizes && product.sieve_sizes.length > 0) {
+      const prices = product.sieve_sizes
+        .map((sieve) => parseFloat(sieve.price_per_carat))
+        .filter((price) => !isNaN(price) && price > 0);
+      return prices.length > 0 ? Math.min(...prices) : 0;
+    }
+
+    // For diamond products, use variants (existing logic)
+    if (product.variants && product.variants.length > 0) {
+      const prices = product.variants
+        .map((variant) => variant.price)
+        .filter(
+          (price) => typeof price === "number" && !isNaN(price) && price > 0
+        );
+      return prices.length > 0 ? Math.min(...prices) : 0;
+    }
+
+    return 0;
+  };
+
+  // Get product image from API response
+  const getProductImage = (product) => {
+    if (product.medias && product.medias.length > 0) {
+      const imageMedia = product.medias.find(
+        (media) => media.file_type === "image"
       );
-    return prices.length > 0 ? Math.min(...prices) : 0;
+      return imageMedia ? imageMedia.filelink : "/placeholder.jpg";
+    }
+    return "/placeholder.jpg";
   };
 
   // Product descriptions by type
@@ -212,13 +337,13 @@ export default function ProductSearchPage({ params }) {
         <Navbar />
 
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-primary-700 to-primary-500 text-white py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-gradient-to-r from-primary-700 to-primary-500 text-white py-8 sm:py-12 lg:py-16">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 capitalize">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 capitalize">
                 {type} Collection
               </h1>
-              <p className="text-lg md:text-xl text-primary-100 max-w-3xl mx-auto">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-primary-100 max-w-3xl mx-auto leading-relaxed">
                 {getTypeDescription(type)}
               </p>
             </div>
@@ -227,21 +352,11 @@ export default function ProductSearchPage({ params }) {
 
         {/* Collection Type Navigation */}
         <div className="bg-white border-b border-neutral shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/collections/all"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  type === "all"
-                    ? "bg-primary-600 text-white"
-                    : "text-secondary hover:text-primary-600 hover:bg-primary-50"
-                }`}
-              >
-                All Products
-              </Link>
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-4">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 lg:gap-4">
               <Link
                 href="/collections/diamond"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   type === "diamond"
                     ? "bg-primary-600 text-white"
                     : "text-secondary hover:text-primary-600 hover:bg-primary-50"
@@ -251,7 +366,7 @@ export default function ProductSearchPage({ params }) {
               </Link>
               <Link
                 href="/collections/melee"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   type === "melee"
                     ? "bg-primary-600 text-white"
                     : "text-secondary hover:text-primary-600 hover:bg-primary-50"
@@ -261,7 +376,7 @@ export default function ProductSearchPage({ params }) {
               </Link>
               <Link
                 href="/collections/colorstone"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   type === "colorstone"
                     ? "bg-primary-600 text-white"
                     : "text-secondary hover:text-primary-600 hover:bg-primary-50"
@@ -271,7 +386,7 @@ export default function ProductSearchPage({ params }) {
               </Link>
               <Link
                 href="/collections/alphabet"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   type === "alphabet"
                     ? "bg-primary-600 text-white"
                     : "text-secondary hover:text-primary-600 hover:bg-primary-50"
@@ -281,7 +396,7 @@ export default function ProductSearchPage({ params }) {
               </Link>
               <Link
                 href="/collections/cuts"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   type === "cuts"
                     ? "bg-primary-600 text-white"
                     : "text-secondary hover:text-primary-600 hover:bg-primary-50"
@@ -291,7 +406,7 @@ export default function ProductSearchPage({ params }) {
               </Link>
               <Link
                 href="/collections/layout"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   type === "layout"
                     ? "bg-primary-600 text-white"
                     : "text-secondary hover:text-primary-600 hover:bg-primary-50"
@@ -305,18 +420,18 @@ export default function ProductSearchPage({ params }) {
 
         {/* Search and Sort Section */}
         <div className="bg-white border-b border-neutral shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <span className="text-secondary">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <span className="text-sm sm:text-base text-secondary">
                 {filteredProducts.length} products found
               </span>
 
               {/* Sort By Dropdown */}
-              <div className="relative">
+              <div className="relative w-full sm:w-auto">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="appearance-none bg-white border border-neutral rounded-lg px-4 py-2 pr-10 text-sm font-medium text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
+                  className="appearance-none bg-white border border-neutral rounded-lg px-3 sm:px-4 py-2 pr-8 sm:pr-10 text-xs sm:text-sm font-medium text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer w-full"
                 >
                   <option value="relevance">Sort by: Relevance</option>
                   <option value="best-selling">Sort by: Best Selling</option>
@@ -328,36 +443,38 @@ export default function ProductSearchPage({ params }) {
                   </option>
                   <option value="latest">Sort by: Latest</option>
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-secondary pointer-events-none" />
+                <ChevronDown className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 h-3 w-3 sm:h-4 sm:w-4 text-secondary pointer-events-none" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex gap-8">
+        <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
             {/* Left Sidebar - Filters */}
-            <div className="hidden lg:block w-80 flex-shrink-0">
+            <div className="hidden lg:block w-72 xl:w-80 flex-shrink-0">
               <div className="sticky top-8">
-                <div className="bg-white rounded-lg border border-neutral p-6 shadow-sm">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Filter className="h-5 w-5 text-text-dark" />
-                    <h3 className="text-lg font-semibold text-text-dark">
+                <div className="bg-white rounded-lg border border-neutral p-4 xl:p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-4 xl:mb-6">
+                    <Filter className="h-4 w-4 xl:h-5 xl:w-5 text-text-dark" />
+                    <h3 className="text-base xl:text-lg font-semibold text-text-dark">
                       Filters
                     </h3>
                   </div>
 
                   {/* Price Range Filter */}
-                  <div className="space-y-6">
+                  <div className="space-y-4 xl:space-y-6">
                     <div>
-                      <h4 className="text-sm font-semibold text-text-dark mb-4">
+                      <h4 className="text-xs xl:text-sm font-semibold text-text-dark mb-3 xl:mb-4">
                         Price Range
                       </h4>
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-secondary">Min:</span>
+                      <div className="space-y-3 xl:space-y-4">
+                        <div className="flex items-center gap-2 xl:gap-4">
+                          <div className="flex items-center gap-1 xl:gap-2">
+                            <span className="text-xs xl:text-sm text-secondary">
+                              Min:
+                            </span>
                             <input
                               type="number"
                               value={isNaN(priceRange.min) ? 0 : priceRange.min}
@@ -369,11 +486,13 @@ export default function ProductSearchPage({ params }) {
                                   min: value,
                                 }));
                               }}
-                              className="w-24 px-2 py-1 text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                              className="w-20 xl:w-24 px-2 py-1 text-xs xl:text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
                             />
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-secondary">Max:</span>
+                          <div className="flex items-center gap-1 xl:gap-2">
+                            <span className="text-xs xl:text-sm text-secondary">
+                              Max:
+                            </span>
                             <input
                               type="number"
                               value={
@@ -388,21 +507,21 @@ export default function ProductSearchPage({ params }) {
                                   max: value,
                                 }));
                               }}
-                              className="w-24 px-2 py-1 text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                              className="w-20 xl:w-24 px-2 py-1 text-xs xl:text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
                             />
                           </div>
                         </div>
                         {priceRange.min > priceRange.max ? (
-                          <p className="text-sm text-red-400 text-center">
+                          <p className="text-xs xl:text-sm text-red-400 text-center">
                             Min value can not be greater than Max value
                           </p>
                         ) : priceRange.max < priceRange.min ? (
-                          <p className="text-sm text-red-400 text-center">
+                          <p className="text-xs xl:text-sm text-red-400 text-center">
                             Max value can not be less than Min value
                           </p>
                         ) : null}
 
-                        <div className="text-sm text-secondary text-center">
+                        <div className="text-xs xl:text-sm text-secondary text-center">
                           $
                           {(isNaN(priceRange.min)
                             ? 0
@@ -421,29 +540,56 @@ export default function ProductSearchPage({ params }) {
               </div>
             </div>
 
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden w-full mb-6">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral rounded-lg text-sm font-medium text-text-dark hover:bg-surface-200 transition-colors cursor-pointer w-full sm:w-auto"
-              >
-                <Filter className="h-4 w-4" />
-                Filters
-              </button>
+            {/* Mobile Filter and Grid View Controls */}
+            <div className="lg:hidden w-full mb-4 sm:mb-6">
+              <div className="flex gap-2 sm:gap-3">
+                {/* Filter Button */}
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white border border-neutral rounded-lg text-xs sm:text-sm font-medium text-text-dark hover:bg-surface-200 transition-colors cursor-pointer flex-1"
+                >
+                  <Filter className="h-3 w-3 sm:h-4 sm:w-4" />
+                  Filters
+                </button>
+
+                {/* Grid View Toggle Buttons */}
+                <div className="flex bg-white border border-neutral rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setMobileGridView(1)}
+                    className={`flex items-center justify-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-colors ${
+                      mobileGridView === 1
+                        ? "bg-primary-600 text-white"
+                        : "text-text-dark hover:bg-surface-200"
+                    }`}
+                  >
+                    <Grid2X2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                  </button>
+                  <button
+                    onClick={() => setMobileGridView(2)}
+                    className={`flex items-center justify-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-colors ${
+                      mobileGridView === 2
+                        ? "bg-primary-600 text-white"
+                        : "text-text-dark hover:bg-surface-200"
+                    }`}
+                  >
+                    <Grid3X3 className="h-3 w-3 sm:h-4 sm:w-4" />
+                  </button>
+                </div>
+              </div>
 
               {/* Mobile Filter Panel */}
               {showFilters && (
-                <div className="mt-4 bg-white rounded-lg border border-neutral p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-text-dark mb-4">
+                <div className="mt-3 sm:mt-4 bg-white rounded-lg border border-neutral p-4 sm:p-6 shadow-sm">
+                  <h3 className="text-base sm:text-lg font-semibold text-text-dark mb-3 sm:mb-4">
                     Filters
                   </h3>
 
                   {/* Price Range Filter */}
                   <div>
-                    <h4 className="text-sm font-semibold text-text-dark mb-4">
+                    <h4 className="text-xs sm:text-sm font-semibold text-text-dark mb-3 sm:mb-4">
                       Price Range
                     </h4>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {/* Dual Thumb Range Slider */}
                       <div className="relative">
                         <div className="relative h-2 bg-surface-200 rounded-lg">
@@ -517,9 +663,11 @@ export default function ProductSearchPage({ params }) {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-secondary">Min:</span>
+                      <div className="flex items-center gap-2 sm:gap-4">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <span className="text-xs sm:text-sm text-secondary">
+                            Min:
+                          </span>
                           <input
                             type="number"
                             min={0}
@@ -538,11 +686,13 @@ export default function ProductSearchPage({ params }) {
                                 }));
                               }
                             }}
-                            className="w-24 px-2 py-1 text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                            className="w-20 sm:w-24 px-2 py-1 text-xs sm:text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
                           />
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-secondary">Max:</span>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <span className="text-xs sm:text-sm text-secondary">
+                            Max:
+                          </span>
                           <input
                             type="number"
                             min={priceRange.min}
@@ -561,12 +711,12 @@ export default function ProductSearchPage({ params }) {
                                 }));
                               }
                             }}
-                            className="w-24 px-2 py-1 text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                            className="w-20 sm:w-24 px-2 py-1 text-xs sm:text-sm border border-neutral rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
                           />
                         </div>
                       </div>
 
-                      <div className="text-sm text-secondary text-center">
+                      <div className="text-xs sm:text-sm text-secondary text-center">
                         $
                         {(isNaN(priceRange.min)
                           ? 0
@@ -585,33 +735,131 @@ export default function ProductSearchPage({ params }) {
             </div>
 
             {/* Right Content - Products */}
-            <div className="flex-1 lg:ml-0">
-              {currentProducts.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="text-6xl mb-4">💎</div>
-                  <h3 className="text-2xl font-semibold text-text-dark mb-2">
-                    No products found
+            <div className="flex-1">
+              {loading ? (
+                <div className="text-center py-12 sm:py-16 lg:py-20">
+                  <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 border-b-2 border-primary-600 mx-auto mb-3 sm:mb-4"></div>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-text-dark mb-2">
+                    Loading products...
                   </h3>
-                  <p className="text-secondary">
-                    Try adjusting your search criteria
+                  <p className="text-sm sm:text-base text-secondary">
+                    Please wait while we fetch the latest collection
                   </p>
+                </div>
+              ) : apiError ? (
+                <div className="text-center py-12 sm:py-16 lg:py-20">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">
+                    ⚠️
+                  </div>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-text-dark mb-2">
+                    Error loading products
+                  </h3>
+                  <p className="text-sm sm:text-base text-secondary mb-3 sm:mb-4">
+                    {apiError}
+                  </p>
+                  <button
+                    onClick={() => {
+                      fetchProducts(type);
+                    }}
+                    className="px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm sm:text-base"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : currentProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 px-3 sm:px-4">
+                  {/* Main Message */}
+                  <div className="text-center max-w-2xl">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+                      No {type} products found
+                    </h2>
+                    <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed">
+                      We couldn't find any products matching your search
+                      criteria. Don't worry, we have plenty of other beautiful
+                      pieces waiting for you.
+                    </p>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-6 sm:mb-8">
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          setPriceRange({ min: 0, max: 100000 });
+                          setSortBy("relevance");
+                        }}
+                        className="px-6 sm:px-8 py-2 sm:py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base"
+                      >
+                        Clear Filters
+                      </button>
+                      <Link
+                        href="/collections/diamond"
+                        className="px-6 sm:px-8 py-2 sm:py-3 border-2 border-primary-600 text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-all duration-200 text-sm sm:text-base"
+                      >
+                        Browse Diamonds
+                      </Link>
+                    </div>
+
+                    {/* Collection Links */}
+                    <div className="border-t border-gray-200 pt-4 sm:pt-6">
+                      <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
+                        Or explore our collections:
+                      </p>
+                      <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+                        <Link
+                          href="/collections/melee"
+                          className="px-3 sm:px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all duration-200 text-xs sm:text-sm font-medium"
+                        >
+                          Melee
+                        </Link>
+                        <Link
+                          href="/collections/colorstone"
+                          className="px-3 sm:px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all duration-200 text-xs sm:text-sm font-medium"
+                        >
+                          Color Stones
+                        </Link>
+                        <Link
+                          href="/collections/layout"
+                          className="px-3 sm:px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all duration-200 text-xs sm:text-sm font-medium"
+                        >
+                          Layouts
+                        </Link>
+                        <Link
+                          href="/collections/alphabet"
+                          className="px-3 sm:px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all duration-200 text-xs sm:text-sm font-medium"
+                        >
+                          Alphabets
+                        </Link>
+
+                        <Link
+                          href="/collections/cuts"
+                          className="px-3 sm:px-4 py-2 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-primary-300 hover:text-primary-600 transition-all duration-200 text-xs sm:text-sm font-medium"
+                        >
+                          Cuts
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <>
                   {/* Products Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+                  <div
+                    className={`grid gap-4 sm:gap-6 mb-8 sm:mb-12 ${
+                      mobileGridView === 1
+                        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                        : "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    }`}
+                  >
                     {currentProducts.map((product) => (
                       <div
-                        onClick={() =>
-                          router.push(`/products/${product.productId}`)
-                        }
-                        key={product.productId}
-                        className="cursor-pointer rounded-lg group bg-white border-neutral transition-all duration-300 overflow-hidden"
+                        onClick={() => router.push(`/products/${product.sku}`)}
+                        key={`${product.product_type}-${product.id}-${product.sku}`}
+                        className="cursor-pointer rounded-lg group bg-white border border-neutral transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md"
                       >
                         {/* Product Image */}
                         <div className="relative aspect-square overflow-hidden">
                           <img
-                            src={product.images[0]}
+                            src={getProductImage(product)}
                             alt={product.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
@@ -620,19 +868,17 @@ export default function ProductSearchPage({ params }) {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              toggleWishlist(product.productId);
+                              toggleWishlist(product.id);
                             }}
-                            className={`cursor-pointer absolute top-3 right-3 p-2 rounded-full transition-all duration-200 ${
-                              wishlist.has(product.productId)
+                            className={`cursor-pointer absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all duration-200 ${
+                              wishlist.has(product.id)
                                 ? "bg-red-500 text-white shadow-lg"
                                 : "bg-white/80 text-secondary hover:bg-white hover:text-red-500"
                             }`}
                           >
                             <Heart
-                              className={`h-5 w-5 ${
-                                wishlist.has(product.productId)
-                                  ? "fill-current"
-                                  : ""
+                              className={`h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 ${
+                                wishlist.has(product.id) ? "fill-current" : ""
                               }`}
                             />
                           </button>
@@ -641,44 +887,44 @@ export default function ProductSearchPage({ params }) {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              toggleCart(product.productId);
+                              toggleCart(product.id);
                             }}
-                            className={`cursor-pointer absolute bottom-3 right-3 p-2 rounded-full transition-all duration-200 ${
-                              cart.has(product.productId)
+                            className={`cursor-pointer absolute bottom-2 right-2 sm:bottom-3 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all duration-200 ${
+                              cart.has(product.id)
                                 ? "bg-primary-600 text-white shadow-lg"
                                 : "bg-white/80 text-secondary hover:bg-white hover:text-primary-600"
                             }`}
                           >
-                            <ShoppingCart className="h-5 w-5" />
+                            <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5" />
                           </button>
 
                           {/* Availability Badge */}
-                          {!product.availability && (
-                            <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                          {!product.is_available && (
+                            <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-red-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-semibold">
                               Out of Stock
                             </div>
                           )}
                         </div>
 
                         {/* Product Info */}
-                        <div className="p-4">
-                          <h3 className="font-semibold text-text-dark mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                        <div className="p-3 sm:p-4">
+                          <h3 className="font-semibold text-text-dark mb-1 sm:mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors text-sm sm:text-base">
                             {product.name}
                           </h3>
 
                           {product.shape && (
-                            <p className="text-sm text-secondary mb-2">
+                            <p className="text-xs sm:text-sm text-secondary mb-1 sm:mb-2">
                               {product.shape} Cut
                             </p>
                           )}
 
                           <div className="flex items-center justify-between">
-                            <div className="text-lg font-bold text-primary-600">
+                            <div className="text-sm sm:text-base lg:text-lg font-bold text-primary-600">
                               ${getProductPrice(product).toLocaleString()}
                             </div>
 
                             {product.certification && (
-                              <div className="text-xs text-secondary bg-surface-200 px-2 py-1 rounded">
+                              <div className="text-[10px] sm:text-xs text-secondary bg-surface-200 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                                 {product.certification} Certified
                               </div>
                             )}
@@ -690,13 +936,13 @@ export default function ProductSearchPage({ params }) {
 
                   {/* Pagination */}
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1 sm:gap-2">
                       <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="cursor-pointer p-2 rounded-lg border border-neutral disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-200 transition-colors"
+                        className="cursor-pointer p-1.5 sm:p-2 rounded-lg border border-neutral disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-200 transition-colors"
                       >
-                        <ChevronLeft className="h-5 w-5" />
+                        <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
 
                       {Array.from(
@@ -717,7 +963,7 @@ export default function ProductSearchPage({ params }) {
                             <button
                               key={pageNum}
                               onClick={() => handlePageChange(pageNum)}
-                              className={`cursor-pointer px-4 py-2 rounded-lg border transition-colors ${
+                              className={`cursor-pointer px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg border transition-colors text-sm sm:text-base ${
                                 currentPage === pageNum
                                   ? "bg-primary-600 text-white border-primary-600"
                                   : "border-neutral hover:bg-primary-500 hover:text-white"
@@ -732,9 +978,9 @@ export default function ProductSearchPage({ params }) {
                       <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="cursor-pointer p-2 rounded-lg border border-neutral disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-200 transition-colors"
+                        className="cursor-pointer p-1.5 sm:p-2 rounded-lg border border-neutral disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-200 transition-colors"
                       >
-                        <ChevronRight className="h-5 w-5" />
+                        <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
                     </div>
                   )}

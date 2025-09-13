@@ -186,10 +186,8 @@ export default function page({ params }) {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://localhost:3000/api/client/product/search?q=${id}`,
-          headers: {
-            Authorization: authToken,
-          },
+          url: `http://localhost:3000/api/product-id?sku=${id}`,
+          headers: {},
         };
 
         const response = await axios.request(config);
@@ -198,10 +196,11 @@ export default function page({ params }) {
           response.data &&
           response.data.status &&
           response.data.data &&
-          response.data.data.length > 0
+          response.data.data.product
         ) {
-          // Get the first product from the response
-          const apiProduct = response.data.data[0];
+          // Get the product and product type from the response
+          const apiProduct = response.data.data.product;
+          const productType = response.data.data.product_type;
 
           // Process media to separate images and videos
           const mediaFiles = apiProduct.medias || [];
@@ -215,29 +214,29 @@ export default function page({ params }) {
           // Normalize product type to match component expectations
           const normalizeProductType = (type) => {
             switch (type) {
-              case "Diamonds":
+              case "diamonds":
                 return "diamond";
-              case "Colorstones":
+              case "colorstones":
                 return "colorstone";
-              case "Cuts":
+              case "cuts":
                 return "cuts";
-              case "Melees":
+              case "melees":
                 return "melee";
-              case "Layouts":
+              case "layouts":
                 return "layout";
-              case "Alphabets":
+              case "alphabets":
                 return "alphabet";
               default:
-                return type.toLowerCase();
+                return type;
             }
           };
 
           // Transform API response to match the expected format
           const transformedProduct = {
-            productId: apiProduct.sku,
+            productId: apiProduct.id,
             name: apiProduct.name,
             slug: apiProduct.slug,
-            productType: normalizeProductType(apiProduct.product_type),
+            productType: normalizeProductType(productType),
             description: apiProduct.description,
             isAvailable: apiProduct.is_available,
             media: mediaFiles,
@@ -245,7 +244,7 @@ export default function page({ params }) {
             video: videos,
             sku: apiProduct.sku,
             // Handle different product types and normalize field names
-            ...(apiProduct.product_type === "Diamonds" && {
+            ...(productType === "diamonds" && {
               shape: apiProduct.shape,
               certification: apiProduct.certification,
               variants: (apiProduct.variants || []).map((variant) => ({
@@ -255,7 +254,7 @@ export default function page({ params }) {
                 clarityRange: variant.clarity_range,
               })),
             }),
-            ...(apiProduct.product_type === "Colorstones" && {
+            ...(productType === "colorstones" && {
               color: apiProduct.color,
               certification: apiProduct.certification,
               variants: (apiProduct.variants || []).map((variant) => ({
@@ -263,7 +262,7 @@ export default function page({ params }) {
                 caratWeight: variant.carat_weight,
               })),
             }),
-            ...(apiProduct.product_type === "Layouts" && {
+            ...(productType === "layouts" && {
               layoutType: apiProduct.layout_type,
               price: apiProduct.price,
               layoutPrice: apiProduct.price,
@@ -285,7 +284,7 @@ export default function page({ params }) {
                 clarityRange: detail.clarity_range,
               })),
             }),
-            ...(apiProduct.product_type === "Cuts" && {
+            ...(productType === "cuts" && {
               shape: apiProduct.shape,
               cutType: apiProduct.cut_type,
               colorRange: apiProduct.color_range,
@@ -295,7 +294,7 @@ export default function page({ params }) {
                 caratWeight: variant.carat_weight,
               })),
             }),
-            ...(apiProduct.product_type === "Melees" && {
+            ...(productType === "melees" && {
               shape: apiProduct.shape,
               sieveSizes: (apiProduct.sieve_sizes || []).map((size) => ({
                 ...size,
@@ -312,7 +311,7 @@ export default function page({ params }) {
                 price: size.price_per_carat,
               })),
             }),
-            ...(apiProduct.product_type === "Alphabets" && {
+            ...(productType === "alphabets" && {
               character: apiProduct.character,
               colorRange: apiProduct.color_range,
               clarityRange: apiProduct.clarity_range,
@@ -325,7 +324,7 @@ export default function page({ params }) {
 
           setProductData(transformedProduct);
         } else {
-          console.error(`Product with ID ${id} not found`);
+          console.error(`Product with SKU ${id} not found`);
           setProductData(null);
           toast.error("Product not found");
         }
@@ -565,11 +564,24 @@ export default function page({ params }) {
 
     setDeletingProduct(true);
     try {
-      const response = await fetch(`/api/products/${productData.productId}`, {
-        method: "DELETE",
-      });
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authentication token not found. Please login again.");
+        return;
+      }
 
-      if (response.ok) {
+      const config = {
+        method: "delete",
+        maxBodyLength: Infinity,
+        url: `http://localhost:3000/api/admin/product/delete-product?sku=${productData.sku}`,
+        headers: {
+          Authorization: authToken,
+        },
+      };
+
+      const response = await axios.request(config);
+
+      if (response.data.status) {
         const productTypeLabel =
           productData.productType === "diamond"
             ? "Diamond"
@@ -588,11 +600,14 @@ export default function page({ params }) {
         // Redirect to products page
         window.location.href = "/admin/products";
       } else {
-        throw new Error("Failed to delete product");
+        throw new Error(response.data.message || "Failed to delete product");
       }
     } catch (error) {
       console.error("Error deleting product:", error);
-      toast.error("Failed to delete product. Please try again.");
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to delete product. Please try again."
+      );
     } finally {
       setDeletingProduct(false);
     }
