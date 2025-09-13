@@ -203,22 +203,22 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setIsLoading(true);
+  // const handleGoogleSignup = async () => {
+  //   setIsLoading(true);
 
-    try {
-      // TODO: Implement Google OAuth signup
-      console.log("Google signup initiated");
+  //   try {
+  //     // TODO: Implement Google OAuth signup
+  //     console.log("Google signup initiated");
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-    } catch (error) {
-      console.error("Google signup error:", error);
-      setErrors({ general: "Google signup failed. Please try again." });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     // Simulate API call
+  //     await new Promise((resolve) => setTimeout(resolve, 1500));
+  //   } catch (error) {
+  //     console.error("Google signup error:", error);
+  //     setErrors({ general: "Google signup failed. Please try again." });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const passwordStrength = () => {
     if (!formData.password) return { score: 0, label: "", color: "" };
@@ -756,7 +756,7 @@ export default function SignupPage() {
             </form>
 
             {/* Divider */}
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border" />
@@ -767,10 +767,10 @@ export default function SignupPage() {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Google Signup Button */}
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <button
                 onClick={handleGoogleSignup}
                 disabled={isLoading}
@@ -805,7 +805,7 @@ export default function SignupPage() {
                   </div>
                 )}
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Login Link */}
