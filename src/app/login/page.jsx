@@ -316,7 +316,7 @@ export default function LoginPage() {
             </form>
 
             {/* Divider */}
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border" />
@@ -327,10 +327,10 @@ export default function LoginPage() {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Google Login Button */}
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <button
                 onClick={handleGoogleLogin}
                 disabled={isLoading}
@@ -365,7 +365,7 @@ export default function LoginPage() {
                   </div>
                 )}
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Sign Up Link */}

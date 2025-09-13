@@ -8,12 +8,12 @@ import Image from "next/image";
 import { Edit, Trash2, X, Save, AlertTriangle } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import productsDataArray from "../../../../../products_dummy2.json";
+import axios from "axios";
+import { getAuthToken } from "@/contexts/auth";
 
-
-export default function page({params}) {
+export default function page({ params }) {
   // Unwrap params Promise using React.use()
-  const unwrappedParams = use(params);
+  const { id } = use(params);
   const colorOptions = [
     "D",
     "E",
@@ -143,68 +143,14 @@ export default function page({params}) {
   const [showProductDeletePopup, setShowProductDeletePopup] = useState(false);
   const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
   const [deletingProduct, setDeletingProduct] = useState(false);
-     const productId = unwrappedParams.id;
   const [productData, setProductData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-
-  // const productData = {
-  //   productId: "683d90f2-a18f-4ea5-9724-6a2dfc832ca3",
-  //   name: "Pear Diamond",
-  //   shape: "Pear",
-  //   sku: "DIA-PEA-002",
-  //   certification: "GIA",
-  //   description:
-  //     "A premium quality pear brilliant diamond certified by GIA. Perfect for fine jewelry.",
-  //   availability: true,
-  //   images: [""],
-  //   video: [""],
-  //   variants: [
-  //     {
-  //       id: 1,
-  //       color: "Q",
-  //       clarity: "SI1",
-  //       caratWeight: 1.42,
-  //       price: 7562,
-  //     },
-  //     {
-  //       id: 2,
-  //       color: "E",
-  //       clarity: "I3",
-  //       caratWeight: 1.09,
-  //       price: 6296,
-  //     },
-  //     {
-  //       id: 3,
-  //       color: "G",
-  //       clarity: "FL",
-  //       caratWeight: 1.41,
-  //       price: 7811,
-  //     },
-  //     {
-  //       id: 4,
-  //       color: "G",
-  //       clarity: "VVS2",
-  //       caratWeight: 0.98,
-  //       price: 5347,
-  //     },
-  //     {
-  //       id: 5,
-  //       color: "R",
-  //       clarity: "VVS1",
-  //       caratWeight: 0.63,
-  //       price: 3799,
-  //     },
-  //   ],
-  //   productType: "diamond",
-  // };
-
-  // Sort diamond variants
-  
   const sortedVariants = useMemo(() => {
     if (!productData || !productData.variants) {
       return [];
     }
-    
+
     const variants = [...productData.variants];
 
     variants.sort((a, b) => {
@@ -226,29 +172,176 @@ export default function page({params}) {
     return variants;
   }, [productData, sortBy, sortOrder]);
 
-  // find the product data from the productsDataArray
-  const findProductById = (id) => {
-    for (const productType in productsDataArray.productTypes) {
-      const products = productsDataArray.productTypes[productType];
-      const product = products.find(p => p.productId === id);
-      if (product) {
-        return product;
-      }
-    }
-    return null;
-  };
-
   // Get product data from API
   useEffect(() => {
-    const product = findProductById(productId);
-    if (product) {
-      setProductData(product);
-    } else {
-      // Product not found - you could redirect or show error
-      console.error(`Product with ID ${productId} not found`);
-      setProductData(null);
+    const fetchProductData = async () => {
+      setLoading(true);
+      try {
+        const authToken = getAuthToken();
+        console.log(authToken);
+        if (!authToken) {
+          toast.error("Authorization failed. Please login again.");
+          return;
+        }
+        const config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `http://localhost:3000/api/client/product/search?q=${id}`,
+          headers: {
+            Authorization: authToken,
+          },
+        };
+
+        const response = await axios.request(config);
+
+        if (
+          response.data &&
+          response.data.status &&
+          response.data.data &&
+          response.data.data.length > 0
+        ) {
+          // Get the first product from the response
+          const apiProduct = response.data.data[0];
+
+          // Process media to separate images and videos
+          const mediaFiles = apiProduct.medias || [];
+          const images = mediaFiles
+            .filter((media) => media.file_type === "image")
+            .map((media) => media.filelink);
+          const videos = mediaFiles
+            .filter((media) => media.file_type === "video")
+            .map((media) => media.filelink);
+
+          // Normalize product type to match component expectations
+          const normalizeProductType = (type) => {
+            switch (type) {
+              case "Diamonds":
+                return "diamond";
+              case "Colorstones":
+                return "colorstone";
+              case "Cuts":
+                return "cuts";
+              case "Melees":
+                return "melee";
+              case "Layouts":
+                return "layout";
+              case "Alphabets":
+                return "alphabet";
+              default:
+                return type.toLowerCase();
+            }
+          };
+
+          // Transform API response to match the expected format
+          const transformedProduct = {
+            productId: apiProduct.sku,
+            name: apiProduct.name,
+            slug: apiProduct.slug,
+            productType: normalizeProductType(apiProduct.product_type),
+            description: apiProduct.description,
+            isAvailable: apiProduct.is_available,
+            media: mediaFiles,
+            images: images,
+            video: videos,
+            sku: apiProduct.sku,
+            // Handle different product types and normalize field names
+            ...(apiProduct.product_type === "Diamonds" && {
+              shape: apiProduct.shape,
+              certification: apiProduct.certification,
+              variants: (apiProduct.variants || []).map((variant) => ({
+                ...variant,
+                caratWeight: variant.carat_weight,
+                colorRange: variant.color_range,
+                clarityRange: variant.clarity_range,
+              })),
+            }),
+            ...(apiProduct.product_type === "Colorstones" && {
+              color: apiProduct.color,
+              certification: apiProduct.certification,
+              variants: (apiProduct.variants || []).map((variant) => ({
+                ...variant,
+                caratWeight: variant.carat_weight,
+              })),
+            }),
+            ...(apiProduct.product_type === "Layouts" && {
+              layoutType: apiProduct.layout_type,
+              price: apiProduct.price,
+              layoutPrice: apiProduct.price,
+              diamondDetails: (apiProduct.diamond_details || []).map(
+                (detail) => ({
+                  ...detail,
+                  caratWeight: detail.carat_weight,
+                  colorRange: detail.color_range,
+                  clarityRange: detail.clarity_range,
+                })
+              ),
+              variants: (apiProduct.diamond_details || []).map((detail) => ({
+                id: detail.id,
+                shape: detail.shape,
+                totalPcs: detail.pcs,
+                totalCaratWeight: detail.carat_weight,
+                dimensions: detail.dimension,
+                colorRange: detail.color_range,
+                clarityRange: detail.clarity_range,
+              })),
+            }),
+            ...(apiProduct.product_type === "Cuts" && {
+              shape: apiProduct.shape,
+              cutType: apiProduct.cut_type,
+              colorRange: apiProduct.color_range,
+              clarityRange: apiProduct.clarity_range,
+              variants: (apiProduct.variants || []).map((variant) => ({
+                ...variant,
+                caratWeight: variant.carat_weight,
+              })),
+            }),
+            ...(apiProduct.product_type === "Melees" && {
+              shape: apiProduct.shape,
+              sieveSizes: (apiProduct.sieve_sizes || []).map((size) => ({
+                ...size,
+                sieveSize: size.size,
+                colorRange: size.color_range,
+                clarityRange: size.clarity_range,
+                pricePerCarat: size.price_per_carat,
+              })),
+              variants: (apiProduct.sieve_sizes || []).map((size) => ({
+                id: size.id,
+                sieveSize: size.size,
+                colorRange: size.color_range,
+                clarityRange: size.clarity_range,
+                price: size.price_per_carat,
+              })),
+            }),
+            ...(apiProduct.product_type === "Alphabets" && {
+              character: apiProduct.character,
+              colorRange: apiProduct.color_range,
+              clarityRange: apiProduct.clarity_range,
+              variants: (apiProduct.variants || []).map((variant) => ({
+                ...variant,
+                caratWeight: variant.carat_weight,
+              })),
+            }),
+          };
+
+          setProductData(transformedProduct);
+        } else {
+          console.error(`Product with ID ${id} not found`);
+          setProductData(null);
+          toast.error("Product not found");
+        }
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setProductData(null);
+        toast.error("Failed to load product data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProductData();
     }
-  }, [productId]);
+  }, [id]);
 
   // Handle sorting
   const handleSort = (column) => {
@@ -510,8 +603,7 @@ export default function page({params}) {
     setEditedVariantData((prev) => ({
       ...prev,
       [field]:
-        field === "caratWeight" ||
-        field === "price"
+        field === "caratWeight" || field === "price"
           ? parseFloat(value) || 0
           : value,
     }));
@@ -526,7 +618,7 @@ export default function page({params}) {
   };
 
   // Loading state
-  if (!productData) {
+  if (loading || !productData) {
     return (
       <div>
         <AdminRoute>
@@ -536,7 +628,9 @@ export default function page({params}) {
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
-                  <p className="mt-4 text-lg text-gray-600">Loading product...</p>
+                  <p className="mt-4 text-lg text-gray-600">
+                    Loading product...
+                  </p>
                 </div>
               </div>
             </div>
@@ -624,16 +718,26 @@ export default function page({params}) {
                   <div className="flex flex-col">
                     <div className="flex flex-col m-4">
                       <div className="flex items-center gap-4">
-                        <Image
-                          src={productData.images[0]}
-                          alt="Product Image"
-                          width={75}
-                          height={75}
-                          className="border border-gray-200 rounded-lg"
-                        />
+                        {productData?.media &&
+                        productData.media.length > 0 &&
+                        productData.media[0].file_type === "image" ? (
+                          <Image
+                            src={productData.media[0].filelink}
+                            alt="Product Image"
+                            width={75}
+                            height={75}
+                            className="border border-gray-200 rounded-lg"
+                          />
+                        ) : (
+                          <div className="w-[75px] h-[75px] bg-gray-200 border border-gray-200 rounded-lg flex items-center justify-center">
+                            <span className="text-gray-500 text-xs">
+                              No Image
+                            </span>
+                          </div>
+                        )}
 
                         <h1 className="text-2xl font-semibold text-gray-800">
-                          {productData.name}
+                          {productData?.name || "Loading..."}
                         </h1>
                       </div>
                     </div>
@@ -901,7 +1005,9 @@ export default function page({params}) {
                               />
                             ) : (
                               <p className="text-sm text-gray-800">
-                                ${productData.layoutPrice.toLocaleString()}
+                                $
+                                {productData?.layoutPrice?.toLocaleString() ||
+                                  "0"}
                               </p>
                             )}
                           </div>
@@ -1066,8 +1172,7 @@ export default function page({params}) {
                             >
                               <td className="px-4 py-2 text-sm text-gray-800">
                                 {editingVariant === variant.id ? (
-                                  <input
-                                    type="text"
+                                  <select
                                     value={editedVariantData.color || ""}
                                     onChange={(e) =>
                                       handleVariantInputChange(
@@ -1076,16 +1181,21 @@ export default function page({params}) {
                                       )
                                     }
                                     className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                    placeholder="Color"
-                                  />
+                                  >
+                                    <option value="">Select Color</option>
+                                    {colorOptions.map((color) => (
+                                      <option key={color} value={color}>
+                                        {color}
+                                      </option>
+                                    ))}
+                                  </select>
                                 ) : (
                                   variant.color
                                 )}
                               </td>
                               <td className="px-4 py-2 text-sm text-gray-800">
                                 {editingVariant === variant.id ? (
-                                  <input
-                                    type="text"
+                                  <select
                                     value={editedVariantData.clarity || ""}
                                     onChange={(e) =>
                                       handleVariantInputChange(
@@ -1094,8 +1204,14 @@ export default function page({params}) {
                                       )
                                     }
                                     className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                    placeholder="Clarity"
-                                  />
+                                  >
+                                    <option value="">Select Clarity</option>
+                                    {clarityOptions.map((clarity) => (
+                                      <option key={clarity} value={clarity}>
+                                        {clarity}
+                                      </option>
+                                    ))}
+                                  </select>
                                 ) : (
                                   variant.clarity
                                 )}
@@ -1313,9 +1429,7 @@ export default function page({params}) {
                                 {editingVariant === variant.id ? (
                                   <input
                                     type="number"
-                                    value={
-                                      editedVariantData.price || ""
-                                    }
+                                    value={editedVariantData.price || ""}
                                     onChange={(e) =>
                                       handleVariantInputChange(
                                         "price",
@@ -1860,7 +1974,7 @@ export default function page({params}) {
                           </tr>
                         </thead>
                         <tbody className="bg-white border border-gray-200">
-                          {productData.variants.map((variant) => (
+                          {productData?.variants?.map((variant) => (
                             <tr
                               key={variant.id}
                               className="hover:bg-gray-50 border border-gray-200"
@@ -2048,17 +2162,18 @@ export default function page({params}) {
                               Total
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-800 font-bold">
-                              {productData.variants.reduce(
-                                (acc, variant) => acc + variant.totalPcs,
+                              {productData?.variants?.reduce(
+                                (acc, variant) =>
+                                  acc + (variant?.totalPcs || 0),
                                 0
-                              )}
+                              ) || 0}
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-800 font-bold">
-                              {productData.variants.reduce(
+                              {productData?.variants?.reduce(
                                 (acc, variant) =>
-                                  acc + variant.totalCaratWeight,
+                                  acc + (variant?.totalCaratWeight || 0),
                                 0
-                              )}
+                              ) || 0}
                             </td>
                             <td></td>
                             <td></td>
@@ -2078,13 +2193,13 @@ export default function page({params}) {
                   </h1>
 
                   {/* Images Section */}
-                  {productData.images.length > 0 && (
+                  {productData?.images?.length > 0 && (
                     <div className="mb-6">
                       <h2 className="text-md font-medium text-gray-700 mb-3">
                         Images
                       </h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {productData.images.map((image, index) => (
+                        {productData?.images?.map((image, index) => (
                           <div key={index} className="relative group">
                             <div className="relative overflow-hidden rounded-lg border border-gray-200">
                               <Image
@@ -2111,13 +2226,13 @@ export default function page({params}) {
                   )}
 
                   {/* Videos Section */}
-                  {productData.video.length > 0 && (
+                  {productData?.video?.length > 0 && (
                     <div>
                       <h2 className="text-md font-medium text-gray-700 mb-3">
                         Videos
                       </h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {productData.video.map((video, index) => (
+                        {productData?.video?.map((video, index) => (
                           <div key={index} className="relative group">
                             <div className="relative overflow-hidden rounded-lg border border-gray-200">
                               <video
@@ -2145,8 +2260,10 @@ export default function page({params}) {
                   )}
 
                   {/* Empty State */}
-                  {productData.images.length === 0 &&
-                    productData.video.length === 0 && (
+                  {(productData?.images?.length === 0 ||
+                    !productData?.images) &&
+                    (productData?.video?.length === 0 ||
+                      !productData?.video) && (
                       <div className="text-center py-8">
                         <div className="text-gray-400 mb-2">
                           <svg
@@ -2363,7 +2480,8 @@ export default function page({params}) {
                     <strong>Shape:</strong> {productData.shape}
                   </p>
                   <p className="text-sm">
-                    <strong>Variants:</strong> {productData.variants.length}
+                    <strong>Variants:</strong>{" "}
+                    {productData?.variants?.length || 0}
                   </p>
                 </div>
               </div>

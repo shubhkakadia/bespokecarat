@@ -3,14 +3,13 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import React, { useState, useEffect, use } from "react";
+import axios from "axios";
 import Image from "next/image";
 import {
   Heart,
   ShoppingCart,
   Plus,
   Minus,
-  Star,
-  Phone,
   MessageCircle,
   Video,
   ChevronLeft,
@@ -19,8 +18,9 @@ import {
   Mail,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import productsData from "../../../../products_dummy2.json";
 import { CustomerRoute } from "@/components/ProtectedRoute";
+import { getAuthToken } from "@/contexts/auth";
+import { toast } from "react-toastify";
 
 export default function ProductPage({ params }) {
   const { id } = use(params);
@@ -44,21 +44,22 @@ export default function ProductPage({ params }) {
   const [availableVariants, setAvailableVariants] = useState([]);
 
   useEffect(() => {
-    if (product?.images || product?.video) {
-      // Create a combined media list with images first, then videos
-      const mediaList = [];
-      if (product.images && Array.isArray(product.images)) {
-        mediaList.push(...product.images);
-      }
-      if (product.video && Array.isArray(product.video)) {
-        mediaList.push(...product.video);
-      }
+    if (product?.medias && Array.isArray(product.medias)) {
+      // Create a combined media list from the API response
+      // Sort to show images first, then videos
+      const sortedMedia = [...product.medias].sort((a, b) => {
+        if (a.file_type === "image" && b.file_type === "video") return -1;
+        if (a.file_type === "video" && b.file_type === "image") return 1;
+        return 0;
+      });
+
+      const mediaList = sortedMedia.map((media) => media.filelink);
 
       // Debug: Log the media list to console
       console.log("Media list created:", {
         totalMedia: mediaList.length,
-        images: product.images?.length || 0,
-        videos: product.video?.length || 0,
+        images: product.medias.filter((m) => m.file_type === "image").length,
+        videos: product.medias.filter((m) => m.file_type === "video").length,
         mediaList,
       });
 
@@ -70,16 +71,35 @@ export default function ProductPage({ params }) {
     }
   }, [product]);
 
-  // Function to get product data from JSON
+  // Function to get product data from API
   const getProductById = async (id) => {
     try {
-      // Search through all product types
-      for (const productType in productsData.productTypes) {
-        const products = productsData.productTypes[productType];
-        const product = products.find((p) => p.productId === id);
-        if (product) {
-          return product;
-        }
+      const authToken = getAuthToken();
+      console.log(authToken);
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return null;
+      }
+      const config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `http://localhost:3000/api/client/product/search?q=${id}`,
+        headers: {
+          Authorization:
+            authToken,
+        },
+      };
+
+      const response = await axios.request(config);
+
+      if (
+        response.data &&
+        response.data.status &&
+        response.data.data &&
+        response.data.data.length > 0
+      ) {
+        // Return the first product from the search results
+        return response.data.data[0];
       }
 
       return null;
@@ -92,19 +112,15 @@ export default function ProductPage({ params }) {
   // Function to get recommended products
   const getRecommendedProducts = async (currentProductId, limit = 5) => {
     try {
-      const allProducts = [];
-
-      // Collect all products from all types
-      for (const productType in productsData.productTypes) {
-        allProducts.push(...productsData.productTypes[productType]);
+      const authToken = getAuthToken();
+      console.log(authToken);
+      if (!authToken) {
+        toast.error("Authorization failed. Please login again.");
+        return null;
       }
-
-      // Filter out current product and get random 5
-      const filteredProducts = allProducts.filter(
-        (p) => p.productId !== currentProductId
-      );
-      const shuffled = filteredProducts.sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, limit);
+      // TODO: Implement recommended products API call
+      // For now, returning empty array as no recommended products API is provided
+      return [];
     } catch (error) {
       console.error("Error loading recommended products:", error);
       return [];
@@ -119,38 +135,50 @@ export default function ProductPage({ params }) {
       setProduct(productData);
       setRecommendedProducts(recommended);
 
-      // Set initial variant selection if product has variants
+      // Set initial variant selection based on product type
       if (productData?.variants?.length > 0) {
         setAvailableVariants(productData.variants);
-        // Select first variant as default
         const firstVariant = productData.variants[0];
 
         // For diamonds, set color and clarity
-        if (productData.productType === "diamond") {
+        if (productData.product_type === "Diamonds") {
           setSelectedColor(firstVariant.color);
           setSelectedClarity(firstVariant.clarity);
+          setSelectedCaratWeight(firstVariant.carat_weight);
         }
-
-        // For color stones, set shape
-        if (productData.productType === "colorstone") {
+        // For colorstones, set shape
+        else if (productData.product_type === "Colorstones") {
           setSelectedShape(firstVariant.shape);
+          setSelectedCaratWeight(firstVariant.carat_weight);
         }
+        // For cuts and alphabets, set carat weight
+        else if (
+          productData.product_type === "Cuts" ||
+          productData.product_type === "Alphabets"
+        ) {
+          setSelectedCaratWeight(firstVariant.carat_weight);
+        }
+      }
 
-        // For melee, set color and clarity ranges
-        if (productData.productType === "melee") {
-          setSelectedColorRange(firstVariant.colorRange);
-          setSelectedClarityRange(firstVariant.clarityRange);
-        }
+      // Handle melee with sieve_sizes - set initial defaults
+      if (
+        productData?.sieve_sizes?.length > 0 &&
+        productData.product_type === "Melees"
+      ) {
+        const allColorRanges = [
+          ...new Set(productData.sieve_sizes.map((s) => s.color_range)),
+        ].sort();
+        const allClarityRanges = [
+          ...new Set(productData.sieve_sizes.map((s) => s.clarity_range)),
+        ].sort();
+        const allSizes = [
+          ...new Set(productData.sieve_sizes.map((s) => s.size)),
+        ].sort();
 
-        // Set carat weight for diamond and colorstone, or sieve size info for melee
-        if (productData.productType === "melee") {
-          setSelectedCaratWeight(firstVariant.sieveSize); // Store sieve size in caratWeight state for consistency
-        } else if (productData.productType === "layout") {
-          // For layouts, we don't select individual variants
-          // Variants are displayed as a complete list
-        } else {
-          setSelectedCaratWeight(firstVariant.caratWeight);
-        }
+        // Set first available options
+        setSelectedColorRange(allColorRanges[0]);
+        setSelectedClarityRange(allClarityRanges[0]);
+        setSelectedCaratWeight(allSizes[0]);
       }
 
       setLoading(false);
@@ -172,7 +200,7 @@ export default function ProductPage({ params }) {
 
   const getDistinctCaratWeights = () => {
     if (!product?.variants) return [];
-    return [...new Set(product.variants.map((v) => v.caratWeight))].sort(
+    return [...new Set(product.variants.map((v) => v.carat_weight))].sort(
       (a, b) => a - b
     );
   };
@@ -186,29 +214,73 @@ export default function ProductPage({ params }) {
 
   // get distinct colorrange
   const getDistinctColorRange = () => {
+    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+      return [...new Set(product.sieve_sizes.map((s) => s.color_range))].sort();
+    }
     if (!product?.variants) return [];
     return [...new Set(product.variants.map((v) => v.colorRange))].sort();
   };
 
   // get distinct clarityrange
   const getDistinctClarityRange = () => {
+    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+      return [
+        ...new Set(product.sieve_sizes.map((s) => s.clarity_range)),
+      ].sort();
+    }
     if (!product?.variants) return [];
     return [...new Set(product.variants.map((v) => v.clarityRange))].sort();
   };
 
   // get distinct sieve sizes for melee
   const getDistinctSieveSizes = () => {
+    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+      return [...new Set(product.sieve_sizes.map((s) => s.size))].sort();
+    }
+    return [];
+  };
+
+  // get distinct dimensions for cuts and colorstones
+  const getDistinctDimensions = () => {
     if (!product?.variants) return [];
-    return [...new Set(product.variants.map((v) => v.sieveSize))].sort();
+    return [...new Set(product.variants.map((v) => v.dimension))]
+      .filter(Boolean)
+      .sort();
   };
 
   // Get the currently selected variant
   const getSelectedVariant = () => {
-    if (!product?.variants) {
-      return product?.variants?.[0] || {};
+    // For Melees, handle sieve_sizes differently
+    if (product?.product_type === "Melees") {
+      if (
+        !product?.sieve_sizes ||
+        selectedCaratWeight === null ||
+        !selectedColorRange ||
+        !selectedClarityRange
+      ) {
+        return product?.sieve_sizes?.[0] || {};
+      }
+      return (
+        product.sieve_sizes.find(
+          (s) =>
+            s.size === selectedCaratWeight &&
+            s.color_range === selectedColorRange &&
+            s.clarity_range === selectedClarityRange
+        ) || product.sieve_sizes[0]
+      );
     }
 
-    if (product.productType === "diamond") {
+    // For Layouts, return the product itself as it has price at product level
+    if (product?.product_type === "Layouts") {
+      return product;
+    }
+
+    // For products with variants
+    if (!product?.variants || product.variants.length === 0) {
+      return {};
+    }
+
+    if (product.product_type === "Diamonds") {
       // For diamonds, check color, clarity, and carat weight
       if (!selectedColor || !selectedClarity || selectedCaratWeight === null) {
         return product.variants[0];
@@ -218,10 +290,10 @@ export default function ProductPage({ params }) {
           (v) =>
             v.color === selectedColor &&
             v.clarity === selectedClarity &&
-            v.caratWeight === selectedCaratWeight
+            v.carat_weight === selectedCaratWeight
         ) || product.variants[0]
       );
-    } else if (product.productType === "colorstone") {
+    } else if (product.product_type === "Colorstones") {
       // For color stones, check shape and carat weight
       if (!selectedShape || selectedCaratWeight === null) {
         return product.variants[0];
@@ -229,37 +301,21 @@ export default function ProductPage({ params }) {
       return (
         product.variants.find(
           (v) =>
-            v.shape === selectedShape && v.caratWeight === selectedCaratWeight
-        ) || product.variants[0]
-      );
-    } else if (product.productType === "melee") {
-      // For melee, check color range, clarity range, and sieve size
-      if (
-        !selectedColorRange ||
-        !selectedClarityRange ||
-        selectedCaratWeight === null
-      ) {
-        return product.variants[0];
-      }
-      return (
-        product.variants.find(
-          (v) =>
-            v.colorRange === selectedColorRange &&
-            v.clarityRange === selectedClarityRange &&
-            v.sieveSize === selectedCaratWeight
+            v.shape === selectedShape && v.carat_weight === selectedCaratWeight
         ) || product.variants[0]
       );
     } else if (
-      product.productType === "alphabet" ||
-      product.productType === "cuts"
+      product.product_type === "Cuts" ||
+      product.product_type === "Alphabets"
     ) {
+      // For cuts and alphabets, just check carat weight
+      if (selectedCaratWeight === null) {
+        return product.variants[0];
+      }
       return (
-        product.variants.find((v) => v.caratWeight === selectedCaratWeight) ||
+        product.variants.find((v) => v.carat_weight === selectedCaratWeight) ||
         product.variants[0]
       );
-    } else if (product.productType === "layout") {
-      // For layouts, return the product itself as it has layoutPrice
-      return product;
     }
 
     return product.variants[0];
@@ -274,26 +330,33 @@ export default function ProductPage({ params }) {
     colorRange = null,
     clarityRange = null
   ) => {
-    if (!product?.variants) return false;
-
-    if (product.productType === "diamond") {
+    if (product.product_type === "Diamonds") {
+      if (!product?.variants) return false;
       return product.variants.some(
         (v) =>
           v.color === color &&
           v.clarity === clarity &&
-          v.caratWeight === caratWeight
+          v.carat_weight === caratWeight
       );
-    } else if (product.productType === "colorstone") {
+    } else if (product.product_type === "Colorstones") {
+      if (!product?.variants) return false;
       return product.variants.some(
-        (v) => v.shape === shape && v.caratWeight === caratWeight
+        (v) => v.shape === shape && v.carat_weight === caratWeight
       );
-    } else if (product.productType === "melee") {
-      return product.variants.some(
-        (v) =>
-          v.colorRange === colorRange &&
-          v.clarityRange === clarityRange &&
-          v.sieveSize === caratWeight
+    } else if (product.product_type === "Melees") {
+      if (!product?.sieve_sizes) return false;
+      return product.sieve_sizes.some(
+        (s) =>
+          s.color_range === colorRange &&
+          s.clarity_range === clarityRange &&
+          s.size === caratWeight
       );
+    } else if (
+      product.product_type === "Cuts" ||
+      product.product_type === "Alphabets"
+    ) {
+      if (!product?.variants) return false;
+      return product.variants.some((v) => v.carat_weight === caratWeight);
     }
 
     return false;
@@ -301,9 +364,8 @@ export default function ProductPage({ params }) {
 
   // Check if an option should be disabled based on current selections
   const isOptionDisabled = (type, value) => {
-    if (!product?.variants) return false;
-
-    if (product.productType === "diamond") {
+    if (product.product_type === "Diamonds") {
+      if (!product?.variants) return false;
       const currentColor = type === "color" ? value : selectedColor;
       const currentClarity = type === "clarity" ? value : selectedClarity;
       const currentCaratWeight =
@@ -319,7 +381,8 @@ export default function ProductPage({ params }) {
         currentClarity,
         currentCaratWeight
       );
-    } else if (product.productType === "colorstone") {
+    } else if (product.product_type === "Colorstones") {
+      if (!product?.variants) return false;
       const currentShape = type === "shape" ? value : selectedShape;
       const currentCaratWeight =
         type === "caratWeight" ? value : selectedCaratWeight;
@@ -330,7 +393,8 @@ export default function ProductPage({ params }) {
       }
 
       return !isVariantAvailable(null, null, currentCaratWeight, currentShape);
-    } else if (product.productType === "melee") {
+    } else if (product.product_type === "Melees") {
+      if (!product?.sieve_sizes) return false;
       const currentColorRange =
         type === "colorRange" ? value : selectedColorRange;
       const currentClarityRange =
@@ -355,6 +419,12 @@ export default function ProductPage({ params }) {
         currentColorRange,
         currentClarityRange
       );
+    } else if (
+      product.product_type === "Cuts" ||
+      product.product_type === "Alphabets"
+    ) {
+      // For cuts and alphabets, no options are disabled (simple structure)
+      return false;
     }
 
     return false;
@@ -362,9 +432,26 @@ export default function ProductPage({ params }) {
 
   // Find the first available variant based on a new selection
   const findDefaultVariant = (type, value) => {
+    // For melee products, search in sieve_sizes
+    if (product?.product_type === "Melees" && product?.sieve_sizes) {
+      const matchingSieves = product.sieve_sizes.filter((sieve) => {
+        switch (type) {
+          case "colorRange":
+            return sieve.color_range === value;
+          case "clarityRange":
+            return sieve.clarity_range === value;
+          case "sieveSize":
+            return sieve.size === value;
+          default:
+            return false;
+        }
+      });
+      return matchingSieves.length > 0 ? matchingSieves[0] : null;
+    }
+
+    // For other products, search in variants
     if (!product?.variants) return null;
 
-    // Filter variants that contain the newly selected option
     const matchingVariants = product.variants.filter((variant) => {
       switch (type) {
         case "color":
@@ -372,7 +459,7 @@ export default function ProductPage({ params }) {
         case "clarity":
           return variant.clarity === value;
         case "caratWeight":
-          return variant.caratWeight === value;
+          return variant.carat_weight === value;
         case "shape":
           return variant.shape === value;
         case "colorRange":
@@ -405,7 +492,7 @@ export default function ProductPage({ params }) {
         const defaultVariant = findDefaultVariant("color", value);
         if (defaultVariant) {
           setSelectedClarity(defaultVariant.clarity);
-          setSelectedCaratWeight(defaultVariant.caratWeight);
+          setSelectedCaratWeight(defaultVariant.carat_weight);
         }
       }
     } else if (type === "clarity") {
@@ -421,7 +508,7 @@ export default function ProductPage({ params }) {
         const defaultVariant = findDefaultVariant("clarity", value);
         if (defaultVariant) {
           setSelectedColor(defaultVariant.color);
-          setSelectedCaratWeight(defaultVariant.caratWeight);
+          setSelectedCaratWeight(defaultVariant.carat_weight);
         }
       }
     } else if (type === "caratWeight") {
@@ -430,16 +517,16 @@ export default function ProductPage({ params }) {
       // If this selection would result in an unavailable combination, find a default
       let wouldBeUnavailable = false;
 
-      if (product.productType === "diamond") {
+      if (product.product_type === "Diamonds") {
         wouldBeUnavailable =
           selectedColor &&
           selectedClarity &&
           !isVariantAvailable(selectedColor, selectedClarity, value);
-      } else if (product.productType === "colorstone") {
+      } else if (product.product_type === "Colorstones") {
         wouldBeUnavailable =
           selectedShape &&
           !isVariantAvailable(null, null, value, selectedShape);
-      } else if (product.productType === "melee") {
+      } else if (product.product_type === "Melees") {
         wouldBeUnavailable =
           selectedColorRange &&
           selectedClarityRange &&
@@ -456,14 +543,14 @@ export default function ProductPage({ params }) {
       if (wouldBeUnavailable) {
         const defaultVariant = findDefaultVariant("caratWeight", value);
         if (defaultVariant) {
-          if (product.productType === "diamond") {
+          if (product.product_type === "Diamonds") {
             setSelectedColor(defaultVariant.color);
             setSelectedClarity(defaultVariant.clarity);
-          } else if (product.productType === "colorstone") {
+          } else if (product.product_type === "Colorstones") {
             setSelectedShape(defaultVariant.shape);
-          } else if (product.productType === "melee") {
-            setSelectedColorRange(defaultVariant.colorRange);
-            setSelectedClarityRange(defaultVariant.clarityRange);
+          } else if (product.product_type === "Melees") {
+            setSelectedColorRange(defaultVariant.color_range);
+            setSelectedClarityRange(defaultVariant.clarity_range);
           }
         }
       }
@@ -478,76 +565,107 @@ export default function ProductPage({ params }) {
       if (wouldBeUnavailable) {
         const defaultVariant = findDefaultVariant("shape", value);
         if (defaultVariant) {
-          setSelectedCaratWeight(defaultVariant.caratWeight);
+          setSelectedCaratWeight(defaultVariant.carat_weight);
         }
       }
     } else if (type === "colorRange") {
       setSelectedColorRange(value);
 
-      // If this selection would result in an unavailable combination, find a default
-      const wouldBeUnavailable =
-        selectedClarityRange &&
-        selectedCaratWeight !== null &&
-        !isVariantAvailable(
-          null,
-          null,
-          selectedCaratWeight,
-          null,
-          value,
-          selectedClarityRange
+      // For melee products, find a compatible sieve size and clarity range
+      if (product.product_type === "Melees" && product.sieve_sizes) {
+        // Find compatible combinations
+        const compatibleSieves = product.sieve_sizes.filter(
+          (s) => s.color_range === value
         );
+        if (compatibleSieves.length > 0) {
+          // If current clarity range is not compatible, select the first available one
+          const currentlySelected = compatibleSieves.find(
+            (s) =>
+              s.clarity_range === selectedClarityRange &&
+              s.size === selectedCaratWeight
+          );
 
-      if (wouldBeUnavailable) {
-        const defaultVariant = findDefaultVariant("colorRange", value);
-        if (defaultVariant) {
-          setSelectedClarityRange(defaultVariant.clarityRange);
-          setSelectedCaratWeight(defaultVariant.sieveSize);
+          if (!currentlySelected) {
+            const firstCompatible = compatibleSieves[0];
+            if (
+              !compatibleSieves.some(
+                (s) => s.clarity_range === selectedClarityRange
+              )
+            ) {
+              setSelectedClarityRange(firstCompatible.clarity_range);
+            }
+            if (!compatibleSieves.some((s) => s.size === selectedCaratWeight)) {
+              setSelectedCaratWeight(firstCompatible.size);
+            }
+          }
         }
       }
     } else if (type === "clarityRange") {
       setSelectedClarityRange(value);
 
-      // If this selection would result in an unavailable combination, find a default
-      const wouldBeUnavailable =
-        selectedColorRange &&
-        selectedCaratWeight !== null &&
-        !isVariantAvailable(
-          null,
-          null,
-          selectedCaratWeight,
-          null,
-          selectedColorRange,
-          value
+      // For melee products, find a compatible sieve size and color range
+      if (product.product_type === "Melees" && product.sieve_sizes) {
+        // Find compatible combinations
+        const compatibleSieves = product.sieve_sizes.filter(
+          (s) => s.clarity_range === value
         );
+        if (compatibleSieves.length > 0) {
+          // If current color range is not compatible, select the first available one
+          const currentlySelected = compatibleSieves.find(
+            (s) =>
+              s.color_range === selectedColorRange &&
+              s.size === selectedCaratWeight
+          );
 
-      if (wouldBeUnavailable) {
-        const defaultVariant = findDefaultVariant("clarityRange", value);
-        if (defaultVariant) {
-          setSelectedColorRange(defaultVariant.colorRange);
-          setSelectedCaratWeight(defaultVariant.sieveSize);
+          if (!currentlySelected) {
+            const firstCompatible = compatibleSieves[0];
+            if (
+              !compatibleSieves.some(
+                (s) => s.color_range === selectedColorRange
+              )
+            ) {
+              setSelectedColorRange(firstCompatible.color_range);
+            }
+            if (!compatibleSieves.some((s) => s.size === selectedCaratWeight)) {
+              setSelectedCaratWeight(firstCompatible.size);
+            }
+          }
         }
       }
     } else if (type === "sieveSize") {
       setSelectedCaratWeight(value);
 
-      // If this selection would result in an unavailable combination, find a default
-      const wouldBeUnavailable =
-        selectedColorRange &&
-        selectedClarityRange &&
-        !isVariantAvailable(
-          null,
-          null,
-          value,
-          null,
-          selectedColorRange,
-          selectedClarityRange
+      // For melee products, find a compatible color range and clarity range
+      if (product.product_type === "Melees" && product.sieve_sizes) {
+        // Find compatible combinations
+        const compatibleSieves = product.sieve_sizes.filter(
+          (s) => s.size === value
         );
+        if (compatibleSieves.length > 0) {
+          // If current selections are not compatible, select the first available ones
+          const currentlySelected = compatibleSieves.find(
+            (s) =>
+              s.color_range === selectedColorRange &&
+              s.clarity_range === selectedClarityRange
+          );
 
-      if (wouldBeUnavailable) {
-        const defaultVariant = findDefaultVariant("sieveSize", value);
-        if (defaultVariant) {
-          setSelectedColorRange(defaultVariant.colorRange);
-          setSelectedClarityRange(defaultVariant.clarityRange);
+          if (!currentlySelected) {
+            const firstCompatible = compatibleSieves[0];
+            if (
+              !compatibleSieves.some(
+                (s) => s.color_range === selectedColorRange
+              )
+            ) {
+              setSelectedColorRange(firstCompatible.color_range);
+            }
+            if (
+              !compatibleSieves.some(
+                (s) => s.clarity_range === selectedClarityRange
+              )
+            ) {
+              setSelectedClarityRange(firstCompatible.clarity_range);
+            }
+          }
         }
       }
     }
@@ -637,16 +755,16 @@ export default function ProductPage({ params }) {
   }
 
   const getWhatsAppMessage = () => {
+    console.log(product, quantity, currentVariant);
     const message =
-      product.name +
+      product?.name?.toString() +
       ", \n" +
-      product.sku +
+      product?.sku?.toString() +
       ", \n" +
-      quantity +
+      quantity?.toString() +
       ", \n" +
-      currentVariant +
-      ", \n" +
-      product.price;
+      JSON.stringify(currentVariant) +
+      ", \n";
     return message;
   };
 
@@ -683,8 +801,9 @@ export default function ProductPage({ params }) {
                   <>
                     {isVideo(currentMediaList[currentMediaIndex]) ? (
                       <video
+                        autoPlay
+                        muted
                         src={currentMediaList[currentMediaIndex]}
-                        controls
                         className="w-full h-full object-cover"
                         poster="" // You can add a poster image here if available
                       >
@@ -741,7 +860,16 @@ export default function ProductPage({ params }) {
                         >
                           {isVideo(media) ? (
                             <div className="w-full h-full bg-surface-200 flex items-center justify-center relative">
-                              <Video className="w-8 h-8 text-surface-600" />
+                              <video
+                                src={media}
+                                muted
+                                className="object-cover w-full h-full"
+                                preload="metadata"
+                                onLoadedMetadata={(e) => {
+                                  // Prevent downloading full video, only metadata/thumbnail
+                                  e.currentTarget.currentTime = 1; // Grab frame at 1s for preview
+                                }}
+                              />
                               <div className="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white text-xs px-1 rounded">
                                 VIDEO
                               </div>
@@ -770,9 +898,50 @@ export default function ProductPage({ params }) {
                   {product.name}
                 </h1>
                 <p className="text-secondary-700 mb-1">SKU: {product.sku}</p>
-                {product.productType === "layout" ? (
+                {/* Product-specific information based on type */}
+                {product.product_type === "Layouts" ? (
                   <p className="text-secondary-700 mb-4">
-                    Layout Type: {product.layoutType}
+                    Layout Type: {product.layout_type}
+                  </p>
+                ) : product.product_type === "Cuts" ? (
+                  <>
+                    <p className="text-secondary-700 mb-1">
+                      Shape: {product.shape}
+                    </p>
+                    <p className="text-secondary-700 mb-1">
+                      Cut Type: {product.cut_type}
+                    </p>
+                    <p className="text-secondary-700 mb-1">
+                      Color Range: {product.color_range}
+                    </p>
+                    <p className="text-secondary-700 mb-4">
+                      Clarity Range: {product.clarity_range}
+                    </p>
+                  </>
+                ) : product.product_type === "Alphabets" ? (
+                  <>
+                    <p className="text-secondary-700 mb-1">
+                      Character: {product.character}
+                    </p>
+                    <p className="text-secondary-700 mb-1">
+                      Color Range: {product.color_range}
+                    </p>
+                    <p className="text-secondary-700 mb-4">
+                      Clarity Range: {product.clarity_range}
+                    </p>
+                  </>
+                ) : product.product_type === "Colorstones" ? (
+                  <>
+                    <p className="text-secondary-700 mb-1">
+                      Shape: {product.shape || "N/A"}
+                    </p>
+                    <p className="text-secondary-700 mb-4">
+                      Color: {product.color}
+                    </p>
+                  </>
+                ) : product.product_type === "Melees" ? (
+                  <p className="text-secondary-700 mb-4">
+                    Shape: {product.shape}
                   </p>
                 ) : (
                   <p className="text-secondary-700 mb-4">
@@ -783,15 +952,16 @@ export default function ProductPage({ params }) {
               </div>
 
               {/* Variants Selection */}
-              {product?.variants &&
-                product.variants.length > 0 &&
-                product.productType !== "layout" && (
+              {((product?.variants && product.variants.length > 0) ||
+                (product?.sieve_sizes && product.sieve_sizes.length > 0)) &&
+                product.product_type !== "Layouts" && (
                   <div className="space-y-4 border-b border-surface-300 pb-6">
                     <h3 className="text-lg font-semibold text-text-dark">
                       Select Options
                     </h3>
 
-                    {product.productType === "diamond" && (
+                    {/* Diamond Variants */}
+                    {product.product_type === "Diamonds" && (
                       <>
                         {/* Color Selection */}
                         <div>
@@ -844,11 +1014,39 @@ export default function ProductPage({ params }) {
                             ))}
                           </div>
                         </div>
+
+                        {/* Carat Weight Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Carat Weight: {selectedCaratWeight}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctCaratWeights().map((weight) => (
+                              <button
+                                key={weight}
+                                onClick={() =>
+                                  handleOptionSelect("caratWeight", weight)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedCaratWeight === weight
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("caratWeight", weight)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {weight} ct
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </>
                     )}
-                    {product.productType === "colorstone" && (
+
+                    {/* Colorstone Variants */}
+                    {product.product_type === "Colorstones" && (
                       <>
-                        {/* Color Selection */}
+                        {/* Shape Selection */}
                         <div>
                           <label className="block text-sm font-medium text-text-dark mb-2">
                             Shape: {selectedShape}
@@ -873,100 +1071,179 @@ export default function ProductPage({ params }) {
                             ))}
                           </div>
                         </div>
+
+                        {/* Carat Weight Selection */}
+                        <div>
+                          <label className="block text-sm font-medium text-text-dark mb-2">
+                            Carat Weight: {selectedCaratWeight}
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {getDistinctCaratWeights().map((weight) => (
+                              <button
+                                key={weight}
+                                onClick={() =>
+                                  handleOptionSelect("caratWeight", weight)
+                                }
+                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                  selectedCaratWeight === weight
+                                    ? "bg-primary-600 text-white border-primary-600"
+                                    : isOptionDisabled("caratWeight", weight)
+                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                }`}
+                              >
+                                {weight} ct
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Dimension Display */}
+                        {getSelectedVariant()?.dimension && (
+                          <div>
+                            <label className="block text-sm font-medium text-text-dark mb-2">
+                              Dimension: {getSelectedVariant().dimension}
+                            </label>
+                          </div>
+                        )}
                       </>
                     )}
-                    {product.productType === "melee" && (
+
+                    {/* Melee Variants */}
+                    {product.product_type === "Melees" &&
+                      product.sieve_sizes && (
+                        <>
+                          {/* Color Range Selection */}
+                          <div>
+                            <label className="block text-sm font-medium text-text-dark mb-2">
+                              Color Range: {selectedColorRange}
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                              {getDistinctColorRange().map((colorRange) => (
+                                <button
+                                  key={colorRange}
+                                  onClick={() =>
+                                    handleOptionSelect("colorRange", colorRange)
+                                  }
+                                  className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                    selectedColorRange === colorRange
+                                      ? "bg-primary-600 text-white border-primary-600"
+                                      : isOptionDisabled(
+                                          "colorRange",
+                                          colorRange
+                                        )
+                                      ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                  }`}
+                                >
+                                  {colorRange}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Clarity Range Selection */}
+                          <div>
+                            <label className="block text-sm font-medium text-text-dark mb-2">
+                              Clarity Range: {selectedClarityRange}
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                              {getDistinctClarityRange().map((clarityRange) => (
+                                <button
+                                  key={clarityRange}
+                                  onClick={() =>
+                                    handleOptionSelect(
+                                      "clarityRange",
+                                      clarityRange
+                                    )
+                                  }
+                                  className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                    selectedClarityRange === clarityRange
+                                      ? "bg-primary-600 text-white border-primary-600"
+                                      : isOptionDisabled(
+                                          "clarityRange",
+                                          clarityRange
+                                        )
+                                      ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                  }`}
+                                >
+                                  {clarityRange}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Sieve Size Selection */}
+                          <div>
+                            <label className="block text-sm font-medium text-text-dark mb-2">
+                              Sieve Size: {selectedCaratWeight}
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                              {getDistinctSieveSizes().map((size) => (
+                                <button
+                                  key={size}
+                                  onClick={() =>
+                                    handleOptionSelect("sieveSize", size)
+                                  }
+                                  className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
+                                    selectedCaratWeight === size
+                                      ? "bg-primary-600 text-white border-primary-600"
+                                      : isOptionDisabled("sieveSize", size)
+                                      ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
+                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
+                                  }`}
+                                >
+                                  {size}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                    {/* Cuts Variants */}
+                    {product.product_type === "Cuts" && (
                       <>
-                        {/* Color Range Selection */}
+                        {/* Carat Weight Selection */}
                         <div>
                           <label className="block text-sm font-medium text-text-dark mb-2">
-                            Color Range: {selectedColorRange}
+                            Carat Weight: {selectedCaratWeight}
                           </label>
                           <div className="flex flex-wrap gap-2">
-                            {getDistinctColorRange().map((colorRange) => (
+                            {getDistinctCaratWeights().map((weight) => (
                               <button
-                                key={colorRange}
+                                key={weight}
                                 onClick={() =>
-                                  handleOptionSelect("colorRange", colorRange)
+                                  handleOptionSelect("caratWeight", weight)
                                 }
                                 className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedColorRange === colorRange
+                                  selectedCaratWeight === weight
                                     ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("colorRange", colorRange)
+                                    : isOptionDisabled("caratWeight", weight)
                                     ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
                                     : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
                                 }`}
                               >
-                                {colorRange}
+                                {weight} ct
                               </button>
                             ))}
                           </div>
                         </div>
 
-                        {/* Clarity Range Selection */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Clarity Range: {selectedClarityRange}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctClarityRange().map((clarityRange) => (
-                              <button
-                                key={clarityRange}
-                                onClick={() =>
-                                  handleOptionSelect(
-                                    "clarityRange",
-                                    clarityRange
-                                  )
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedClarityRange === clarityRange
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled(
-                                        "clarityRange",
-                                        clarityRange
-                                      )
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {clarityRange}
-                              </button>
-                            ))}
+                        {/* Dimension Display */}
+                        {getSelectedVariant()?.dimension && (
+                          <div>
+                            <label className="block text-sm font-medium text-text-dark mb-2">
+                              Dimension: {getSelectedVariant().dimension}
+                            </label>
                           </div>
-                        </div>
-
-                        {/* Sieve Size Selection for Melee */}
-                        <div>
-                          <label className="block text-sm font-medium text-text-dark mb-2">
-                            Sieve Size: {selectedCaratWeight}
-                          </label>
-                          <div className="flex flex-wrap gap-2">
-                            {getDistinctSieveSizes().map((size) => (
-                              <button
-                                key={size}
-                                onClick={() =>
-                                  handleOptionSelect("sieveSize", size)
-                                }
-                                className={`cursor-pointer px-4 py-2 border rounded-md text-sm transition-colors ${
-                                  selectedCaratWeight === size
-                                    ? "bg-primary-600 text-white border-primary-600"
-                                    : isOptionDisabled("sieveSize", size)
-                                    ? "bg-surface-200 text-secondary-400 border-surface-300 opacity-50 hover:opacity-100"
-                                    : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200"
-                                }`}
-                              >
-                                {size}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
+                        )}
                       </>
                     )}
 
-                    {(product.productType === "diamond" ||
-                      product.productType === "colorstone" ||
-                      product.productType === "alphabet" ||
-                      product.productType === "cuts") && (
+                    {/* Alphabets Variants */}
+                    {product.product_type === "Alphabets" && (
                       <>
                         {/* Carat Weight Selection */}
                         <div>
@@ -998,16 +1275,16 @@ export default function ProductPage({ params }) {
                   </div>
                 )}
 
-              {/* Layout Variants Display */}
-              {product?.productType === "layout" &&
-                product?.variants &&
-                product.variants.length > 0 && (
+              {/* Layout Diamond Details Display */}
+              {product?.product_type === "Layouts" &&
+                product?.diamond_details &&
+                product.diamond_details.length > 0 && (
                   <div className="space-y-4 border-b border-surface-300 pb-6">
                     <h3 className="text-lg font-semibold text-text-dark">
-                      Layout Variants
+                      Diamond Details
                     </h3>
                     <p className="text-sm text-secondary-700 mb-4">
-                      This layout includes all the following variants:
+                      This layout includes the following diamond specifications:
                     </p>
                     <div className="overflow-x-auto">
                       <table className="w-full border border-surface-300 rounded-lg">
@@ -1034,30 +1311,30 @@ export default function ProductPage({ params }) {
                           </tr>
                         </thead>
                         <tbody className="bg-white">
-                          {product.variants.map((variant, index) => (
+                          {product.diamond_details.map((detail, index) => (
                             <tr
-                              key={variant.id || index}
+                              key={detail.id || index}
                               className={`${
                                 index % 2 === 0 ? "bg-white" : "bg-surface-50"
                               } hover:bg-surface-100 transition-colors`}
                             >
                               <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                                {variant.shape}
+                                {detail.shape}
                               </td>
                               <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                                {variant.totalPcs}
+                                {detail.pcs}
                               </td>
                               <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                                {variant.totalCaratWeight} ct
+                                {detail.carat_weight} ct
                               </td>
                               <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                                {variant.dimensions}
+                                {detail.dimension}
                               </td>
                               <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                                {variant.colorRange}
+                                {detail.color_range}
                               </td>
                               <td className="px-4 py-3 text-sm text-text-dark border-b border-surface-200">
-                                {variant.clarityRange}
+                                {detail.clarity_range}
                               </td>
                             </tr>
                           ))}
@@ -1069,35 +1346,37 @@ export default function ProductPage({ params }) {
 
               {/* Price */}
               {(currentVariant.price ||
-                (product.productType === "layout" && product.layoutPrice)) && (
+                currentVariant.price_per_carat ||
+                (product.product_type === "Layouts" && product.price)) && (
                 <div className="border-b border-surface-300 pb-4">
                   <div className="text-3xl font-bold text-primary-600">
-                    {product.productType === "layout"
-                      ? `$${product.layoutPrice?.toLocaleString()}`
-                      : product.productType === "melee"
-                      ? `$${currentVariant.price?.toLocaleString()} per piece`
+                    {product.product_type === "Layouts"
+                      ? `$${product.price?.toLocaleString()}`
+                      : product.product_type === "Melees"
+                      ? `$${currentVariant.price_per_carat?.toLocaleString()} per carat`
                       : `$${currentVariant.price?.toLocaleString()}`}
                   </div>
-                  {product.productType === "layout" ? (
+
+                  {product.product_type === "Layouts" ? (
                     <div className="space-y-1">
                       <p className="text-secondary-700">
-                        {product.layoutType} Layout •{" "}
-                        {product.variants?.length || 0} variants included
+                        {product.layout_type} Layout •{" "}
+                        {product.diamond_details?.length || 0} diamond
+                        specifications included
                       </p>
                       <div className="flex items-center space-x-4 text-sm text-secondary-600">
                         <span className="bg-surface-100 px-3 py-1 rounded-full">
-                          <strong>Pieces:</strong>{" "}
-                          {product.variants?.reduce(
-                            (sum, variant) => sum + (variant.totalPcs || 0),
+                          <strong>Total Pieces:</strong>{" "}
+                          {product.diamond_details?.reduce(
+                            (sum, detail) => sum + (detail.pcs || 0),
                             0
                           )}
                         </span>
                         <span className="bg-surface-100 px-3 py-1 rounded-full">
-                          <strong>Carat Weight:</strong>{" "}
-                          {product.variants
+                          <strong>Total Carat Weight:</strong>{" "}
+                          {product.diamond_details
                             ?.reduce(
-                              (sum, variant) =>
-                                sum + (variant.totalCaratWeight || 0),
+                              (sum, detail) => sum + (detail.carat_weight || 0),
                               0
                             )
                             .toFixed(2)}{" "}
@@ -1105,39 +1384,37 @@ export default function ProductPage({ params }) {
                         </span>
                       </div>
                     </div>
+                  ) : product.product_type === "Melees" ? (
+                    <p className="text-secondary-700">
+                      {currentVariant.size}
+                      {currentVariant.color_range &&
+                        currentVariant.clarity_range && (
+                          <>
+                            {" "}
+                            • {currentVariant.color_range} •{" "}
+                            {currentVariant.clarity_range}
+                          </>
+                        )}
+                    </p>
                   ) : (
-                    (currentVariant.caratWeight ||
-                      currentVariant.sieveSize) && (
+                    currentVariant.carat_weight && (
                       <p className="text-secondary-700">
-                        {product.productType === "melee" ? (
-                          <>
-                            {currentVariant.sieveSize}
-                            {currentVariant.colorRange &&
-                              currentVariant.clarityRange && (
-                                <>
-                                  {" "}
-                                  • {currentVariant.colorRange} •{" "}
-                                  {currentVariant.clarityRange}
-                                </>
-                              )}
-                          </>
-                        ) : (
-                          <>
-                            {currentVariant.caratWeight} carats
-                            {product.productType === "diamond" &&
-                              currentVariant.color &&
-                              currentVariant.clarity && (
-                                <>
-                                  {" "}
-                                  • {currentVariant.color} •{" "}
-                                  {currentVariant.clarity}
-                                </>
-                              )}
-                            {product.productType === "colorstone" &&
-                              currentVariant.shape && (
-                                <> • {currentVariant.shape}</>
-                              )}
-                          </>
+                        {currentVariant.carat_weight} carats
+                        {product.product_type === "Diamonds" &&
+                          currentVariant.color &&
+                          currentVariant.clarity && (
+                            <>
+                              {" "}
+                              • {currentVariant.color} •{" "}
+                              {currentVariant.clarity}
+                            </>
+                          )}
+                        {product.product_type === "Colorstones" &&
+                          currentVariant.shape && (
+                            <> • {currentVariant.shape}</>
+                          )}
+                        {currentVariant.dimension && (
+                          <> • {currentVariant.dimension}</>
                         )}
                       </p>
                     )
@@ -1223,7 +1500,7 @@ export default function ProductPage({ params }) {
 
                   {/* message: [productname], [sku], [quantity], [selected variant], [price] */}
                   <a
-                    href={`https://wa.me/+919409658456text=${getWhatsAppMessage()}`}
+                    href={`https://wa.me/+919409658456?text=${getWhatsAppMessage()}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="cursor-pointer flex items-center justify-center space-x-2 py-3 px-4 border border-green-200 text-green-600 rounded-md hover:bg-green-50 transition-colors"
