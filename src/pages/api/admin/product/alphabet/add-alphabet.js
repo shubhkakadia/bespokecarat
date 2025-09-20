@@ -1,3 +1,6 @@
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
+import { SEARCH_MAP } from "../../../../../../lib/mappers";
+
 const db = require("../../../../../../config/dbConfig");
 const { isAdmin } = require("../../../../../../lib/authFromToken");
 const { getUniqueId } = require("../../../../../../lib/getUniqueId");
@@ -100,19 +103,14 @@ export default async function handler(req, res) {
         alphabet_variants,
       } = value;
 
-      const isExist = await Alphabets.findOne({
-        where: { sku },
-        transaction: t,
-      });
+      const taken = await isGlobalSkuTaken(sku, t);
 
-      if (isExist) {
+      if (taken.taken) {
         await t.rollback();
-
         await cleanupUploadedFiles(req.files);
-
         return res.status(200).send({
           status: false,
-          message: `An alphabet with sku ${isExist.sku} already exists.`,
+          message: `SKU : '${sku}' already exists in ${taken.table}`,
         });
       }
 

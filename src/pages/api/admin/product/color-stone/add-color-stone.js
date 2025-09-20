@@ -1,3 +1,4 @@
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
 import { cleanupUploadedFiles } from "../../../../../../lib/middlewares/cleanupUploadedFiles";
 
 const db = require("../../../../../../config/dbConfig");
@@ -99,19 +100,14 @@ export default async function handler(req, res) {
         color_stone_variants,
       } = value;
 
-      const isExist = await ColorStones.findOne({
-        where: { sku },
-        transaction: t,
-      });
+      const taken = await isGlobalSkuTaken(sku, t);
 
-      if (isExist) {
+      if (taken.taken) {
         await t.rollback();
-
         await cleanupUploadedFiles(req.files);
-
         return res.status(200).send({
           status: false,
-          message: `A Color Stone with sku ${isExist.sku} already exists.`,
+          message: `SKU : '${sku}' already exists in ${taken.table}`,
         });
       }
 

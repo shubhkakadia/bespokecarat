@@ -1,5 +1,6 @@
 const db = require("../../../../../../config/dbConfig");
 import { isAdmin } from "../../../../../../lib/authFromToken";
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
 const { getUniqueId } = require("../../../../../../lib/getUniqueId");
 const {
   cleanupUploadedFiles,
@@ -97,19 +98,14 @@ export default async function handler(req, res) {
         cut_variants,
       } = value;
 
-      const isExist = await Cuts.findOne({
-        where: { sku },
-        transaction: t,
-      });
+      const taken = await isGlobalSkuTaken(sku, t);
 
-      if (isExist) {
+      if (taken.taken) {
         await t.rollback();
-
         await cleanupUploadedFiles(req.files);
-
         return res.status(200).send({
           status: false,
-          message: `A cut with sku ${isExist.sku} already exists.`,
+          message: `SKU : '${sku}' already exists in ${taken.table}`,
         });
       }
 
