@@ -51,7 +51,7 @@ export default function ProductsPage() {
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: "http://localhost:3000/api/client/homepage",
+        url: `/api/client/homepage`,
         headers: {
           Authorization: authToken,
         },

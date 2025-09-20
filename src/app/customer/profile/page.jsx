@@ -29,14 +29,14 @@ export default function ProfilePage() {
           <div className="max-w-4xl mx-auto">
             {/* Header Section */}
             <div className="mb-6 sm:mb-8">
-              <Link 
-                href="/customer" 
+              <Link
+                href="/customer"
                 className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors duration-200 mb-4 sm:mb-6"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="text-sm sm:text-base">Back to Dashboard</span>
               </Link>
-              
+
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
                   <User className="h-5 w-5 sm:h-6 sm:w-6 text-white" />

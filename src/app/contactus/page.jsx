@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "@/components/Footer";
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, Upload, X, CheckCircle } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -17,6 +18,11 @@ export default function ContactPage() {
   });
 
   const [openFAQ, setOpenFAQ] = useState(null);
+  const [uploadedPhotos, setUploadedPhotos] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // null, 'success', 'error'
+  const fileInputRef = useRef(null);
 
   const FAQData = [
     {
@@ -64,15 +70,189 @@ export default function ContactPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    // Validate file types and sizes
+    const validFiles = files.filter((file) => {
+      const isImage = file.type.startsWith("image/");
+      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB
+      return isImage && isValidSize;
+    });
+
+    if (validFiles.length !== files.length) {
+      alert(
+        "Some files were skipped. Only image files under 10MB are allowed."
+      );
+    }
+
+    if (uploadedPhotos.length + validFiles.length > 5) {
+      alert("Maximum 5 photos allowed.");
+      return;
+    }
+
+    // Create immediate preview with blob URLs
+    const photosWithPreview = validFiles.map((file) => ({
+      file,
+      originalName: file.name,
+      size: file.size,
+      previewUrl: URL.createObjectURL(file),
+      isUploading: true,
+      url: null, // Will be set after upload
+      filename: null, // Will be set after upload
+    }));
+
+    // Add photos with preview immediately
+    setUploadedPhotos((prev) => [...prev, ...photosWithPreview]);
+
+    // Upload files in the background
+    setIsUploading(true);
+    const uploadFormData = new FormData();
+    validFiles.forEach((file) => {
+      uploadFormData.append("enquiry_images", file);
+    });
+
+    try {
+      const response = await fetch("/api/enquiry/upload-images", {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        // Update the photos with server URLs
+        setUploadedPhotos((prev) => {
+          const newPhotos = [...prev];
+          let uploadIndex = 0;
+
+          for (
+            let i = newPhotos.length - validFiles.length;
+            i < newPhotos.length;
+            i++
+          ) {
+            if (newPhotos[i].isUploading && uploadIndex < result.files.length) {
+              newPhotos[i] = {
+                ...newPhotos[i],
+                ...result.files[uploadIndex],
+                isUploading: false,
+              };
+              uploadIndex++;
+            }
+          }
+          return newPhotos;
+        });
+      } else {
+        alert("Upload failed: " + result.error);
+        // Remove the failed uploads
+        setUploadedPhotos((prev) => prev.filter((photo) => !photo.isUploading));
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Upload failed. Please try again.");
+      // Remove the failed uploads
+      setUploadedPhotos((prev) => prev.filter((photo) => !photo.isUploading));
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const removePhoto = (index) => {
+    setUploadedPhotos((prev) => {
+      const photoToRemove = prev[index];
+      // Cleanup blob URL to prevent memory leaks
+      if (photoToRemove?.previewUrl) {
+        URL.revokeObjectURL(photoToRemove.previewUrl);
+      }
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // Only include successfully uploaded photos (those with server URLs)
+      const successfullyUploadedPhotos = uploadedPhotos.filter(
+        (photo) => photo.url && !photo.isUploading
+      );
+
+      // Prepare email data
+      const emailData = {
+        name: formData.name,
+        email: formData.email,
+        phone_number: formData.phone,
+        enquiry_type: formData.inquiryType,
+        time: new Date().toLocaleString("en-US", {
+          timeZone: "Asia/Hong_Kong",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZoneName: "short",
+        }),
+        subject: formData.subject,
+        message: formData.message,
+        photos_urls:
+          successfullyUploadedPhotos.length > 0
+            ? successfullyUploadedPhotos.map((photo) => photo.url).join("\n")
+            : "No photos attached",
+      };
+
+      // Send email using EmailJS
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID",
+        emailData,
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY"
+      );
+
+      setSubmitStatus("success");
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+        inquiryType: "general",
+      });
+
+      // Clean up blob URLs before clearing photos
+      uploadedPhotos.forEach((photo) => {
+        if (photo.previewUrl) {
+          URL.revokeObjectURL(photo.previewUrl);
+        }
+      });
+      setUploadedPhotos([]);
+    } catch (error) {
+      console.error("Email send error:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleFAQ = (index) => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
+
+  // Cleanup blob URLs on unmount
+  useEffect(() => {
+    return () => {
+      uploadedPhotos.forEach((photo) => {
+        if (photo.previewUrl) {
+          URL.revokeObjectURL(photo.previewUrl);
+        }
+      });
+    };
+  }, [uploadedPhotos]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -85,10 +265,14 @@ export default function ContactPage() {
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
               Get in <span className="text-primary-600">Touch</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 mb-6 max-w-3xl mx-auto">
               Were here to help you find the perfect lab-grown diamonds. Contact
               our expert team for personalized assistance and answers to all
               your questions.
+            </p>
+            <p className="text-lg text-primary-600 font-medium mb-8 max-w-3xl mx-auto">
+              Send us your photo of a shape or design and we can make it a
+              diamond. Our master craftsmen can bring any vision to life!
             </p>
           </div>
         </div>
@@ -227,11 +411,122 @@ export default function ContactPage() {
                     />
                   </div>
 
+                  {/* Photo Attachment Section */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Attach Photos (Optional)
+                    </label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary-400 transition-colors">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        disabled={isUploading || uploadedPhotos.length >= 5}
+                      />
+
+                      {uploadedPhotos.length < 5 && (
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploading}
+                          className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                        >
+                          <Upload className="w-5 h-5 mr-2" />
+                          {isUploading ? "Uploading..." : "Select Photos"}
+                        </button>
+                      )}
+
+                      <p className="mt-2 text-sm text-gray-500">
+                        Maximum 5 photos, 10MB each. Supported formats: JPG,
+                        PNG, GIF
+                      </p>
+                    </div>
+
+                    {/* Display uploaded photos */}
+                    {uploadedPhotos.length > 0 && (
+                      <div className="mt-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">
+                          Attached Photos ({uploadedPhotos.length}/5)
+                        </h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          {uploadedPhotos.map((photo, index) => (
+                            <div key={index} className="relative group">
+                              <div className="relative">
+                                <img
+                                  src={photo.previewUrl || photo.url}
+                                  alt={photo.originalName}
+                                  className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                                />
+                                {photo.isUploading && (
+                                  <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                                    <div className="text-white text-xs">
+                                      Uploading...
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => removePhoto(index)}
+                                className="cursor-pointer absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                              <div className="mt-1 text-xs text-gray-500 truncate">
+                                {photo.originalName}
+                                {photo.isUploading && (
+                                  <span className="text-blue-500 ml-1">
+                                    (uploading...)
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Success/Error Messages */}
+                  {submitStatus === "success" && (
+                    <div className="flex items-center p-4 bg-green-100 border border-green-200 rounded-lg">
+                      <CheckCircle className="w-5 h-5 text-green-600 mr-3" />
+                      <div>
+                        <h4 className="text-green-800 font-medium">
+                          Email sent successfully!
+                        </h4>
+                        <p className="text-green-700 text-sm mt-1">
+                          Thank you for contacting us. We will get back to you
+                          as soon as possible.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {submitStatus === "error" && (
+                    <div className="flex items-center p-4 bg-red-100 border border-red-200 rounded-lg">
+                      <X className="w-5 h-5 text-red-600 mr-3" />
+                      <div>
+                        <h4 className="text-red-800 font-medium">
+                          Failed to send email
+                        </h4>
+                        <p className="text-red-700 text-sm mt-1">
+                          Please try again or contact us directly at
+                          bespokecarat@gmail.com
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="cursor-pointer w-full bg-primary-600 hover:bg-primary-700 text-white px-8 py-4 rounded-lg text-lg font-medium transition duration-200"
+                    disabled={isSubmitting || isUploading}
+                    className="cursor-pointer w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg text-lg font-medium transition duration-200"
                   >
-                    Send Message
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </button>
                 </form>
               </div>

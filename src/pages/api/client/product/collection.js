@@ -15,11 +15,11 @@ export default async function handler(req, res) {
   const client = await isClient(req);
   const admin = await isAdmin(req);
 
-  if (!client && !admin) {
-    return res
-      .status(200)
-      .send({ status: false, message: "Authorization failed" });
-  }
+  // if (!client || !admin) {
+  //   return res
+  //     .status(200)
+  //     .send({ status: false, message: "Authorization failed" });
+  // }
 
   if (req.method === "GET") {
     try {

@@ -126,7 +126,7 @@ export default function ProductPage({ params }) {
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://localhost:3000/api/product-id?sku=${id}`,
+        url: `/api/product-id?sku=${id}`,
         headers: {
           Authorization: authToken,
         },
@@ -228,14 +228,6 @@ export default function ProductPage({ params }) {
       return [...new Set(product.sieve_sizes.map((s) => s.size))].sort();
     }
     return [];
-  };
-
-  // get distinct dimensions for cuts and colorstones
-  const getDistinctDimensions = () => {
-    if (!product?.variants) return [];
-    return [...new Set(product.variants.map((v) => v.dimension))]
-      .filter(Boolean)
-      .sort();
   };
 
   // Get the currently selected variant
