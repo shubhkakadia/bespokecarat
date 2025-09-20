@@ -3,15 +3,15 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import React from "react";
 import { CustomerRoute } from "@/components/ProtectedRoute";
-import { 
-  ShoppingBag, 
-  Clock, 
-  Package, 
-  Truck, 
-  CheckCircle, 
+import {
+  ShoppingBag,
+  Clock,
+  Package,
+  Truck,
+  CheckCircle,
   Star,
   ArrowLeft,
-  Mail
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -20,19 +20,19 @@ export default function OrdersPage() {
     <CustomerRoute>
       <div className="min-h-screen bg-gradient-to-br from-surface-50 to-surface-100">
         <Navbar />
-        
+
         <div className="px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header Section */}
             <div className="mb-6 sm:mb-8">
-              <Link 
-                href="/customer" 
+              <Link
+                href="/customer"
                 className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors duration-200 mb-4 sm:mb-6"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="text-sm sm:text-base">Back to Dashboard</span>
               </Link>
-              
+
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
                   <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
@@ -65,9 +65,10 @@ export default function OrdersPage() {
                 Coming Soon
               </h2>
               <p className="text-base sm:text-lg text-secondary mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
-                We're crafting an exceptional order management experience for you. 
-                Soon you'll be able to track your precious jewelry orders, view detailed 
-                order history, and manage your luxury purchases with ease.
+                We're crafting an exceptional order management experience for
+                you. Soon you'll be able to track your precious jewelry orders,
+                view detailed order history, and manage your luxury purchases
+                with ease.
               </p>
 
               {/* Features Preview */}
@@ -76,24 +77,36 @@ export default function OrdersPage() {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
                     <Truck className="h-5 w-5 sm:h-6 sm:w-6 text-primary-600" />
                   </div>
-                  <h3 className="font-semibold text-text-dark mb-2 text-sm sm:text-base">Real-time Tracking</h3>
-                  <p className="text-xs sm:text-sm text-secondary">Track your orders from crafting to delivery</p>
+                  <h3 className="font-semibold text-text-dark mb-2 text-sm sm:text-base">
+                    Real-time Tracking
+                  </h3>
+                  <p className="text-xs sm:text-sm text-secondary">
+                    Track your orders from crafting to delivery
+                  </p>
                 </div>
-                
+
                 <div className="bg-surface-50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-border-light">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent-100 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
                     <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-accent-600" />
                   </div>
-                  <h3 className="font-semibold text-text-dark mb-2 text-sm sm:text-base">Order History</h3>
-                  <p className="text-xs sm:text-sm text-secondary">Complete history of your luxury purchases</p>
+                  <h3 className="font-semibold text-text-dark mb-2 text-sm sm:text-base">
+                    Order History
+                  </h3>
+                  <p className="text-xs sm:text-sm text-secondary">
+                    Complete history of your luxury purchases
+                  </p>
                 </div>
-                
+
                 <div className="bg-surface-50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-border-light sm:col-span-2 lg:col-span-1">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent-warm-100 rounded-lg flex items-center justify-center mx-auto mb-3 sm:mb-4">
                     <Star className="h-5 w-5 sm:h-6 sm:w-6 text-accent-warm-600" />
                   </div>
-                  <h3 className="font-semibold text-text-dark mb-2 text-sm sm:text-base">Premium Support</h3>
-                  <p className="text-xs sm:text-sm text-secondary">Dedicated support for your orders</p>
+                  <h3 className="font-semibold text-text-dark mb-2 text-sm sm:text-base">
+                    Premium Support
+                  </h3>
+                  <p className="text-xs sm:text-sm text-secondary">
+                    Dedicated support for your orders
+                  </p>
                 </div>
               </div>
 

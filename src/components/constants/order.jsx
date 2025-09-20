@@ -67,7 +67,13 @@ export const colorRanges = [
   "Y-Z",
 ];
 
-export const clarityRanges = ["FL-IF", "VVS1-VVS2", "VS1-VS2", "SI1-SI2", "I1-I3"];
+export const clarityRanges = [
+  "FL-IF",
+  "VVS1-VVS2",
+  "VS1-VS2",
+  "SI1-SI2",
+  "I1-I3",
+];
 
 export const layoutTypeOptions = [
   "Bracelet",
@@ -104,3 +110,5 @@ export const sieveSizeOptions = [
   "3.1mm - 3.3mm",
   "3.3mm - 3.5mm",
 ];
+
+export const certificationOptions = ["GIA", "HRD", "IGI"];

@@ -6,120 +6,28 @@ import Sidebar from "../../components/sidebar";
 import Link from "next/link";
 import Image from "next/image";
 import { Edit, Trash2, X, Save, AlertTriangle } from "lucide-react";
+import MediaSection from "../components/MediaSection";
+import VariantDeletePopup from "../components/VariantDeletePopup";
+import ProductDeletePopup from "../components/ProductDeletePopup";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { getAuthToken } from "@/contexts/auth";
+import {
+  colorOptions,
+  clarityOptions,
+  colorRanges,
+  clarityRanges,
+  layoutTypeOptions,
+  cutTypeOptions,
+  sieveSizeOptions,
+  certificationOptions,
+  shapeOptions,
+} from "@/components/constants/order";
 
 export default function page({ params }) {
   // Unwrap params Promise using React.use()
   const { id } = use(params);
-  const colorOptions = [
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-    "W",
-    "X",
-    "Y",
-    "Z",
-  ];
-
-  const clarityOptions = [
-    "FL",
-    "IF",
-    "VVS1",
-    "VVS2",
-    "VS1",
-    "VS2",
-    "SI1",
-    "SI2",
-    "I1",
-    "I2",
-    "I3",
-  ];
-
-  const colorRanges = [
-    "D-F",
-    "G-H",
-    "I-J",
-    "K-L",
-    "M-N",
-    "O-P",
-    "Q-R",
-    "S-T",
-    "U-V",
-    "W-X",
-    "Y-Z",
-  ];
-
-  const clarityRanges = ["FL-IF", "VVS1-VVS2", "VS1-VS2", "SI1-SI2", "I1-I3"];
-
-  const layoutTypeOptions = [
-    "Bracelet",
-    "Necklace",
-    "Anklet",
-    "Brooch",
-    "Choker",
-    "Tennis Bracelet",
-  ];
-
-  const cutTypeOptions = [
-    "Cut",
-    "Portuguese Cut",
-    "Rose Cut",
-    "Old Mine Cut",
-    "Step Cut",
-  ];
-
-  // Sieve size options in mm
-  const sieveSizeOptions = [
-    "0.5mm - 0.7mm",
-    "0.7mm - 0.9mm",
-    "0.9mm - 1.1mm",
-    "1.1mm - 1.3mm",
-    "1.3mm - 1.5mm",
-    "1.5mm - 1.7mm",
-    "1.7mm - 1.9mm",
-    "1.9mm - 2.1mm",
-    "2.1mm - 2.3mm",
-    "2.3mm - 2.5mm",
-    "2.5mm - 2.7mm",
-    "2.7mm - 2.9mm",
-    "2.9mm - 3.1mm",
-    "3.1mm - 3.3mm",
-    "3.3mm - 3.5mm",
-  ];
-
-  const shapeOptions = [
-    "Round",
-    "Oval",
-    "Emerald",
-    "Princess",
-    "Asscher",
-    "Cushion",
-    "Radiant",
-    "Pear",
-    "Marquise",
-    "Heart",
-    "Baguette",
-    "Trillion",
-  ];
 
   const [sortBy, setSortBy] = useState("id");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -133,6 +41,12 @@ export default function page({ params }) {
   const [editingProduct, setEditingProduct] = useState(false);
   const [editedProductData, setEditedProductData] = useState({});
   const [savingProduct, setSavingProduct] = useState(false);
+  // Local variant and media edit helpers
+  const [newVariantTempIdCounter, setNewVariantTempIdCounter] = useState(0);
+  const [newImageFiles, setNewImageFiles] = useState([]);
+  const [newVideoFiles, setNewVideoFiles] = useState([]);
+  const [reloadKey, setReloadKey] = useState(0);
+  const [deletedVariantIds, setDeletedVariantIds] = useState([]);
 
   // Delete functionality state for variants (simple popup)
   const [showVariantDeletePopup, setShowVariantDeletePopup] = useState(false);
@@ -154,19 +68,32 @@ export default function page({ params }) {
     const variants = [...productData.variants];
 
     variants.sort((a, b) => {
-      let aValue = a[sortBy];
-      let bValue = b[sortBy];
+      let aValue = a?.[sortBy];
+      let bValue = b?.[sortBy];
 
-      if (typeof aValue === "string") {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
+      const bothNumbers =
+        typeof aValue === "number" && typeof bValue === "number";
+      const bothStrings =
+        typeof aValue === "string" && typeof bValue === "string";
+
+      if (bothNumbers) {
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       }
 
-      if (sortOrder === "asc") {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
+      if (bothStrings) {
+        const aStr = aValue.toLowerCase();
+        const bStr = bValue.toLowerCase();
+        if (aStr === bStr) return 0;
+        const cmp = aStr > bStr ? 1 : -1;
+        return sortOrder === "asc" ? cmp : -cmp;
       }
+
+      // Fallback: coerce to string safely
+      const aStr = (aValue ?? "").toString().toLowerCase();
+      const bStr = (bValue ?? "").toString().toLowerCase();
+      if (aStr === bStr) return 0;
+      const cmp = aStr > bStr ? 1 : -1;
+      return sortOrder === "asc" ? cmp : -cmp;
     });
 
     return variants;
@@ -186,7 +113,7 @@ export default function page({ params }) {
         const config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://localhost:3000/api/product-id?sku=${id}`,
+          url: `/api/product-id?sku=${id}`,
           headers: {},
         };
 
@@ -239,6 +166,7 @@ export default function page({ params }) {
             productType: normalizeProductType(productType),
             description: apiProduct.description,
             isAvailable: apiProduct.is_available,
+            availability: apiProduct.is_available,
             media: mediaFiles,
             images: images,
             video: videos,
@@ -340,7 +268,7 @@ export default function page({ params }) {
     if (id) {
       fetchProductData();
     }
-  }, [id]);
+  }, [id, reloadKey]);
 
   // Handle sorting
   const handleSort = (column) => {
@@ -352,11 +280,71 @@ export default function page({ params }) {
     }
   };
 
-  // Handle media delete
-  const handleDeleteMedia = (mediaId, mediaType) => {
-    console.log(`Delete ${mediaType} with ID: ${mediaId}`);
-    // In a real implementation, this would make an API call to delete the media
-    toast.success(`${mediaType} deleted successfully!`);
+  // Handle media delete (calls admin API)
+  const handleDeleteMedia = async (mediaLink, mediaType) => {
+    try {
+      const authToken = getAuthToken();
+      if (!authToken) {
+        toast.error("Authentication token not found. Please login again.");
+        return;
+      }
+
+      const FILELINK_PREFIX = "/api/media/";
+      let filename = "";
+      try {
+        // Support absolute URLs and relative links
+        const link = mediaLink || "";
+        const idx = link.indexOf(FILELINK_PREFIX);
+        if (idx !== -1) {
+          filename = link.substring(idx + FILELINK_PREFIX.length);
+        } else {
+          filename = link.split("/").pop() || "";
+        }
+      } catch (e) {
+        filename = mediaLink;
+      }
+
+      if (!filename) {
+        toast.error("Unable to determine filename for deletion");
+        return;
+      }
+
+      const config = {
+        method: "delete",
+        maxBodyLength: Infinity,
+        url: `/api/admin/product/media-delete`,
+        headers: {
+          Authorization: authToken,
+          "Content-Type": "application/json",
+        },
+        data: { filename },
+      };
+
+      const response = await axios.request(config);
+      if (response?.data?.status) {
+        // Optimistically update local state
+        setProductData((prev) => {
+          if (!prev) return prev;
+          const updated = { ...prev };
+          if (mediaType === "image") {
+            updated.images = (prev.images || []).filter((i) => i !== mediaLink);
+          } else if (mediaType === "video") {
+            updated.video = (prev.video || []).filter((v) => v !== mediaLink);
+          }
+          // Also remove from media list if present
+          if (prev.media) {
+            updated.media = prev.media.filter((m) => m.filelink !== mediaLink);
+          }
+          return updated;
+        });
+        toast.success(`${mediaType} deleted successfully!`);
+      } else {
+        throw new Error(response?.data?.message || "Delete failed");
+      }
+    } catch (error) {
+      console.error("Error deleting media:", error);
+      toast.error(error?.message || "Failed to delete media");
+    }
   };
 
   // Handle variant edit
@@ -416,39 +404,184 @@ export default function page({ params }) {
   const handleSaveVariantChanges = async (variantId) => {
     setSavingVariant(true);
     try {
-      // API call to update the variant
-      const response = await fetch(
-        `/api/products/${productData.productId}/variants/${variantId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedVariantData),
-        }
-      );
+      // Update the variant locally; actual persistence will happen on Save Product
+      setProductData((prev) => {
+        if (!prev) return prev;
+        const updated = { ...prev };
 
-      if (response.ok) {
-        const productTypeLabel =
-          productData.productType === "diamond"
-            ? "Diamond"
-            : productData.productType === "melee"
-            ? "Melee"
-            : productData.productType === "colorstone"
-            ? "Colorstone"
-            : productData.productType === "cuts"
-            ? "Cuts"
-            : productData.productType === "layout"
-            ? "Layout"
-            : "Alphabet";
-        toast.success(`${productTypeLabel} variant updated successfully!`);
-        setEditingVariant(null);
-        setEditedVariantData({});
-      } else {
-        throw new Error("Failed to update variant");
-      }
+        // Determine the candidate values for uniqueness check
+        const current = (prev.variants || []).find((v) => v.id === variantId);
+        let candidate = null;
+        if (prev.productType === "diamond") {
+          candidate = {
+            color: (editedVariantData.color ?? current?.color ?? "").trim(),
+            clarity: (
+              editedVariantData.clarity ??
+              current?.clarity ??
+              ""
+            ).trim(),
+            caratWeight: Number(
+              editedVariantData.caratWeight ?? current?.caratWeight ?? 0
+            ),
+          };
+        } else if (prev.productType === "colorstone") {
+          candidate = {
+            dimension: (
+              editedVariantData.dimension ??
+              current?.dimension ??
+              ""
+            ).trim(),
+            shape: (editedVariantData.shape ?? current?.shape ?? "").trim(),
+            caratWeight: Number(
+              editedVariantData.caratWeight ?? current?.caratWeight ?? 0
+            ),
+          };
+        }
+
+        // Check for duplicates among other variants
+        let duplicate = false;
+        if (candidate && prev.productType === "diamond") {
+          duplicate = (prev.variants || []).some(
+            (v) =>
+              v.id !== variantId &&
+              (v.color ?? "").trim().toLowerCase() ===
+                candidate.color.toLowerCase() &&
+              (v.clarity ?? "").trim().toLowerCase() ===
+                candidate.clarity.toLowerCase() &&
+              Number(v.caratWeight ?? 0) === candidate.caratWeight
+          );
+        } else if (candidate && prev.productType === "colorstone") {
+          duplicate = (prev.variants || []).some(
+            (v) =>
+              v.id !== variantId &&
+              (v.dimension ?? "").trim().toLowerCase() ===
+                candidate.dimension.toLowerCase() &&
+              (v.shape ?? "").trim().toLowerCase() ===
+                candidate.shape.toLowerCase() &&
+              Number(v.caratWeight ?? 0) === candidate.caratWeight
+          );
+        }
+
+        if (duplicate) {
+          toast.error(
+            "Variant already exists with same Color - Clarity - Carat Weight"
+          );
+          return prev; // do not apply changes
+        }
+
+        updated.variants = (prev.variants || []).map((v) => {
+          if (v.id === variantId) {
+            return {
+              ...v,
+              ...(productData.productType === "diamond" && {
+                color: editedVariantData.color ?? v.color,
+                clarity: editedVariantData.clarity ?? v.clarity,
+                caratWeight:
+                  editedVariantData.caratWeight !== undefined
+                    ? Number(editedVariantData.caratWeight)
+                    : v.caratWeight,
+                price:
+                  editedVariantData.price !== undefined
+                    ? Number(editedVariantData.price)
+                    : v.price,
+              }),
+              ...(productData.productType === "melee" && {
+                sieveSize:
+                  editedVariantData.sieveSize !== undefined
+                    ? editedVariantData.sieveSize
+                    : v.sieveSize,
+                colorRange:
+                  editedVariantData.colorRange !== undefined
+                    ? editedVariantData.colorRange
+                    : v.colorRange,
+                clarityRange:
+                  editedVariantData.clarityRange !== undefined
+                    ? editedVariantData.clarityRange
+                    : v.clarityRange,
+                price:
+                  editedVariantData.price !== undefined
+                    ? Number(editedVariantData.price)
+                    : v.price,
+              }),
+              ...(productData.productType === "colorstone" && {
+                dimension:
+                  editedVariantData.dimension !== undefined
+                    ? editedVariantData.dimension
+                    : v.dimension,
+                shape:
+                  editedVariantData.shape !== undefined
+                    ? editedVariantData.shape
+                    : v.shape,
+                caratWeight:
+                  editedVariantData.caratWeight !== undefined
+                    ? Number(editedVariantData.caratWeight)
+                    : v.caratWeight,
+                price:
+                  editedVariantData.price !== undefined
+                    ? Number(editedVariantData.price)
+                    : v.price,
+              }),
+              ...(productData.productType === "cuts" && {
+                dimension:
+                  editedVariantData.dimension !== undefined
+                    ? editedVariantData.dimension
+                    : v.dimension,
+                caratWeight:
+                  editedVariantData.caratWeight !== undefined
+                    ? Number(editedVariantData.caratWeight)
+                    : v.caratWeight,
+                price:
+                  editedVariantData.price !== undefined
+                    ? Number(editedVariantData.price)
+                    : v.price,
+              }),
+              ...(productData.productType === "alphabet" && {
+                caratWeight:
+                  editedVariantData.caratWeight !== undefined
+                    ? Number(editedVariantData.caratWeight)
+                    : v.caratWeight,
+                price:
+                  editedVariantData.price !== undefined
+                    ? Number(editedVariantData.price)
+                    : v.price,
+              }),
+              ...(productData.productType === "layout" && {
+                shape:
+                  editedVariantData.shape !== undefined
+                    ? editedVariantData.shape
+                    : v.shape,
+                totalPcs:
+                  editedVariantData.totalPcs !== undefined
+                    ? Number(editedVariantData.totalPcs)
+                    : v.totalPcs,
+                totalCaratWeight:
+                  editedVariantData.totalCaratWeight !== undefined
+                    ? Number(editedVariantData.totalCaratWeight)
+                    : v.totalCaratWeight,
+                dimensions:
+                  editedVariantData.dimensions !== undefined
+                    ? editedVariantData.dimensions
+                    : v.dimensions,
+                colorRange:
+                  editedVariantData.colorRange !== undefined
+                    ? editedVariantData.colorRange
+                    : v.colorRange,
+                clarityRange:
+                  editedVariantData.clarityRange !== undefined
+                    ? editedVariantData.clarityRange
+                    : v.clarityRange,
+              }),
+            };
+          }
+          return v;
+        });
+        return updated;
+      });
+      toast.success("Variant updated");
+      setEditingVariant(null);
+      setEditedVariantData({});
     } catch (error) {
-      console.error("Error updating variant:", error);
+      console.error("Error updating variant locally:", error);
       toast.error("Failed to update variant. Please try again.");
     } finally {
       setSavingVariant(false);
@@ -461,36 +594,40 @@ export default function page({ params }) {
     setShowVariantDeletePopup(true);
   };
 
-  // Handle confirm variant delete
+  // Handle confirm variant delete (local + mark for persistence)
   const handleConfirmVariantDelete = async () => {
     setDeletingVariant(true);
     try {
-      const response = await fetch(
-        `/api/products/${productData.productId}/variants/${variantToDelete.id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (response.ok) {
-        const productTypeLabel =
-          productData.productType === "diamond"
-            ? "Diamond"
-            : productData.productType === "melee"
-            ? "Melee"
-            : productData.productType === "colorstone"
-            ? "Colorstone"
-            : productData.productType === "cuts"
-            ? "Cuts"
-            : productData.productType === "layout"
-            ? "Layout"
-            : "Alphabet";
-        toast.success(`${productTypeLabel} variant deleted successfully!`);
-        setShowVariantDeletePopup(false);
-        setVariantToDelete(null);
-      } else {
-        throw new Error("Failed to delete variant");
+      const id = variantToDelete?.id;
+      const isExisting = typeof id === "number" || /^\d+$/.test(String(id));
+      if (isExisting) {
+        setDeletedVariantIds((prev) =>
+          Array.from(new Set([...(prev || []), Number(id)]))
+        );
       }
+
+      setProductData((prev) => {
+        if (!prev) return prev;
+        const updated = { ...prev };
+        updated.variants = (prev.variants || []).filter((v) => v.id !== id);
+        return updated;
+      });
+
+      const productTypeLabel =
+        productData.productType === "diamond"
+          ? "Diamond"
+          : productData.productType === "melee"
+          ? "Melee"
+          : productData.productType === "colorstone"
+          ? "Colorstone"
+          : productData.productType === "cuts"
+          ? "Cuts"
+          : productData.productType === "layout"
+          ? "Layout"
+          : "Alphabet";
+      toast.success(`${productTypeLabel} variant deleted successfully!`);
+      setShowVariantDeletePopup(false);
+      setVariantToDelete(null);
     } catch (error) {
       console.error("Error deleting variant:", error);
       toast.error("Failed to delete variant. Please try again.");
@@ -526,20 +663,506 @@ export default function page({ params }) {
   const handleSaveProductChanges = async () => {
     setSavingProduct(true);
     try {
-      const response = await fetch(`/api/products/${productData.productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editedProductData),
-      });
+      // If product is a diamond, use the diamond edit API with FormData
+      if (productData.productType === "diamond") {
+        const authToken = getAuthToken();
+        if (!authToken) {
+          toast.error("Authentication token not found. Please login again.");
+          return;
+        }
 
-      if (response.ok) {
-        toast.success("Product updated successfully!");
-        setEditingProduct(false);
-        setEditedProductData({});
-      } else {
-        throw new Error("Failed to update product");
+        const formData = new FormData();
+
+        const name = editedProductData.name ?? productData.name;
+        const shape = editedProductData.shape ?? productData.shape;
+        const certification =
+          editedProductData.certification ?? productData.certification;
+        const description =
+          editedProductData.description ?? productData.description;
+        const isAvailable =
+          editedProductData.availability ?? productData.availability ?? false;
+
+        formData.append("name", name ?? "");
+        formData.append("shape", shape ?? "");
+        formData.append("certification", certification ?? "");
+        formData.append("description", description ?? "");
+        formData.append("is_available", String(!!isAvailable));
+
+        // Build diamond_variants payload from current variants (including new ones)
+        const diamondVariants = (productData.variants || [])
+          .map((variant) => ({
+            id:
+              typeof variant.id === "number" ||
+              /^(\d+)$/.test(String(variant.id))
+                ? String(variant.id)
+                : undefined, // omit id for brand new variants
+            color: variant.color,
+            clarity: variant.clarity,
+            carat_weight: Number(
+              variant.caratWeight ?? variant.carat_weight ?? 0
+            ),
+            price: Number(variant.price ?? 0),
+          }))
+          .map((v) => {
+            const copy = { ...v };
+            if (copy.id === undefined) delete copy.id;
+            return copy;
+          });
+        formData.append("diamond_variants", JSON.stringify(diamondVariants));
+        if (deletedVariantIds?.length) {
+          formData.append(
+            "diamond_variants_deleted_ids",
+            JSON.stringify(deletedVariantIds)
+          );
+        }
+
+        // Append new media if any were added during edit mode
+        if (newImageFiles && newImageFiles.length > 0) {
+          newImageFiles.forEach((file) => formData.append("images", file));
+        }
+        if (newVideoFiles && newVideoFiles.length > 0) {
+          newVideoFiles.forEach((file) => formData.append("videos", file));
+        }
+
+        const config = {
+          method: "patch",
+          maxBodyLength: Infinity,
+          url: `/api/admin/product/diamond/edit-diamond?sku=${productData.sku}`,
+          headers: {
+            Authorization: authToken,
+            // Browser will set proper multipart headers
+          },
+          data: formData,
+        };
+
+        const response = await axios.request(config);
+
+        if (response?.data?.status) {
+          toast.success("Diamond updated successfully!");
+          setEditingProduct(false);
+          setEditedProductData({});
+          setNewImageFiles([]);
+          setNewVideoFiles([]);
+          setDeletedVariantIds([]);
+          setReloadKey((k) => k + 1);
+        } else {
+          throw new Error(
+            response?.data?.message || "Failed to update diamond"
+          );
+        }
+      } else if (productData.productType === "melee") {
+        const authToken = getAuthToken();
+        if (!authToken) {
+          toast.error("Authentication token not found. Please login again.");
+          return;
+        }
+
+        const formData = new FormData();
+
+        const name = editedProductData.name ?? productData.name;
+        const shape = editedProductData.shape ?? productData.shape;
+        const description =
+          editedProductData.description ?? productData.description;
+        const isAvailable =
+          editedProductData.availability ?? productData.availability ?? false;
+
+        formData.append("name", name ?? "");
+        formData.append("shape", shape ?? "");
+        formData.append("description", description ?? "");
+        formData.append("is_available", String(!!isAvailable));
+
+        // Build sieve_sizes from variants
+        const sieveSizes = (productData.variants || [])
+          .map((variant) => ({
+            id:
+              typeof variant.id === "number" ||
+              /^(\d+)$/.test(String(variant.id))
+                ? String(variant.id)
+                : undefined,
+            size: variant.sieveSize,
+            color_range: variant.colorRange,
+            clarity_range: variant.clarityRange,
+            price_per_carat: Number(
+              variant.price ?? variant.pricePerCarat ?? 0
+            ),
+          }))
+          .map((v) => {
+            const copy = { ...v };
+            if (copy.id === undefined) delete copy.id;
+            return copy;
+          });
+        formData.append("sieve_sizes", JSON.stringify(sieveSizes));
+        if (deletedVariantIds?.length) {
+          formData.append(
+            "sieve_sizes_deleted_ids",
+            JSON.stringify(deletedVariantIds)
+          );
+        }
+
+        if (newImageFiles && newImageFiles.length > 0) {
+          newImageFiles.forEach((file) => formData.append("images", file));
+        }
+        if (newVideoFiles && newVideoFiles.length > 0) {
+          newVideoFiles.forEach((file) => formData.append("videos", file));
+        }
+
+        const config = {
+          method: "patch",
+          maxBodyLength: Infinity,
+          url: `/api/admin/product/melee/edit-melee?sku=${productData.sku}`,
+          headers: {
+            Authorization: authToken,
+          },
+          data: formData,
+        };
+
+        const response = await axios.request(config);
+
+        if (response?.data?.status) {
+          toast.success("Melee updated successfully!");
+          setEditingProduct(false);
+          setEditedProductData({});
+          setNewImageFiles([]);
+          setNewVideoFiles([]);
+          setDeletedVariantIds([]);
+          setReloadKey((k) => k + 1);
+        } else {
+          throw new Error(response?.data?.message || "Failed to update melee");
+        }
+      } else if (productData.productType === "cuts") {
+        const authToken = getAuthToken();
+        if (!authToken) {
+          toast.error("Authentication token not found. Please login again.");
+          return;
+        }
+
+        const formData = new FormData();
+
+        const name = editedProductData.name ?? productData.name;
+        const shape = editedProductData.shape ?? productData.shape;
+        const cutType = editedProductData.cutType ?? productData.cutType;
+        const colorRange =
+          editedProductData.colorRange ?? productData.colorRange;
+        const clarityRange =
+          editedProductData.clarityRange ?? productData.clarityRange;
+        const description =
+          editedProductData.description ?? productData.description;
+        const isAvailable =
+          editedProductData.availability ?? productData.availability ?? false;
+
+        formData.append("name", name ?? "");
+        formData.append("shape", shape ?? "");
+        formData.append("cut_type", cutType ?? "");
+        formData.append("color_range", colorRange ?? "");
+        formData.append("clarity_range", clarityRange ?? "");
+        formData.append("description", description ?? "");
+        formData.append("is_available", String(!!isAvailable));
+
+        // Build cut_variants from variants
+        const cutVariants = (productData.variants || [])
+          .map((variant) => ({
+            id:
+              typeof variant.id === "number" ||
+              /^(\d+)$/.test(String(variant.id))
+                ? String(variant.id)
+                : undefined,
+            dimension: variant.dimension,
+            carat_weight: Number(variant.caratWeight ?? 0),
+            price: Number(variant.price ?? 0),
+          }))
+          .map((v) => {
+            const copy = { ...v };
+            if (copy.id === undefined) delete copy.id;
+            return copy;
+          });
+        formData.append("cut_variants", JSON.stringify(cutVariants));
+        if (deletedVariantIds?.length) {
+          formData.append(
+            "cut_variants_deleted_ids",
+            JSON.stringify(deletedVariantIds)
+          );
+        }
+
+        if (newImageFiles && newImageFiles.length > 0) {
+          newImageFiles.forEach((file) => formData.append("images", file));
+        }
+        if (newVideoFiles && newVideoFiles.length > 0) {
+          newVideoFiles.forEach((file) => formData.append("videos", file));
+        }
+
+        const config = {
+          method: "patch",
+          maxBodyLength: Infinity,
+          url: `/api/admin/product/cut/edit-cut?sku=${productData.sku}`,
+          headers: {
+            Authorization: authToken,
+          },
+          data: formData,
+        };
+
+        const response = await axios.request(config);
+
+        if (response?.data?.status) {
+          toast.success("Cut updated successfully!");
+          setEditingProduct(false);
+          setEditedProductData({});
+          setNewImageFiles([]);
+          setNewVideoFiles([]);
+          setDeletedVariantIds([]);
+          setReloadKey((k) => k + 1);
+        } else {
+          throw new Error(response?.data?.message || "Failed to update cut");
+        }
+      } else if (productData.productType === "colorstone") {
+        const authToken = getAuthToken();
+        if (!authToken) {
+          toast.error("Authentication token not found. Please login again.");
+          return;
+        }
+
+        const formData = new FormData();
+
+        const name = editedProductData.name ?? productData.name;
+        const color = editedProductData.color ?? productData.color;
+        const certification =
+          editedProductData.certification ?? productData.certification;
+        const description =
+          editedProductData.description ?? productData.description;
+        const isAvailable =
+          editedProductData.availability ?? productData.availability ?? false;
+
+        formData.append("name", name ?? "");
+        formData.append("color", color ?? "");
+        formData.append("certification", certification ?? "");
+        formData.append("description", description ?? "");
+        formData.append("is_available", String(!!isAvailable));
+
+        // Build color_stone_variants from variants
+        const colorStoneVariants = (productData.variants || [])
+          .map((variant) => ({
+            id:
+              typeof variant.id === "number" ||
+              /^(\d+)$/.test(String(variant.id))
+                ? String(variant.id)
+                : undefined,
+            shape: variant.shape,
+            dimension: variant.dimension,
+            carat_weight: Number(variant.caratWeight ?? 0),
+            price: Number(variant.price ?? 0),
+          }))
+          .map((v) => {
+            const copy = { ...v };
+            if (copy.id === undefined) delete copy.id;
+            return copy;
+          });
+        formData.append(
+          "color_stone_variants",
+          JSON.stringify(colorStoneVariants)
+        );
+        if (deletedVariantIds?.length) {
+          formData.append(
+            "color_stone_variants_deleted_ids",
+            JSON.stringify(deletedVariantIds)
+          );
+        }
+
+        if (newImageFiles && newImageFiles.length > 0) {
+          newImageFiles.forEach((file) => formData.append("images", file));
+        }
+        if (newVideoFiles && newVideoFiles.length > 0) {
+          newVideoFiles.forEach((file) => formData.append("videos", file));
+        }
+
+        const config = {
+          method: "patch",
+          maxBodyLength: Infinity,
+          url: `/api/admin/product/color-stone/edit-color-stone?sku=${productData.sku}`,
+          headers: {
+            Authorization: authToken,
+          },
+          data: formData,
+        };
+
+        const response = await axios.request(config);
+
+        if (response?.data?.status) {
+          toast.success("Color stone updated successfully!");
+          setEditingProduct(false);
+          setEditedProductData({});
+          setNewImageFiles([]);
+          setNewVideoFiles([]);
+          setDeletedVariantIds([]);
+          setReloadKey((k) => k + 1);
+        } else {
+          throw new Error(
+            response?.data?.message || "Failed to update color stone"
+          );
+        }
+      } else if (productData.productType === "alphabet") {
+        const authToken = getAuthToken();
+        if (!authToken) {
+          toast.error("Authentication token not found. Please login again.");
+          return;
+        }
+
+        const formData = new FormData();
+
+        const name = editedProductData.name ?? productData.name;
+        const character = editedProductData.character ?? productData.character;
+        const colorRange =
+          editedProductData.colorRange ?? productData.colorRange;
+        const clarityRange =
+          editedProductData.clarityRange ?? productData.clarityRange;
+        const description =
+          editedProductData.description ?? productData.description;
+        const isAvailable =
+          editedProductData.availability ?? productData.availability ?? false;
+
+        formData.append("name", name ?? "");
+        formData.append("character", character ?? "");
+        formData.append("color_range", colorRange ?? "");
+        formData.append("clarity_range", clarityRange ?? "");
+        formData.append("description", description ?? "");
+        formData.append("is_available", String(!!isAvailable));
+
+        const alphabetVariants = (productData.variants || [])
+          .map((variant) => ({
+            id:
+              typeof variant.id === "number" || /^\d+$/.test(String(variant.id))
+                ? String(variant.id)
+                : undefined,
+            carat_weight: Number(
+              variant.caratWeight ?? variant.carat_weight ?? 0
+            ),
+            price: Number(variant.price ?? 0),
+          }))
+          .map((v) => {
+            const copy = { ...v };
+            if (copy.id === undefined) delete copy.id;
+            return copy;
+          });
+        formData.append("alphabet_variants", JSON.stringify(alphabetVariants));
+        if (deletedVariantIds?.length) {
+          formData.append(
+            "alphabet_variants_deleted_ids",
+            JSON.stringify(deletedVariantIds)
+          );
+        }
+
+        if (newImageFiles && newImageFiles.length > 0) {
+          newImageFiles.forEach((file) => formData.append("images", file));
+        }
+        if (newVideoFiles && newVideoFiles.length > 0) {
+          newVideoFiles.forEach((file) => formData.append("videos", file));
+        }
+
+        const config = {
+          method: "patch",
+          maxBodyLength: Infinity,
+          url: `/api/admin/product/alphabet/edit-alphabet?sku=${productData.sku}`,
+          headers: {
+            Authorization: authToken,
+          },
+          data: formData,
+        };
+        const response = await axios.request(config);
+        if (response?.data?.status) {
+          toast.success("Alphabet updated successfully!");
+          setEditingProduct(false);
+          setEditedProductData({});
+          setNewImageFiles([]);
+          setNewVideoFiles([]);
+          setDeletedVariantIds([]);
+          setReloadKey((k) => k + 1);
+        } else {
+          throw new Error(
+            response?.data?.message || "Failed to update alphabet"
+          );
+        }
+      } else if (productData.productType === "layout") {
+        const authToken = getAuthToken();
+        if (!authToken) {
+          toast.error("Authentication token not found. Please login again.");
+          return;
+        }
+
+        const formData = new FormData();
+
+        const name = editedProductData.name ?? productData.name;
+        const layoutType =
+          editedProductData.layoutType ?? productData.layoutType;
+        const description =
+          editedProductData.description ?? productData.description;
+        const isAvailable =
+          editedProductData.availability ?? productData.availability ?? false;
+        const layoutPrice =
+          editedProductData.layoutPrice ??
+          productData.layoutPrice ??
+          productData.price ??
+          0;
+
+        formData.append("name", name ?? "");
+        formData.append("layout_type", layoutType ?? "");
+        formData.append("description", description ?? "");
+        formData.append("is_available", String(!!isAvailable));
+        formData.append("price", String(Number(layoutPrice) || 0));
+
+        const diamondDetails = (productData.variants || [])
+          .map((variant) => ({
+            id:
+              typeof variant.id === "number" || /^\d+$/.test(String(variant.id))
+                ? String(variant.id)
+                : undefined,
+            shape: variant.shape ?? "",
+            pcs: Number(variant.totalPcs ?? variant.pcs ?? 0),
+            carat_weight: Number(
+              variant.totalCaratWeight ?? variant.carat_weight ?? 0
+            ),
+            dimension: variant.dimensions ?? variant.dimension ?? "",
+            color_range: variant.colorRange ?? variant.color_range ?? "",
+            clarity_range: variant.clarityRange ?? variant.clarity_range ?? "",
+          }))
+          .map((v) => {
+            const copy = { ...v };
+            if (copy.id === undefined) delete copy.id;
+            return copy;
+          });
+        formData.append("diamond_details", JSON.stringify(diamondDetails));
+        if (deletedVariantIds?.length) {
+          formData.append(
+            "diamond_details_deleted_ids",
+            JSON.stringify(deletedVariantIds)
+          );
+        }
+
+        if (newImageFiles && newImageFiles.length > 0) {
+          newImageFiles.forEach((file) => formData.append("images", file));
+        }
+        if (newVideoFiles && newVideoFiles.length > 0) {
+          newVideoFiles.forEach((file) => formData.append("videos", file));
+        }
+
+        const config = {
+          method: "patch",
+          maxBodyLength: Infinity,
+          url: `/api/admin/product/layout/edit-layout?sku=${productData.sku}`,
+          headers: {
+            Authorization: authToken,
+          },
+          data: formData,
+        };
+        const response = await axios.request(config);
+        if (response?.data?.status) {
+          toast.success("Layout updated successfully!");
+          setEditingProduct(false);
+          setEditedProductData({});
+          setNewImageFiles([]);
+          setNewVideoFiles([]);
+          setDeletedVariantIds([]);
+          setReloadKey((k) => k + 1);
+        } else {
+          throw new Error(response?.data?.message || "Failed to update layout");
+        }
       }
     } catch (error) {
       console.error("Error updating product:", error);
@@ -573,7 +1196,7 @@ export default function page({ params }) {
       const config = {
         method: "delete",
         maxBodyLength: Infinity,
-        url: `http://localhost:3000/api/admin/product/delete-product?sku=${productData.sku}`,
+        url: `/api/admin/product/delete-product?sku=${productData.sku}`,
         headers: {
           Authorization: authToken,
         },
@@ -630,6 +1253,116 @@ export default function page({ params }) {
       ...prev,
       [field]: value,
     }));
+  };
+
+  // Add a new empty variant for all supported product types
+  const handleAddVariant = () => {
+    if (
+      productData.productType !== "diamond" &&
+      productData.productType !== "melee" &&
+      productData.productType !== "cuts" &&
+      productData.productType !== "colorstone" &&
+      productData.productType !== "alphabet" &&
+      productData.productType !== "layout"
+    )
+      return;
+    const tempId = `new-${Date.now()}-${newVariantTempIdCounter}`;
+    setNewVariantTempIdCounter((c) => c + 1);
+    const newVariant =
+      productData.productType === "diamond"
+        ? {
+            id: tempId,
+            color: "",
+            clarity: "",
+            caratWeight: 0,
+            price: 0,
+          }
+        : productData.productType === "melee"
+        ? {
+            id: tempId,
+            sieveSize: "",
+            colorRange: "",
+            clarityRange: "",
+            price: 0,
+          }
+        : productData.productType === "cuts"
+        ? {
+            id: tempId,
+            dimension: "",
+            caratWeight: 0,
+            price: 0,
+          }
+        : productData.productType === "colorstone"
+        ? {
+            id: tempId,
+            dimension: "",
+            shape: "",
+            caratWeight: 0,
+            price: 0,
+          }
+        : productData.productType === "alphabet"
+        ? {
+            id: tempId,
+            caratWeight: 0,
+            price: 0,
+          }
+        : {
+            id: tempId,
+            shape: "",
+            totalPcs: 0,
+            totalCaratWeight: 0,
+            dimensions: "",
+            colorRange: "",
+            clarityRange: "",
+          };
+    setProductData((prev) => {
+      const existing = prev?.variants || [];
+      const updated = {
+        ...prev,
+        variants: [...existing, newVariant],
+      };
+      return updated;
+    });
+    setEditingVariant(tempId);
+    setEditedVariantData(
+      productData.productType === "diamond"
+        ? { color: "", clarity: "", caratWeight: 0, price: 0 }
+        : productData.productType === "melee"
+        ? { sieveSize: "", colorRange: "", clarityRange: "", price: 0 }
+        : productData.productType === "cuts"
+        ? { dimension: "", caratWeight: 0, price: 0 }
+        : productData.productType === "colorstone"
+        ? { dimension: "", shape: "", caratWeight: 0, price: 0 }
+        : productData.productType === "alphabet"
+        ? { caratWeight: 0, price: 0 }
+        : {
+            shape: "",
+            totalPcs: 0,
+            totalCaratWeight: 0,
+            dimensions: "",
+            colorRange: "",
+            clarityRange: "",
+          }
+    );
+    toast.success(
+      "New variant added. Fill the fields and click Save on the row."
+    );
+  };
+
+  // Media upload handlers (edit mode only)
+  const handleAddImages = (files) => {
+    const list = Array.from(files || []);
+    if (list.length === 0) return;
+    setNewImageFiles((prev) => [...prev, ...list]);
+    // Optionally show temporary previews by object URLs; skipping for brevity
+    toast.success(`${list.length} image(s) added`);
+  };
+
+  const handleAddVideos = (files) => {
+    const list = Array.from(files || []);
+    if (list.length === 0) return;
+    setNewVideoFiles((prev) => [...prev, ...list]);
+    toast.success(`${list.length} video(s) added`);
   };
 
   // Loading state
@@ -821,9 +1554,12 @@ export default function page({ params }) {
                           <p className="text-sm text-gray-500">Shape</p>
                           <div className="text-sm text-gray-800">
                             {editingProduct ? (
-                              <input
-                                type="text"
-                                value={editedProductData.shape || ""}
+                              <select
+                                value={
+                                  editedProductData.shape ||
+                                  productData.shape ||
+                                  ""
+                                }
                                 onChange={(e) =>
                                   handleProductInputChange(
                                     "shape",
@@ -831,8 +1567,16 @@ export default function page({ params }) {
                                   )
                                 }
                                 className="text-sm text-gray-800 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder="Shape"
-                              />
+                              >
+                                <option value="" disabled>
+                                  Select shape
+                                </option>
+                                {shapeOptions.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
                             ) : (
                               <p className="text-sm text-gray-800">
                                 {productData.shape}
@@ -848,11 +1592,11 @@ export default function page({ params }) {
                           <p className="text-sm text-gray-500">Cut Type</p>
                           <div className="text-sm text-gray-800">
                             {editingProduct ? (
-                              <input
-                                type="text"
+                              <select
                                 value={
                                   editedProductData.cutType ||
-                                  productData.cutType
+                                  productData.cutType ||
+                                  ""
                                 }
                                 onChange={(e) =>
                                   handleProductInputChange(
@@ -861,8 +1605,16 @@ export default function page({ params }) {
                                   )
                                 }
                                 className="text-sm text-gray-800 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder="Cut Type"
-                              />
+                              >
+                                <option value="" disabled>
+                                  Select cut type
+                                </option>
+                                {cutTypeOptions.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
                             ) : (
                               <p className="text-sm text-gray-800">
                                 {productData.cutType}
@@ -878,11 +1630,11 @@ export default function page({ params }) {
                           <p className="text-sm text-gray-500">Color Range</p>
                           <div className="text-sm text-gray-800">
                             {editingProduct ? (
-                              <input
-                                type="text"
+                              <select
                                 value={
                                   editedProductData.colorRange ||
-                                  productData.colorRange
+                                  productData.colorRange ||
+                                  ""
                                 }
                                 onChange={(e) =>
                                   handleProductInputChange(
@@ -891,8 +1643,16 @@ export default function page({ params }) {
                                   )
                                 }
                                 className="text-sm text-gray-800 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder="Color Range"
-                              />
+                              >
+                                <option value="" disabled>
+                                  Select color range
+                                </option>
+                                {colorRanges.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
                             ) : (
                               <p className="text-sm text-gray-800">
                                 {productData.colorRange}
@@ -908,11 +1668,11 @@ export default function page({ params }) {
                           <p className="text-sm text-gray-500">Clarity Range</p>
                           <div className="text-sm text-gray-800">
                             {editingProduct ? (
-                              <input
-                                type="text"
+                              <select
                                 value={
                                   editedProductData.clarityRange ||
-                                  productData.clarityRange
+                                  productData.clarityRange ||
+                                  ""
                                 }
                                 onChange={(e) =>
                                   handleProductInputChange(
@@ -921,8 +1681,16 @@ export default function page({ params }) {
                                   )
                                 }
                                 className="text-sm text-gray-800 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder="Clarity Range"
-                              />
+                              >
+                                <option value="" disabled>
+                                  Select clarity range
+                                </option>
+                                {clarityRanges.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
                             ) : (
                               <p className="text-sm text-gray-800">
                                 {productData.clarityRange}
@@ -967,11 +1735,11 @@ export default function page({ params }) {
                           <p className="text-sm text-gray-500">Layout Type</p>
                           <div className="text-sm text-gray-800">
                             {editingProduct ? (
-                              <input
-                                type="text"
+                              <select
                                 value={
                                   editedProductData.layoutType ||
-                                  productData.layoutType
+                                  productData.layoutType ||
+                                  ""
                                 }
                                 onChange={(e) =>
                                   handleProductInputChange(
@@ -980,8 +1748,16 @@ export default function page({ params }) {
                                   )
                                 }
                                 className="text-sm text-gray-800 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder="Layout Type"
-                              />
+                              >
+                                <option value="" disabled>
+                                  Select layout type
+                                </option>
+                                {layoutTypeOptions.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
                             ) : (
                               <p className="text-sm text-gray-800">
                                 {productData.layoutType}
@@ -1036,9 +1812,10 @@ export default function page({ params }) {
                               <input
                                 type="checkbox"
                                 checked={
-                                  editedProductData.availability !== undefined
+                                  !!(editedProductData.availability !==
+                                  undefined
                                     ? editedProductData.availability
-                                    : productData.availability
+                                    : productData.availability)
                                 }
                                 onChange={(e) =>
                                   handleProductInputChange(
@@ -1077,9 +1854,12 @@ export default function page({ params }) {
                           <p className="text-sm text-gray-500">Certification</p>
                           <div className="text-sm text-gray-800">
                             {editingProduct ? (
-                              <input
-                                type="text"
-                                value={editedProductData.certification || ""}
+                              <select
+                                value={
+                                  editedProductData.certification ||
+                                  productData.certification ||
+                                  ""
+                                }
                                 onChange={(e) =>
                                   handleProductInputChange(
                                     "certification",
@@ -1087,8 +1867,16 @@ export default function page({ params }) {
                                   )
                                 }
                                 className="text-sm text-gray-800 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                placeholder="Certification"
-                              />
+                              >
+                                <option value="" disabled>
+                                  Select certification
+                                </option>
+                                {certificationOptions.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
                             ) : (
                               <p className="text-sm text-gray-800">
                                 {productData.certification}
@@ -1134,7 +1922,11 @@ export default function page({ params }) {
                       ? "Colorstone"
                       : productData.productType === "cuts"
                       ? "Cuts"
-                      : "Alphabet"}{" "}
+                      : productData.productType === "alphabet"
+                      ? "Alphabet"
+                      : productData.productType === "layout"
+                      ? "Layout"
+                      : "Unknown"}{" "}
                     Variants
                   </h1>
                   {productData.productType === "diamond" && (
@@ -1319,6 +2111,16 @@ export default function page({ params }) {
                           ))}
                         </tbody>
                       </table>
+                      {editingProduct && (
+                        <div className="mt-3">
+                          <button
+                            onClick={handleAddVariant}
+                            className="cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded"
+                          >
+                            + Add Variant
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {productData.productType === "melee" && (
@@ -1509,6 +2311,16 @@ export default function page({ params }) {
                           ))}
                         </tbody>
                       </table>
+                      {editingProduct && (
+                        <div className="mt-3">
+                          <button
+                            onClick={handleAddVariant}
+                            className="cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded"
+                          >
+                            + Add Variant
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {productData.productType === "colorstone" && (
@@ -1688,6 +2500,16 @@ export default function page({ params }) {
                           ))}
                         </tbody>
                       </table>
+                      {editingProduct && (
+                        <div className="mt-3">
+                          <button
+                            onClick={handleAddVariant}
+                            className="cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded"
+                          >
+                            + Add Variant
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {productData.productType === "cuts" && (
@@ -1836,6 +2658,16 @@ export default function page({ params }) {
                           ))}
                         </tbody>
                       </table>
+                      {editingProduct && (
+                        <div className="mt-3">
+                          <button
+                            onClick={handleAddVariant}
+                            className="cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded"
+                          >
+                            + Add Variant
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {productData.productType === "alphabet" && (
@@ -1958,6 +2790,16 @@ export default function page({ params }) {
                           ))}
                         </tbody>
                       </table>
+                      {editingProduct && (
+                        <div className="mt-3">
+                          <button
+                            onClick={handleAddVariant}
+                            className="cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded"
+                          >
+                            + Add Variant
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {productData.productType === "layout" && (
@@ -2197,348 +3039,63 @@ export default function page({ params }) {
                           </tr>
                         </tbody>
                       </table>
+                      {editingProduct && (
+                        <div className="mt-3">
+                          <button
+                            onClick={handleAddVariant}
+                            className="cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded"
+                          >
+                            + Add Variant
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
 
                 {/* Media Section */}
-                <div className="border border-gray-200 rounded-xl m-2 p-4">
-                  <h1 className="text-lg font-semibold text-gray-800 mb-4">
-                    Media Gallery
-                  </h1>
-
-                  {/* Images Section */}
-                  {productData?.images?.length > 0 && (
-                    <div className="mb-6">
-                      <h2 className="text-md font-medium text-gray-700 mb-3">
-                        Images
-                      </h2>
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {productData?.images?.map((image, index) => (
-                          <div key={index} className="relative group">
-                            <div className="relative overflow-hidden rounded-lg border border-gray-200">
-                              <Image
-                                src={image}
-                                alt={image}
-                                width={200}
-                                height={200}
-                                className="w-full h-48 object-cover transition-transform duration-200 group-hover:scale-105"
-                              />
-                              <button
-                                onClick={() =>
-                                  handleDeleteMedia(image, "image")
-                                }
-                                className="cursor-pointer absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100"
-                                title="Delete image"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Videos Section */}
-                  {productData?.video?.length > 0 && (
-                    <div>
-                      <h2 className="text-md font-medium text-gray-700 mb-3">
-                        Videos
-                      </h2>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {productData?.video?.map((video, index) => (
-                          <div key={index} className="relative group">
-                            <div className="relative overflow-hidden rounded-lg border border-gray-200">
-                              <video
-                                className="w-full h-48 object-cover"
-                                controls
-                                preload="metadata"
-                              >
-                                <source src={video} type="video/mp4" />
-                                Your browser does not support the video tag.
-                              </video>
-                              <button
-                                onClick={() =>
-                                  handleDeleteMedia(video, "video")
-                                }
-                                className="cursor-pointer absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100"
-                                title="Delete video"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Empty State */}
-                  {(productData?.images?.length === 0 ||
-                    !productData?.images) &&
-                    (productData?.video?.length === 0 ||
-                      !productData?.video) && (
-                      <div className="text-center py-8">
-                        <div className="text-gray-400 mb-2">
-                          <svg
-                            className="mx-auto h-12 w-12"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                          </svg>
-                        </div>
-                        <p className="text-gray-500">
-                          No media files available
-                        </p>
-                      </div>
-                    )}
-                </div>
+                <MediaSection
+                  images={productData?.images || []}
+                  videos={productData?.video || []}
+                  editingEnabled={editingProduct}
+                  onDeleteMedia={handleDeleteMedia}
+                  onAddImages={(files) => handleAddImages(files)}
+                  onAddVideos={(files) => handleAddVideos(files)}
+                  newImageFiles={newImageFiles}
+                  newVideoFiles={newVideoFiles}
+                />
               </div>
             </div>
           </div>
         </div>
 
         {/* Simple Variant Delete Popup */}
-        {showVariantDeletePopup && variantToDelete && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-              <div className="flex items-center mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-500 mr-3" />
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Delete{" "}
-                  {productData.productType === "diamond"
-                    ? "Diamond"
-                    : productData.productType === "melee"
-                    ? "Melee"
-                    : productData.productType === "colorstone"
-                    ? "Colorstone"
-                    : productData.productType === "cuts"
-                    ? "Cuts"
-                    : "Alphabet"}{" "}
-                  Variant
-                </h2>
-              </div>
-
-              <div className="mb-6">
-                <p className="text-sm text-gray-600 mb-4">
-                  Are you sure you want to delete this{" "}
-                  {productData.productType === "diamond"
-                    ? "diamond"
-                    : productData.productType === "melee"
-                    ? "melee"
-                    : productData.productType === "colorstone"
-                    ? "colorstone"
-                    : productData.productType === "cuts"
-                    ? "cuts"
-                    : "alphabet"}{" "}
-                  variant?
-                </p>
-                <div className="bg-gray-50 p-3 rounded border">
-                  <p className="text-sm">
-                    <strong>ID:</strong> {variantToDelete.id}
-                  </p>
-                  {productData.productType === "diamond" ? (
-                    <>
-                      <p className="text-sm">
-                        <strong>Color:</strong> {variantToDelete.color}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Clarity:</strong> {variantToDelete.clarity}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Carat Weight:</strong>{" "}
-                        {variantToDelete.caratWeight}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Price:</strong> $
-                        {variantToDelete.price?.toLocaleString()}
-                      </p>
-                    </>
-                  ) : productData.productType === "melee" ? (
-                    <>
-                      <p className="text-sm">
-                        <strong>Sieve Size:</strong> {variantToDelete.sieveSize}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Color Range:</strong>{" "}
-                        {variantToDelete.colorRange}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Clarity Range:</strong>{" "}
-                        {variantToDelete.clarityRange}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Price Per Carat:</strong> $
-                        {variantToDelete.pricePerCarat?.toLocaleString()}
-                      </p>
-                    </>
-                  ) : productData.productType === "colorstone" ? (
-                    <>
-                      <p className="text-sm">
-                        <strong>Dimension:</strong> {variantToDelete.dimension}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Shape:</strong> {variantToDelete.shape}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Carat Weight:</strong>{" "}
-                        {variantToDelete.caratWeight}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Price:</strong> $
-                        {variantToDelete.price?.toLocaleString()}
-                      </p>
-                    </>
-                  ) : productData.productType === "cuts" ? (
-                    <>
-                      <p className="text-sm">
-                        <strong>Carat Weight:</strong>{" "}
-                        {variantToDelete.caratWeight}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Dimension:</strong> {variantToDelete.dimension}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Price:</strong> $
-                        {variantToDelete.price?.toLocaleString()}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-sm">
-                        <strong>Carat Weight:</strong>{" "}
-                        {variantToDelete.caratWeight}
-                      </p>
-                      <p className="text-sm">
-                        <strong>Price:</strong> $
-                        {variantToDelete.price?.toLocaleString()}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => {
-                    setShowVariantDeletePopup(false);
-                    setVariantToDelete(null);
-                  }}
-                  disabled={deletingVariant}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleConfirmVariantDelete}
-                  disabled={deletingVariant}
-                  className="px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded disabled:opacity-50"
-                >
-                  {deletingVariant ? "Deleting..." : "Delete Variant"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <VariantDeletePopup
+          open={showVariantDeletePopup}
+          productType={productData?.productType}
+          variant={variantToDelete}
+          deleting={deletingVariant}
+          onCancel={() => {
+            setShowVariantDeletePopup(false);
+            setVariantToDelete(null);
+          }}
+          onConfirm={handleConfirmVariantDelete}
+        />
 
         {/* Product Delete Popup with SKU Confirmation */}
-        {showProductDeletePopup && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-xs">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 border border-gray-200 shadow-lg">
-              <div className="flex items-center mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-500 mr-3" />
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Delete{" "}
-                  {productData.productType === "diamond"
-                    ? "Diamond"
-                    : productData.productType === "melee"
-                    ? "Melee"
-                    : productData.productType === "colorstone"
-                    ? "Colorstone"
-                    : productData.productType === "cuts"
-                    ? "Cuts"
-                    : "Alphabet"}{" "}
-                  Product
-                </h2>
-              </div>
-
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-2">
-                  Are you sure you want to delete this entire{" "}
-                  {productData.productType === "diamond"
-                    ? "diamond"
-                    : productData.productType === "melee"
-                    ? "melee"
-                    : productData.productType === "colorstone"
-                    ? "colorstone"
-                    : productData.productType === "cuts"
-                    ? "cuts"
-                    : "alphabet"}{" "}
-                  product?
-                </p>
-                <div className="bg-gray-50 p-3 rounded border">
-                  <p className="text-sm">
-                    <strong>Product:</strong> {productData.name}
-                  </p>
-                  <p className="text-sm">
-                    <strong>SKU:</strong> {productData.sku}
-                  </p>
-                  <p className="text-sm">
-                    <strong>Shape:</strong> {productData.shape}
-                  </p>
-                  <p className="text-sm">
-                    <strong>Variants:</strong>{" "}
-                    {productData?.variants?.length || 0}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <p className="text-sm text-red-600 font-medium mb-2">
-                  Type "{productData.sku}" below to confirm deletion:
-                </p>
-                <input
-                  type="text"
-                  value={deleteConfirmationText}
-                  onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
-                  placeholder={`Enter ${productData.sku} to confirm`}
-                />
-              </div>
-
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => {
-                    setShowProductDeletePopup(false);
-                    setDeleteConfirmationText("");
-                  }}
-                  disabled={deletingProduct}
-                  className="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleConfirmProductDelete}
-                  disabled={
-                    deletingProduct ||
-                    deleteConfirmationText !== productData.sku
-                  }
-                  className="cursor-pointer px-4 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {deletingProduct ? "Deleting..." : "Delete Product"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ProductDeletePopup
+          open={showProductDeletePopup}
+          productType={productData?.productType}
+          product={productData}
+          confirmationText={deleteConfirmationText}
+          setConfirmationText={(text) => setDeleteConfirmationText(text)}
+          deleting={deletingProduct}
+          onCancel={() => {
+            setShowProductDeletePopup(false);
+            setDeleteConfirmationText("");
+          }}
+          onConfirm={handleConfirmProductDelete}
+        />
 
         <ToastContainer
           position="top-right"

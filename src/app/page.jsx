@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "@/components/Footer";
@@ -48,37 +49,38 @@ export default function HomePage() {
   const testimonials = [
     {
       quote:
-        "Exceptional quality and service. Their custom sizes were exactly what we needed for a complex design brief.",
-      initials: "AK",
-      name: "Aria Kapoor",
-      title: "New York, USA",
+        "We had a tricky order with unusual size requirements, but they delivered exactly as promised. The stones matched perfectly with our design and the turnaround time was faster than expected.",
+      initials: "AR",
+      name: "Alice Roberts",
+      title: "Interior Designer, New York, USA",
     },
     {
       quote:
-        "Transparent grading and consistent timelines. We rely on them for B2B orders at scale.",
+        "Consistent quality and clear grading reports. For bulk B2B orders, reliability is everything, and they’ve been one of the few suppliers we can depend on.",
       initials: "JD",
-      name: "James Dsouza",
+      name: "John Davis",
       title: "Wholesale Jeweler, Dubai",
     },
     {
       quote:
-        "From antique cuts to portraits, their precision and polish are consistently impressive.",
+        "We often need antique cuts and portrait stones for custom projects. Their polishing and precision work have been top-notch every single time.",
       initials: "SL",
-      name: "Sofia L.",
-      title: "Boutique Studio, London",
+      name: "Sophie Lewis",
+      title: "Boutique Studio Owner, London",
     },
     {
       quote:
-        "I am so impressed with the quality of the diamonds they sent me. They are exactly what I was looking for and the service was excellent.",
-      initials: "ML",
-      name: "Manoj L.",
-      title: "Melbourne, Australia",
+        "The diamonds I ordered arrived exactly as shown in the videos. Clean, well-cut, and excellent communication throughout the process. Definitely ordering again.",
+      initials: "MW",
+      name: "Michael Williams",
+      title: "Retail Jeweler, Melbourne, Australia",
     },
     {
-      quote: "Very good service and quality of the diamonds.",
-      initials: "AR",
-      name: "Amit R.",
-      title: "Sydney, Australia",
+      quote:
+        "Very professional team. The quality of the diamonds exceeded my expectations and delivery was smooth. Great experience overall.",
+      initials: "AT",
+      name: "Andrew Taylor",
+      title: "Private Buyer, Sydney, Australia",
     },
   ];
 
@@ -129,6 +131,19 @@ export default function HomePage() {
     testimonialDeadlineRef.current =
       Date.now() + (testimonialRemainingMs || 6000);
   };
+
+  const sampleInventoryImages = [
+    "/media/IMG_1145.JPG",
+    "/media/IMG_1137.JPG",
+    "/media/IMG_1138.JPG",
+    "/media/IMG_1139.JPG",
+    "/media/IMG_1140.JPG",
+    "/media/IMG_1141.JPG",
+    "/media/IMG_1142.JPG",
+    "/media/IMG_1143.JPG",
+    "/media/IMG_1144.JPG",
+    "/media/IMG_1146.JPG",
+  ];
 
   return (
     <div className="min-h-screen bg-surface">
@@ -188,18 +203,18 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {/* Small Loose Diamonds */}
             <Link
               href="/collections/melee"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://i.etsystatic.com/8335775/r/il/80d1e8/849619294/il_1588xN.849619294_5y77.jpg"
+                <Image
+                  src="/media/melee.webp"
                   alt="Small Loose Diamonds"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -219,11 +234,11 @@ export default function HomePage() {
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://cdn.shopify.com/s/files/1/0536/3086/1474/files/BRC_cut_636x358_59b1bd6e-f14a-42c5-81e6-ecc2cd209418.jpg?v=1626433488"
+                <Image
+                  src="/media/IMG_1133.PNG"
                   alt="Brilliant Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -243,11 +258,11 @@ export default function HomePage() {
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://ourosjewels.com/cdn/shop/files/LG5466_1_00b63814-b0e1-45b7-975e-ebf3abaf0eea_1400x1400.webp?v=1749276960"
+                <Image
+                  src="/media/IMG_1131.PNG"
                   alt="Antique Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -256,7 +271,7 @@ export default function HomePage() {
                   </h3>
                 </div>
                 <div className="absolute top-3 right-3 rounded-full bg-white/85 text-text-dark px-2 py-1 text-xs font-medium shadow-sm group-hover:bg-white">
-                  Vintage
+                  Antique
                 </div>
               </div>
             </Link>
@@ -267,11 +282,11 @@ export default function HomePage() {
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://ourosjewels.com/cdn/shop/files/GEM2238-OJ5377-EWI_1_d4e842cd-9aad-4988-b27c-78dc90cbe2a1_1400x1400.webp?v=1749274849"
+                <Image
+                  src="/media/color stone.jpg"
                   alt="Colored Diamonds"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -285,41 +300,17 @@ export default function HomePage() {
               </div>
             </Link>
 
-            {/* Portuguese Cut */}
-            <Link
-              href="/collections/portuguesecut"
-              className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
-            >
-              <div className="relative aspect-square">
-                <img
-                  src="https://ourosjewels.com/cdn/shop/files/OA1557_1_9b9800d5-5fdd-48df-af28-d7520e91a074_1400x1400.webp?v=1749280901"
-                  alt="Portuguese Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white text-lg font-semibold drop-shadow">
-                    Portuguese Cut
-                  </h3>
-                </div>
-                <div className="absolute top-3 right-3 rounded-full bg-white/85 text-text-dark px-2 py-1 text-xs font-medium shadow-sm group-hover:bg-white">
-                  Portuguese Cut
-                </div>
-              </div>
-            </Link>
-
             {/* Baguette, Tapered & Step Cut */}
             <Link
               href="/collections/stepcut"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://i.etsystatic.com/13062514/r/il/8314b6/2580085146/il_570xN.2580085146_946u.jpg"
+                <Image
+                  src="/media/IMG_1132.PNG"
                   alt="Baguette, Tapered & Step Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -333,41 +324,17 @@ export default function HomePage() {
               </div>
             </Link>
 
-            {/* Rose Cut */}
-            <Link
-              href="/collections/rosecut"
-              className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
-            >
-              <div className="relative aspect-square">
-                <img
-                  src="https://ourosjewels.com/cdn/shop/files/Antique-Shape-Lab-Diamond-Loose_5ef91f99-2d59-49e7-9ae5-23161764a111_1400x1400.webp?v=1749279653"
-                  alt="Rose Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white text-lg font-semibold drop-shadow">
-                    Rose Cut
-                  </h3>
-                </div>
-                <div className="absolute top-3 right-3 rounded-full bg-white/85 text-text-dark px-2 py-1 text-xs font-medium shadow-sm group-hover:bg-white">
-                  Rose Cut
-                </div>
-              </div>
-            </Link>
-
             {/* Old Mine Cut */}
             <Link
               href="/collections/oldcut"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://ourosjewels.com/cdn/shop/files/OA5973-EWI_6_2a6226d3-0a2e-4feb-9fe5-b662c1afab19_1400x1400.webp?v=1749287781"
+                <Image
+                  src="/media/IMG_1136.PNG"
                   alt="Old Mine Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -387,11 +354,11 @@ export default function HomePage() {
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="https://ourosjewels.com/cdn/shop/files/01_49748425-a83f-4c22-be84-c955ba6530cb_1400x1400.webp?v=1750941829"
+                <Image
+                  src="/media/IMG_1144.JPG"
                   alt="Alphabet Cut"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -411,11 +378,11 @@ export default function HomePage() {
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-square">
-                <img
-                  src="/layout.jpg"
+                <Image
+                  src="/media/IMG_1135.PNG"
                   alt="Layout"
-                  loading="lazy"
-                  className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -427,6 +394,385 @@ export default function HomePage() {
                   Layout
                 </div>
               </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Sample Inventory Preview */}
+      <section className="py-16 bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
+              Sample inventory
+            </h2>
+            <p className="text-secondary text-sm md:text-base mt-2">
+              A quick look at recently polished stones
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {sampleInventoryImages.map((src, idx) => (
+              <div
+                key={idx}
+                className="group relative overflow-hidden rounded-xl bg-white border border-neutral-300 shadow-sm hover:shadow-md transition"
+              >
+                <div className="relative aspect-square">
+                  <Image
+                    src={src}
+                    alt={`Sample inventory ${idx + 1}`}
+                    fill
+                    className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Custom Shape Section */}
+      <section className="py-16 bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Content */}
+            <div className="order-2 lg:order-1">
+              <div className="space-y-6">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary-100 text-primary-800 text-sm font-semibold">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  CUSTOM SHAPES
+                </div>
+
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
+                  Any shape you desire — we can create it
+                </h2>
+
+                <div className="space-y-4 text-secondary leading-relaxed">
+                  <p>
+                    Have a specific diamond shape in mind? Whether it's a unique
+                    geometric design, a custom pattern, or even a shape inspired
+                    by a photo you've seen, our master craftsmen can bring your
+                    vision to life.
+                  </p>
+
+                  <p>
+                    Simply send us a photo or sketch of your desired shape, and
+                    we'll work with you to create the perfect custom diamond
+                    that meets your exact specifications.
+                  </p>
+
+                  <p className="font-medium text-text-dark">
+                    No shape is too complex, no design too intricate. Your
+                    imagination is our only limit.
+                  </p>
+                </div>
+
+                <div className="pt-4">
+                  <div className="flex items-center gap-3 text-sm text-secondary">
+                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                    <span>Custom geometric shapes</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-secondary mt-2">
+                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                    <span>Photo-to-diamond conversion</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-secondary mt-2">
+                    <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                    <span>Unlimited design possibilities</span>
+                  </div>
+                </div>
+
+                <div className="pt-6">
+                  <Link
+                    href="/contactus"
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-primary text-white font-semibold shadow-md hover:bg-hover-brand transition-all duration-300 hover:shadow-lg"
+                  >
+                    Send Us Your Design
+                    <svg
+                      className="w-5 h-5 ml-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Image */}
+            <div className="order-1 lg:order-2">
+              <div className="relative overflow-hidden rounded-2xl border border-neutral-300 shadow-sm h-80 lg:h-96">
+                <Image
+                  src="/media/antique.jpg"
+                  alt="Custom diamond shapes and antique cuts"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                    <p className="text-sm text-text-dark font-medium">
+                      "Every custom shape tells a unique story"
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sustainability Section */}
+      <section className="py-16 bg-background-secondary">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Image */}
+            <div className="order-2 lg:order-1">
+              <div className="relative overflow-hidden rounded-2xl border border-neutral-300 shadow-sm h-80 lg:h-96">
+                <Image
+                  src="/media/plant.jpg"
+                  alt="Sustainable plant growth for every order"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="order-1 lg:order-2">
+              <div className="space-y-6">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 text-sm font-semibold">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  DID YOU KNOW?
+                </div>
+
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
+                  At Bespoke Carat, we grow 1 plant for every order — making
+                  your sparkle truly sustainable.
+                </h2>
+
+                <div className="space-y-4 text-secondary leading-relaxed">
+                  <p>
+                    Your Diamond shouldn't just shine beautifully, it should
+                    also make a positive impact. That's why every time you
+                    choose Bespoke Carat, you're not only getting a rare,
+                    one-of-one diamond, but also contributing to a greener
+                    future.
+                  </p>
+
+                  <p>
+                    Because true luxury isn't just about owning something rare —
+                    it's about owning something responsible, meaningful, and
+                    lasting.
+                  </p>
+
+                  <p className="font-medium text-text-dark">
+                    With us, your diamond isn't just grown in the lab — it's
+                    grown with purpose.
+                  </p>
+                </div>
+
+                <div className="pt-4">
+                  <div className="flex items-center gap-3 text-sm text-secondary">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Carbon-neutral diamond production</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-secondary mt-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>1 tree planted for every order</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm text-secondary mt-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>100% sustainable lab-grown process</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Diamond Journal Section */}
+      <section className="py-16 bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
+              Diamond Journal
+            </h2>
+            <p className="text-secondary text-sm md:text-base mt-2">
+              Expert insights, trends, and stories from the world of diamonds
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Portuguese Cut Diamond */}
+            <Link
+              href="/diamondjournal/WhatYouShouldKnowAboutPortugueseCutDiamond"
+              className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
+            >
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/What you Should know about Portuguese Cut Diamond/portuguese.png"
+                  alt="Portuguese Cut Diamond Guide"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                <div className="absolute top-3 left-3 right-3">
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/90 text-text-dark text-xs font-medium shadow-sm">
+                    Diamond Guide
+                  </span>
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-text-dark mb-2 group-hover:text-primary transition-colors">
+                  What You Should Know About Portuguese Cut Diamond
+                </h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Discover the unique characteristics and beauty of Portuguese
+                  cut diamonds, a rare and exquisite cutting style.
+                </p>
+              </div>
+            </Link>
+
+            {/* Celebrity Inspired Engagement Ring */}
+            <Link
+              href="/diamondjournal/CelebrityInspiredEngagementRing"
+              className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
+            >
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/1.jpg"
+                  alt="Celebrity Inspired Engagement Rings"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                <div className="absolute top-3 left-3 right-3">
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/90 text-text-dark text-xs font-medium shadow-sm">
+                    Inspiration
+                  </span>
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-text-dark mb-2 group-hover:text-primary transition-colors">
+                  Celebrity Inspired Engagement Ring
+                </h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Find your dream diamond inspired by celebrity engagement rings
+                  and create your own iconic moment.
+                </p>
+              </div>
+            </Link>
+
+            {/* Natural vs Lab Grown */}
+            <Link
+              href="/diamondjournal/NaturalVsLabGrown"
+              className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
+            >
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/Natural vs Lab grown/Natural vs Lab grown/natural vs lab.jpg"
+                  alt="Natural vs Lab Grown Diamonds"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                <div className="absolute top-3 left-3 right-3">
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/90 text-text-dark text-xs font-medium shadow-sm">
+                    Education
+                  </span>
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-text-dark mb-2 group-hover:text-primary transition-colors">
+                  Natural vs Lab Grown
+                </h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Understand the differences between natural and lab-grown
+                  diamonds to make an informed choice.
+                </p>
+              </div>
+            </Link>
+
+            {/* Understanding Geometric Modern Shapes */}
+            <Link
+              href="/diamondjournal/UnderstandingGeometricModernShapes"
+              className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
+            >
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src="/Understanding Geometric modern shapes/geometric.png"
+                  alt="Understanding Geometric Modern Shapes"
+                  fill
+                  className="object-cover transform transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                <div className="absolute top-3 left-3 right-3">
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/90 text-text-dark text-xs font-medium shadow-sm">
+                    Design
+                  </span>
+                </div>
+              </div>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-text-dark mb-2 group-hover:text-primary transition-colors">
+                  Understanding Geometric Modern Shapes
+                </h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Explore contemporary geometric diamond shapes and their unique
+                  appeal in modern jewelry design.
+                </p>
+              </div>
+            </Link>
+          </div>
+
+          <div className="text-center mt-8">
+            <Link
+              href="/diamondjournal"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-50 text-text-dark font-medium shadow-sm transition"
+            >
+              View All Articles
+              <svg
+                className="w-4 h-4 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </Link>
           </div>
         </div>
@@ -713,11 +1059,12 @@ export default function HomePage() {
               </div>
             </div>
             <div>
-              <div className="relative overflow-hidden rounded-2xl border border-neutral-300 shadow-sm">
-                <img
-                  src="/layout.jpg"
+              <div className="relative overflow-hidden rounded-2xl border border-neutral-300 shadow-sm h-80 md:h-[22rem]">
+                <Image
+                  src="/media/IMG_1135.PNG"
                   alt="Bespoke craftsmanship"
-                  className="w-full h-72 md:h-[22rem] object-cover"
+                  fill
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
               </div>
@@ -727,7 +1074,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-surface">
+      <section className="py-16 bg-background-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">

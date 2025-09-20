@@ -1,232 +1,278 @@
 @import "tailwindcss";
 
 @theme {
-  --color-whitesmoke: #F4F5F6; /* Diamond White */
+  --color-whitesmoke: #f4f5f6; /* Diamond White */
 
   /* Core Brand Colors - Semantic Names */
-  --color-primary: #000080;           /* Navy Blue - primary branding */
-  --color-surface: #F9F9F9;           /* Diamond White - main backgrounds */
-  --color-secondary: #7A7A7A;         /* Slate Gray - secondary elements */
-  --color-neutral: #E1E1E1;           /* Pearl Gray - neutral elements */
-  --color-accent: #D4AF37;            /* Champagne Gold - luxury accents */
-  --color-accent-cool: #A9C3D9;       /* Ice Blue - cool accents */
-  --color-accent-warm: #B76E79;       /* Rose Gold - warm accents */
-  --color-text-dark: #2C2C2C;         /* Charcoal - main text */
+  --color-primary: #000080; /* Navy Blue - primary branding */
+  --color-surface: #f9f9f9; /* Diamond White - main backgrounds */
+  --color-secondary: #7a7a7a; /* Slate Gray - secondary elements */
+  --color-neutral: #e1e1e1; /* Pearl Gray - neutral elements */
+  --color-accent: #d4af37; /* Champagne Gold - luxury accents */
+  --color-accent-cool: #a9c3d9; /* Ice Blue - cool accents */
+  --color-accent-warm: #b76e79; /* Rose Gold - warm accents */
+  --color-text-dark: #2c2c2c; /* Charcoal - main text */
 
   /* Primary Color Scale (Navy Blue variations) */
-  --color-primary-50: #F0F0FF;        /* Very light navy */
-  --color-primary-100: #E1E1FF;       /* Light navy */
-  --color-primary-200: #C3C3FF;       /* Lighter navy */
-  --color-primary-300: #A4A4FF;       /* Medium light navy */
-  --color-primary-400: #8686FF;       /* Medium navy */
-  --color-primary-500: #6767E6;       /* Base navy lighter */
-  --color-primary-600: #4848CC;       /* Darker navy */
-  --color-primary-700: #2929B3;       /* Even darker navy */
-  --color-primary-800: #1A1A99;       /* Very dark navy */
-  --color-primary-900: #000080;       /* Original navy blue */
-  --color-primary-950: #000066;       /* Darkest navy */
+  --color-primary-50: #f0f0ff; /* Very light navy */
+  --color-primary-100: #e1e1ff; /* Light navy */
+  --color-primary-200: #c3c3ff; /* Lighter navy */
+  --color-primary-300: #a4a4ff; /* Medium light navy */
+  --color-primary-400: #8686ff; /* Medium navy */
+  --color-primary-500: #6767e6; /* Base navy lighter */
+  --color-primary-600: #4848cc; /* Darker navy */
+  --color-primary-700: #2929b3; /* Even darker navy */
+  --color-primary-800: #1a1a99; /* Very dark navy */
+  --color-primary-900: #000080; /* Original navy blue */
+  --color-primary-950: #000066; /* Darkest navy */
 
   /* Surface Color Scale (Diamond White variations) */
-  --color-surface-50: #FFFFFF;        /* Pure white */
-  --color-surface-100: #F9F9F9;       /* Original diamond white */
-  --color-surface-200: #F5F5F5;       /* Slightly darker */
-  --color-surface-300: #F0F0F0;       /* Light gray */
-  --color-surface-400: #EBEBEB;       /* Medium light gray */
-  --color-surface-500: #E6E6E6;       /* Medium gray */
-  --color-surface-600: #E1E1E1;       /* Darker surface */
-  --color-surface-700: #DCDCDC;       /* Even darker */
-  --color-surface-800: #D7D7D7;       /* Very dark surface */
-  --color-surface-900: #D2D2D2;       /* Darkest surface */
-  --color-surface-950: #CDCDCD;       /* Darkest */
+  --color-surface-50: #ffffff; /* Pure white */
+  --color-surface-100: #f9f9f9; /* Original diamond white */
+  --color-surface-200: #f5f5f5; /* Slightly darker */
+  --color-surface-300: #f0f0f0; /* Light gray */
+  --color-surface-400: #ebebeb; /* Medium light gray */
+  --color-surface-500: #e6e6e6; /* Medium gray */
+  --color-surface-600: #e1e1e1; /* Darker surface */
+  --color-surface-700: #dcdcdc; /* Even darker */
+  --color-surface-800: #d7d7d7; /* Very dark surface */
+  --color-surface-900: #d2d2d2; /* Darkest surface */
+  --color-surface-950: #cdcdcd; /* Darkest */
 
   /* Secondary Color Scale (Slate Gray variations) */
-  --color-secondary-50: #F7F7F7;      /* Very light secondary */
-  --color-secondary-100: #EFEFEF;     /* Light secondary */
-  --color-secondary-200: #DFDFDF;     /* Lighter secondary */
-  --color-secondary-300: #CFCFCF;     /* Medium light secondary */
-  --color-secondary-400: #BFBFBF;     /* Medium secondary */
-  --color-secondary-500: #AFAFAF;     /* Base secondary lighter */
-  --color-secondary-600: #9F9F9F;     /* Darker secondary */
-  --color-secondary-700: #7A7A7A;     /* Original slate gray */
-  --color-secondary-800: #6B6B6B;     /* Very dark secondary */
-  --color-secondary-900: #5C5C5C;     /* Darkest secondary */
-  --color-secondary-950: #4D4D4D;     /* Darkest */
+  --color-secondary-50: #f7f7f7; /* Very light secondary */
+  --color-secondary-100: #efefef; /* Light secondary */
+  --color-secondary-200: #dfdfdf; /* Lighter secondary */
+  --color-secondary-300: #cfcfcf; /* Medium light secondary */
+  --color-secondary-400: #bfbfbf; /* Medium secondary */
+  --color-secondary-500: #afafaf; /* Base secondary lighter */
+  --color-secondary-600: #9f9f9f; /* Darker secondary */
+  --color-secondary-700: #7a7a7a; /* Original slate gray */
+  --color-secondary-800: #6b6b6b; /* Very dark secondary */
+  --color-secondary-900: #5c5c5c; /* Darkest secondary */
+  --color-secondary-950: #4d4d4d; /* Darkest */
 
   /* Neutral Color Scale (Pearl Gray variations) */
-  --color-neutral-50: #FAFAFA;        /* Very light neutral */
-  --color-neutral-100: #F5F5F5;       /* Light neutral */
-  --color-neutral-200: #F0F0F0;       /* Lighter neutral */
-  --color-neutral-300: #EBEBEB;       /* Medium light neutral */
-  --color-neutral-400: #E6E6E6;       /* Medium neutral */
-  --color-neutral-500: #E3E3E3;       /* Base neutral lighter */
-  --color-neutral-600: #E1E1E1;       /* Original pearl gray */
-  --color-neutral-700: #DADADA;       /* Darker neutral */
-  --color-neutral-800: #D3D3D3;       /* Very dark neutral */
-  --color-neutral-900: #CCCCCC;       /* Darkest neutral */
-  --color-neutral-950: #C5C5C5;       /* Darkest */
+  --color-neutral-50: #fafafa; /* Very light neutral */
+  --color-neutral-100: #f5f5f5; /* Light neutral */
+  --color-neutral-200: #f0f0f0; /* Lighter neutral */
+  --color-neutral-300: #ebebeb; /* Medium light neutral */
+  --color-neutral-400: #e6e6e6; /* Medium neutral */
+  --color-neutral-500: #e3e3e3; /* Base neutral lighter */
+  --color-neutral-600: #e1e1e1; /* Original pearl gray */
+  --color-neutral-700: #dadada; /* Darker neutral */
+  --color-neutral-800: #d3d3d3; /* Very dark neutral */
+  --color-neutral-900: #cccccc; /* Darkest neutral */
+  --color-neutral-950: #c5c5c5; /* Darkest */
 
   /* Accent Color Scale (Champagne Gold variations) */
-  --color-accent-50: #FEFDFB;         /* Very light gold */
-  --color-accent-100: #FDF9F0;        /* Light gold */
-  --color-accent-200: #FAF3E1;        /* Lighter gold */
-  --color-accent-300: #F7EDD2;        /* Medium light gold */
-  --color-accent-400: #F4E7C3;        /* Medium gold */
-  --color-accent-500: #F1E1B4;        /* Base gold lighter */
-  --color-accent-600: #EEDBAA;        /* Slightly darker gold */
-  --color-accent-700: #E8D095;        /* Medium dark gold */
-  --color-accent-800: #DFC470;        /* Darker gold */
-  --color-accent-900: #D4AF37;        /* Original champagne gold */
-  --color-accent-950: #B8941F;        /* Darkest gold */
+  --color-accent-50: #fefdfb; /* Very light gold */
+  --color-accent-100: #fdf9f0; /* Light gold */
+  --color-accent-200: #faf3e1; /* Lighter gold */
+  --color-accent-300: #f7edd2; /* Medium light gold */
+  --color-accent-400: #f4e7c3; /* Medium gold */
+  --color-accent-500: #f1e1b4; /* Base gold lighter */
+  --color-accent-600: #eedbaa; /* Slightly darker gold */
+  --color-accent-700: #e8d095; /* Medium dark gold */
+  --color-accent-800: #dfc470; /* Darker gold */
+  --color-accent-900: #d4af37; /* Original champagne gold */
+  --color-accent-950: #b8941f; /* Darkest gold */
 
   /* Cool Accent Color Scale (Ice Blue variations) */
-  --color-accent-cool-50: #F5F9FC;    /* Very light ice blue */
-  --color-accent-cool-100: #EBF3F9;   /* Light ice blue */
-  --color-accent-cool-200: #D7E7F3;   /* Lighter ice blue */
-  --color-accent-cool-300: #C3DBED;   /* Medium light ice blue */
-  --color-accent-cool-400: #AFCFE7;   /* Medium ice blue */
-  --color-accent-cool-500: #9BC3E1;   /* Base ice blue lighter */
-  --color-accent-cool-600: #A9C3D9;   /* Original ice blue */
-  --color-accent-cool-700: #8FB7D3;   /* Darker ice blue */
-  --color-accent-cool-800: #75ABCD;   /* Very dark ice blue */
-  --color-accent-cool-900: #5B9FC7;   /* Darkest ice blue */
-  --color-accent-cool-950: #4193C1;   /* Darkest */
+  --color-accent-cool-50: #f5f9fc; /* Very light ice blue */
+  --color-accent-cool-100: #ebf3f9; /* Light ice blue */
+  --color-accent-cool-200: #d7e7f3; /* Lighter ice blue */
+  --color-accent-cool-300: #c3dbed; /* Medium light ice blue */
+  --color-accent-cool-400: #afcfe7; /* Medium ice blue */
+  --color-accent-cool-500: #9bc3e1; /* Base ice blue lighter */
+  --color-accent-cool-600: #a9c3d9; /* Original ice blue */
+  --color-accent-cool-700: #8fb7d3; /* Darker ice blue */
+  --color-accent-cool-800: #75abcd; /* Very dark ice blue */
+  --color-accent-cool-900: #5b9fc7; /* Darkest ice blue */
+  --color-accent-cool-950: #4193c1; /* Darkest */
 
   /* Warm Accent Color Scale (Rose Gold variations) */
-  --color-accent-warm-50: #FCF7F8;    /* Very light rose gold */
-  --color-accent-warm-100: #F9EFF1;   /* Light rose gold */
-  --color-accent-warm-200: #F3DFE3;   /* Lighter rose gold */
-  --color-accent-warm-300: #EDCFD5;   /* Medium light rose gold */
-  --color-accent-warm-400: #E7BFC7;   /* Medium rose gold */
-  --color-accent-warm-500: #E1AFB9;   /* Base rose gold lighter */
-  --color-accent-warm-600: #DB9FAB;   /* Slightly darker rose gold */
-  --color-accent-warm-700: #D58F9D;   /* Medium dark rose gold */
-  --color-accent-warm-800: #CF7F8F;   /* Darker rose gold */
-  --color-accent-warm-900: #B76E79;   /* Original rose gold */
-  --color-accent-warm-950: #A05E69;   /* Darkest rose gold */
+  --color-accent-warm-50: #fcf7f8; /* Very light rose gold */
+  --color-accent-warm-100: #f9eff1; /* Light rose gold */
+  --color-accent-warm-200: #f3dfe3; /* Lighter rose gold */
+  --color-accent-warm-300: #edcfd5; /* Medium light rose gold */
+  --color-accent-warm-400: #e7bfc7; /* Medium rose gold */
+  --color-accent-warm-500: #e1afb9; /* Base rose gold lighter */
+  --color-accent-warm-600: #db9fab; /* Slightly darker rose gold */
+  --color-accent-warm-700: #d58f9d; /* Medium dark rose gold */
+  --color-accent-warm-800: #cf7f8f; /* Darker rose gold */
+  --color-accent-warm-900: #b76e79; /* Original rose gold */
+  --color-accent-warm-950: #a05e69; /* Darkest rose gold */
 
   /* Text Dark Color Scale (Charcoal variations) */
-  --color-text-dark-50: #F7F7F7;      /* Very light charcoal */
-  --color-text-dark-100: #EFEFEF;     /* Light charcoal */
-  --color-text-dark-200: #DFDFDF;     /* Lighter charcoal */
-  --color-text-dark-300: #CFCFCF;     /* Medium light charcoal */
-  --color-text-dark-400: #BFBFBF;     /* Medium charcoal */
-  --color-text-dark-500: #7F7F7F;     /* Base charcoal lighter */
-  --color-text-dark-600: #5F5F5F;     /* Darker charcoal */
-  --color-text-dark-700: #3F3F3F;     /* Even darker charcoal */
-  --color-text-dark-800: #2F2F2F;     /* Very dark charcoal */
-  --color-text-dark-900: #2C2C2C;     /* Original charcoal */
-  --color-text-dark-950: #1A1A1A;     /* Darkest charcoal */
+  --color-text-dark-50: #f7f7f7; /* Very light charcoal */
+  --color-text-dark-100: #efefef; /* Light charcoal */
+  --color-text-dark-200: #dfdfdf; /* Lighter charcoal */
+  --color-text-dark-300: #cfcfcf; /* Medium light charcoal */
+  --color-text-dark-400: #bfbfbf; /* Medium charcoal */
+  --color-text-dark-500: #7f7f7f; /* Base charcoal lighter */
+  --color-text-dark-600: #5f5f5f; /* Darker charcoal */
+  --color-text-dark-700: #3f3f3f; /* Even darker charcoal */
+  --color-text-dark-800: #2f2f2f; /* Very dark charcoal */
+  --color-text-dark-900: #2c2c2c; /* Original charcoal */
+  --color-text-dark-950: #1a1a1a; /* Darkest charcoal */
 
   /* Semantic Color Groups */
-  
+
   /* Background Variants */
-  --color-background-primary: #F9F9F9;     /* Main page backgrounds */
-  --color-background-secondary: #FFFFFF;   /* Card/section backgrounds */
-  --color-background-brand: #000080;      /* Brand backgrounds */
-  --color-background-accent: #D4AF37;     /* Accent backgrounds */
-  --color-background-muted: #E1E1E1;      /* Muted backgrounds */
-  --color-background-cool: #A9C3D9;       /* Cool accent backgrounds */
-  --color-background-warm: #B76E79;       /* Warm accent backgrounds */
+  --color-background-primary: #f9f9f9; /* Main page backgrounds */
+  --color-background-secondary: #ffffff; /* Card/section backgrounds */
+  --color-background-brand: #000080; /* Brand backgrounds */
+  --color-background-accent: #d4af37; /* Accent backgrounds */
+  --color-background-muted: #e1e1e1; /* Muted backgrounds */
+  --color-background-cool: #a9c3d9; /* Cool accent backgrounds */
+  --color-background-warm: #b76e79; /* Warm accent backgrounds */
 
   /* Text Variants */
-  --color-text-primary: #2C2C2C;          /* Main headings and body text */
-  --color-text-secondary: #7A7A7A;        /* Secondary text and descriptions */
-  --color-text-muted: #E1E1E1;            /* Subtle text and labels */
-  --color-text-inverse: #F9F9F9;          /* Text on dark backgrounds */
-  --color-text-brand: #000080;            /* Brand text */
-  --color-text-accent: #D4AF37;           /* Accent text and links */
-  --color-text-cool: #A9C3D9;             /* Cool accent text */
-  --color-text-warm: #B76E79;             /* Warm accent text */
+  --color-text-primary: #2c2c2c; /* Main headings and body text */
+  --color-text-secondary: #7a7a7a; /* Secondary text and descriptions */
+  --color-text-muted: #e1e1e1; /* Subtle text and labels */
+  --color-text-inverse: #f9f9f9; /* Text on dark backgrounds */
+  --color-text-brand: #000080; /* Brand text */
+  --color-text-accent: #d4af37; /* Accent text and links */
+  --color-text-cool: #a9c3d9; /* Cool accent text */
+  --color-text-warm: #b76e79; /* Warm accent text */
 
   /* Border Variants */
-  --color-border-primary: #E1E1E1;        /* Main borders */
-  --color-border-secondary: #7A7A7A;      /* Secondary borders */
-  --color-border-accent: #D4AF37;         /* Accent borders */
-  --color-border-brand: #000080;          /* Brand borders */
-  --color-border-light: #F9F9F9;          /* Light borders */
-  --color-border-cool: #A9C3D9;           /* Cool accent borders */
-  --color-border-warm: #B76E79;           /* Warm accent borders */
+  --color-border-primary: #e1e1e1; /* Main borders */
+  --color-border-secondary: #7a7a7a; /* Secondary borders */
+  --color-border-accent: #d4af37; /* Accent borders */
+  --color-border-brand: #000080; /* Brand borders */
+  --color-border-light: #f9f9f9; /* Light borders */
+  --color-border-cool: #a9c3d9; /* Cool accent borders */
+  --color-border-warm: #b76e79; /* Warm accent borders */
 
   /* Interactive States */
-  --color-hover-brand: #000066;           /* Brand hover state */
-  --color-hover-accent: #B8941F;          /* Accent hover state */
-  --color-hover-cool: #8FB7D3;            /* Cool accent hover state */
-  --color-hover-warm: #A05E69;            /* Warm accent hover state */
-  --color-focus-brand: #000080;           /* Focus states */
-  --color-disabled: #E1E1E1;              /* Disabled elements */
+  --color-hover-brand: #000066; /* Brand hover state */
+  --color-hover-accent: #b8941f; /* Accent hover state */
+  --color-hover-cool: #8fb7d3; /* Cool accent hover state */
+  --color-hover-warm: #a05e69; /* Warm accent hover state */
+  --color-focus-brand: #000080; /* Focus states */
+  --color-disabled: #e1e1e1; /* Disabled elements */
 
   /* Font Families */
-  --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-family-serif: "Playfair Display", ui-serif, Georgia, Cambria, serif;
-  --font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
-
+  --font-family-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas,
+    monospace;
 }
 
 /* Keyframes */
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideDown {
-  0% { transform: translateY(-20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  0% { transform: scale(0.9); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes glow {
-  0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.5); }
-  100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+  0% {
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+  }
 }
 
 @keyframes slideInFromTop {
-  0% { 
-    opacity: 0; 
+  0% {
+    opacity: 0;
     transform: translateY(-8px);
   }
-  100% { 
-    opacity: 1; 
+  100% {
+    opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes pulse-primary {
-  0% { 
+  0% {
     box-shadow: 0 0 0 0 rgba(0, 0, 128, 0.4);
   }
-  70% { 
+  70% {
     box-shadow: 0 0 0 10px rgba(0, 0, 128, 0);
   }
-  100% { 
+  100% {
     box-shadow: 0 0 0 0 rgba(0, 0, 128, 0);
   }
 }
 
 @keyframes heartBeat {
-  0% { transform: scale(1); }
-  14% { transform: scale(1.3); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.2); }
-  70% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.2);
+  }
+  70% {
+    transform: scale(1);
+  }
 }
 
 /* Custom Range Slider Styles */
@@ -242,13 +288,13 @@
     border: 2px solid #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   &::-webkit-slider-track {
-    background: #E1E1E1;
+    background: #e1e1e1;
     border-radius: 5px;
     height: 8px;
   }
-  
+
   /* Firefox */
   &::-moz-range-thumb {
     appearance: none;
@@ -260,23 +306,23 @@
     border: 2px solid #ffffff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   &::-moz-range-track {
-    background: #E1E1E1;
+    background: #e1e1e1;
     border-radius: 5px;
     height: 8px;
     border: none;
   }
-  
+
   /* Focus states */
   &:focus {
     outline: none;
   }
-  
+
   &:focus::-webkit-slider-thumb {
     box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2);
   }
-  
+
   &:focus::-moz-range-thumb {
     box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2);
   }
@@ -285,7 +331,7 @@
 /* Dual Range Slider Styles */
 .dual-range-slider {
   pointer-events: all;
-  
+
   /* Webkit browsers */
   &::-webkit-slider-thumb {
     appearance: none;
@@ -299,12 +345,12 @@
     pointer-events: all;
     position: relative;
   }
-  
+
   &::-webkit-slider-track {
     background: transparent;
     height: 8px;
   }
-  
+
   /* Firefox */
   &::-moz-range-thumb {
     appearance: none;
@@ -317,22 +363,22 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     pointer-events: all;
   }
-  
+
   &::-moz-range-track {
     background: transparent;
     height: 8px;
     border: none;
   }
-  
+
   /* Focus states */
   &:focus {
     outline: none;
   }
-  
+
   &:focus::-webkit-slider-thumb {
     box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
   &:focus::-moz-range-thumb {
     box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
   }

@@ -16,6 +16,7 @@ import { useAuth } from "../contexts/AuthContext";
 import SearchCard from "./SearchCard";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import { getAuthToken } from "@/contexts/auth";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function Navbar() {
   const debounceRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+  const authToken = getAuthToken();
 
   const isActivePath = (path) => {
     if (!pathname) return false;
@@ -130,10 +132,9 @@ export default function Navbar() {
         const controller = new AbortController();
         searchAbortRef.current = controller;
 
-        const token = getToken?.();
         const res = await axios.get(`/api/client/product/search`, {
           params: { q: searchQuery.trim() },
-          headers: token ? { Authorization: token } : {},
+          headers: { Authorization: authToken },
           signal: controller.signal,
         });
         const data = Array.isArray(res?.data?.data) ? res.data.data : [];
@@ -216,12 +217,18 @@ export default function Navbar() {
           {/* Logo/Brand */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary-600 rounded-lg flex items-center justify-center">
+              <Image
+                src="/BESPOKE/03.png"
+                alt="Bespoke Carat"
+                width={200}
+                height={40}
+              />
+              {/* <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary-600 rounded-lg flex items-center justify-center">
                 <Gem className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
               <span className="text-lg sm:text-xl font-bold text-text-dark">
                 Bespoke Carat
-              </span>
+              </span> */}
             </Link>
           </div>
 
@@ -473,6 +480,17 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
+
+            <Link
+              href="/diamondjournal"
+              className={`${
+                isActivePath("/diamondjournal")
+                  ? "text-primary"
+                  : "text-secondary"
+              } hover:text-primary-600 px-2 xl:px-3 py-2 text-sm font-medium transition duration-200`}
+            >
+              Diamond Journal
+            </Link>
 
             <Link
               href="/aboutus"
@@ -915,6 +933,16 @@ export default function Navbar() {
                 } hover:text-primary-600 block px-2 sm:px-3 py-2 text-sm sm:text-base font-medium`}
               >
                 Home
+              </Link>
+              <Link
+                href="/diamondjournal"
+                className={`${
+                  isActivePath("/diamondjournal")
+                    ? "text-primary"
+                    : "text-secondary"
+                } hover:text-primary-600 block px-2 sm:px-3 py-2 text-sm sm:text-base font-medium`}
+              >
+                Diamond Journal
               </Link>
               <div className="relative" ref={mobileDiamondDropdownRef}>
                 <button

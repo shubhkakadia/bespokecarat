@@ -34,7 +34,18 @@ export default function ProductSearchPage({ params }) {
   const [searchMaxPrice, setSearchMaxPrice] = useState(100000);
   const [apiError, setApiError] = useState(null);
   const [mobileGridView, setMobileGridView] = useState(2); // 1 or 2 products per row on mobile
+  const [allProducts, setAllProducts] = useState([]); // Cache all products
   const hasSetInitialPriceRange = useRef(false);
+
+  // Melee-specific filter states
+  const [selectedColorRanges, setSelectedColorRanges] = useState([]);
+  const [selectedClarityRanges, setSelectedClarityRanges] = useState([]);
+  const [selectedSieveSizes, setSelectedSieveSizes] = useState([]);
+  const [meleeFilterOptions, setMeleeFilterOptions] = useState({
+    colorRanges: [],
+    clarityRanges: [],
+    sieveSizes: [],
+  });
 
   const productsPerPage = 24;
 
@@ -187,52 +198,97 @@ export default function ProductSearchPage({ params }) {
     };
   };
 
-  // Get products for the current type
+  // Fetch products only when type changes (single API call per type)
   useEffect(() => {
     const loadProducts = async () => {
+      setLoading(true);
       const products = await fetchProducts(type);
+      setAllProducts(products);
 
-      // Set initial price range based on available products (only once)
-      if (!hasSetInitialPriceRange.current) {
+      // Set initial price range based on available products (only once per type)
+      if (
+        !hasSetInitialPriceRange.current ||
+        hasSetInitialPriceRange.current !== type
+      ) {
         const availablePriceRange = getPriceRange(products);
         if (
           !isNaN(availablePriceRange.min) &&
           !isNaN(availablePriceRange.max)
         ) {
           setPriceRange(availablePriceRange);
-          hasSetInitialPriceRange.current = true;
+          hasSetInitialPriceRange.current = type; // Mark this type as initialized
         }
       }
 
-      // Filter products based on search query
-      let filteredProducts = products;
-      if (searchQuery.trim()) {
-        filteredProducts = products.filter(
-          (product) =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.shape?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.description
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase())
-        );
+      // Clear melee filters when not on melee page
+      if (type !== "melee") {
+        setSelectedColorRanges([]);
+        setSelectedClarityRanges([]);
+        setSelectedSieveSizes([]);
+        setMeleeFilterOptions({
+          colorRanges: [],
+          clarityRanges: [],
+          sieveSizes: [],
+        });
+      } else {
+        // Extract melee filter options if applicable
+        const options = getMeleeFilterOptions(products);
+        setMeleeFilterOptions(options);
       }
 
-      // Filter by price range
-      filteredProducts = filterByPrice(
-        filteredProducts,
-        priceRange.min,
-        priceRange.max
-      );
-
-      // Sort products
-      filteredProducts = sortProducts(filteredProducts, sortBy);
-
-      setFilteredProducts(filteredProducts);
-      setCurrentPage(1); // Reset to first page when filtering
+      setLoading(false);
     };
 
     loadProducts();
-  }, [type, searchQuery, sortBy, priceRange]);
+  }, [type]);
+
+  // Apply filters and sorting to cached products (no API calls)
+  useEffect(() => {
+    if (allProducts.length === 0) return;
+
+    // Filter products based on search query
+    let filteredProducts = allProducts;
+    if (searchQuery.trim()) {
+      filteredProducts = allProducts.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.shape?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by price range
+    filteredProducts = filterByPrice(
+      filteredProducts,
+      priceRange.min,
+      priceRange.max
+    );
+
+    // Apply melee-specific filters if applicable
+    if (type === "melee") {
+      filteredProducts = filterMeleeProducts(
+        filteredProducts,
+        selectedColorRanges,
+        selectedClarityRanges,
+        selectedSieveSizes
+      );
+    }
+
+    // Sort products
+    filteredProducts = sortProducts(filteredProducts, sortBy);
+
+    setFilteredProducts(filteredProducts);
+    setCurrentPage(1); // Reset to first page when filtering
+  }, [
+    allProducts,
+    searchQuery,
+    sortBy,
+    priceRange,
+    selectedColorRanges,
+    selectedClarityRanges,
+    selectedSieveSizes,
+    type,
+  ]);
 
   // Get current page products
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -308,6 +364,64 @@ export default function ProductSearchPage({ params }) {
       return imageMedia ? imageMedia.filelink : "/placeholder.jpg";
     }
     return "/placeholder.jpg";
+  };
+
+  // Extract unique filter options from melee products
+  const getMeleeFilterOptions = (products) => {
+    const colorRanges = new Set();
+    const clarityRanges = new Set();
+    const sieveSizes = new Set();
+
+    products.forEach((product) => {
+      if (product.sieve_sizes && product.sieve_sizes.length > 0) {
+        product.sieve_sizes.forEach((sieve) => {
+          if (sieve.color_range) colorRanges.add(sieve.color_range);
+          if (sieve.clarity_range) clarityRanges.add(sieve.clarity_range);
+          if (sieve.size) sieveSizes.add(sieve.size);
+        });
+      }
+    });
+
+    return {
+      colorRanges: Array.from(colorRanges).sort(),
+      clarityRanges: Array.from(clarityRanges).sort(),
+      sieveSizes: Array.from(sieveSizes).sort(),
+    };
+  };
+
+  // Filter melee products based on selected melee filters
+  const filterMeleeProducts = (
+    products,
+    colorRanges,
+    clarityRanges,
+    sieveSizes
+  ) => {
+    if (
+      type !== "melee" ||
+      (colorRanges.length === 0 &&
+        clarityRanges.length === 0 &&
+        sieveSizes.length === 0)
+    ) {
+      return products;
+    }
+
+    return products.filter((product) => {
+      if (!product.sieve_sizes || product.sieve_sizes.length === 0) {
+        return false;
+      }
+
+      return product.sieve_sizes.some((sieve) => {
+        const colorMatch =
+          colorRanges.length === 0 || colorRanges.includes(sieve.color_range);
+        const clarityMatch =
+          clarityRanges.length === 0 ||
+          clarityRanges.includes(sieve.clarity_range);
+        const sizeMatch =
+          sieveSizes.length === 0 || sieveSizes.includes(sieve.size);
+
+        return colorMatch && clarityMatch && sizeMatch;
+      });
+    });
   };
 
   // Product descriptions by type
@@ -535,6 +649,155 @@ export default function ProductSearchPage({ params }) {
                         </div>
                       </div>
                     </div>
+
+                    {/* Melee-specific filters */}
+                    {type === "melee" && (
+                      <>
+                        {/* Reset Melee Filters Button */}
+                        {(selectedColorRanges.length > 0 ||
+                          selectedClarityRanges.length > 0 ||
+                          selectedSieveSizes.length > 0) && (
+                          <div className="mb-4 xl:mb-6">
+                            <button
+                              onClick={() => {
+                                setSelectedColorRanges([]);
+                                setSelectedClarityRanges([]);
+                                setSelectedSieveSizes([]);
+                              }}
+                              className="cursor-pointer w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg text-xs xl:text-sm font-medium transition-colors border border-gray-300 flex items-center justify-center gap-2"
+                            >
+                              Reset Melee Filters
+                              <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs">
+                                {selectedColorRanges.length +
+                                  selectedClarityRanges.length +
+                                  selectedSieveSizes.length}
+                              </span>
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Color Range Filter */}
+                        <div>
+                          <h4 className="text-xs xl:text-sm font-semibold text-text-dark mb-3 xl:mb-4">
+                            Color Range
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {meleeFilterOptions.colorRanges.map(
+                              (colorRange) => {
+                                const isSelected =
+                                  selectedColorRanges.includes(colorRange);
+                                return (
+                                  <button
+                                    key={colorRange}
+                                    onClick={() => {
+                                      if (isSelected) {
+                                        setSelectedColorRanges(
+                                          selectedColorRanges.filter(
+                                            (c) => c !== colorRange
+                                          )
+                                        );
+                                      } else {
+                                        setSelectedColorRanges([
+                                          ...selectedColorRanges,
+                                          colorRange,
+                                        ]);
+                                      }
+                                    }}
+                                    className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                      isSelected
+                                        ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                        : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                                    }`}
+                                  >
+                                    {colorRange}
+                                  </button>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Clarity Range Filter */}
+                        <div>
+                          <h4 className="text-xs xl:text-sm font-semibold text-text-dark mb-3 xl:mb-4">
+                            Clarity Range
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {meleeFilterOptions.clarityRanges.map(
+                              (clarityRange) => {
+                                const isSelected =
+                                  selectedClarityRanges.includes(clarityRange);
+                                return (
+                                  <button
+                                    key={clarityRange}
+                                    onClick={() => {
+                                      if (isSelected) {
+                                        setSelectedClarityRanges(
+                                          selectedClarityRanges.filter(
+                                            (c) => c !== clarityRange
+                                          )
+                                        );
+                                      } else {
+                                        setSelectedClarityRanges([
+                                          ...selectedClarityRanges,
+                                          clarityRange,
+                                        ]);
+                                      }
+                                    }}
+                                    className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                      isSelected
+                                        ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                        : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                                    }`}
+                                  >
+                                    {clarityRange}
+                                  </button>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Sieve Size Filter */}
+                        <div>
+                          <h4 className="text-xs xl:text-sm font-semibold text-text-dark mb-3 xl:mb-4">
+                            Sieve Size
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {meleeFilterOptions.sieveSizes.map((sieveSize) => {
+                              const isSelected =
+                                selectedSieveSizes.includes(sieveSize);
+                              return (
+                                <button
+                                  key={sieveSize}
+                                  onClick={() => {
+                                    if (isSelected) {
+                                      setSelectedSieveSizes(
+                                        selectedSieveSizes.filter(
+                                          (s) => s !== sieveSize
+                                        )
+                                      );
+                                    } else {
+                                      setSelectedSieveSizes([
+                                        ...selectedSieveSizes,
+                                        sieveSize,
+                                      ]);
+                                    }
+                                  }}
+                                  className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                    isSelected
+                                      ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                                  }`}
+                                >
+                                  {sieveSize}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -729,6 +992,155 @@ export default function ProductSearchPage({ params }) {
                         ).toLocaleString()}
                       </div>
                     </div>
+
+                    {/* Melee-specific filters for mobile */}
+                    {type === "melee" && (
+                      <>
+                        {/* Reset Melee Filters Button */}
+                        {(selectedColorRanges.length > 0 ||
+                          selectedClarityRanges.length > 0 ||
+                          selectedSieveSizes.length > 0) && (
+                          <div className="mt-4 pt-4 border-t border-neutral">
+                            <button
+                              onClick={() => {
+                                setSelectedColorRanges([]);
+                                setSelectedClarityRanges([]);
+                                setSelectedSieveSizes([]);
+                              }}
+                              className="w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 rounded-lg text-xs sm:text-sm font-medium transition-colors border border-gray-300 flex items-center justify-center gap-2"
+                            >
+                              Reset Melee Filters
+                              <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-xs">
+                                {selectedColorRanges.length +
+                                  selectedClarityRanges.length +
+                                  selectedSieveSizes.length}
+                              </span>
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Color Range Filter */}
+                        <div className="mt-4 pt-4 border-t border-neutral">
+                          <h4 className="text-xs sm:text-sm font-semibold text-text-dark mb-3 sm:mb-4">
+                            Color Range
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {meleeFilterOptions.colorRanges.map(
+                              (colorRange) => {
+                                const isSelected =
+                                  selectedColorRanges.includes(colorRange);
+                                return (
+                                  <button
+                                    key={colorRange}
+                                    onClick={() => {
+                                      if (isSelected) {
+                                        setSelectedColorRanges(
+                                          selectedColorRanges.filter(
+                                            (c) => c !== colorRange
+                                          )
+                                        );
+                                      } else {
+                                        setSelectedColorRanges([
+                                          ...selectedColorRanges,
+                                          colorRange,
+                                        ]);
+                                      }
+                                    }}
+                                    className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                      isSelected
+                                        ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                        : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                                    }`}
+                                  >
+                                    {colorRange}
+                                  </button>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Clarity Range Filter */}
+                        <div className="mt-4 pt-4 border-t border-neutral">
+                          <h4 className="text-xs sm:text-sm font-semibold text-text-dark mb-3 sm:mb-4">
+                            Clarity Range
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {meleeFilterOptions.clarityRanges.map(
+                              (clarityRange) => {
+                                const isSelected =
+                                  selectedClarityRanges.includes(clarityRange);
+                                return (
+                                  <button
+                                    key={clarityRange}
+                                    onClick={() => {
+                                      if (isSelected) {
+                                        setSelectedClarityRanges(
+                                          selectedClarityRanges.filter(
+                                            (c) => c !== clarityRange
+                                          )
+                                        );
+                                      } else {
+                                        setSelectedClarityRanges([
+                                          ...selectedClarityRanges,
+                                          clarityRange,
+                                        ]);
+                                      }
+                                    }}
+                                    className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                      isSelected
+                                        ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                        : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                                    }`}
+                                  >
+                                    {clarityRange}
+                                  </button>
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Sieve Size Filter */}
+                        <div className="mt-4 pt-4 border-t border-neutral">
+                          <h4 className="text-xs sm:text-sm font-semibold text-text-dark mb-3 sm:mb-4">
+                            Sieve Size
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {meleeFilterOptions.sieveSizes.map((sieveSize) => {
+                              const isSelected =
+                                selectedSieveSizes.includes(sieveSize);
+                              return (
+                                <button
+                                  key={sieveSize}
+                                  onClick={() => {
+                                    if (isSelected) {
+                                      setSelectedSieveSizes(
+                                        selectedSieveSizes.filter(
+                                          (s) => s !== sieveSize
+                                        )
+                                      );
+                                    } else {
+                                      setSelectedSieveSizes([
+                                        ...selectedSieveSizes,
+                                        sieveSize,
+                                      ]);
+                                    }
+                                  }}
+                                  className={`cursor-pointer px-2 sm:px-3 py-1.5 sm:py-2 border rounded-md text-xs sm:text-sm transition-all duration-200 ${
+                                    isSelected
+                                      ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                                      : "bg-surface-50 text-text-dark border-surface-300 hover:bg-surface-200 hover:shadow-sm"
+                                  }`}
+                                >
+                                  {sieveSize}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
@@ -758,8 +1170,12 @@ export default function ProductSearchPage({ params }) {
                     {apiError}
                   </p>
                   <button
-                    onClick={() => {
-                      fetchProducts(type);
+                    onClick={async () => {
+                      setLoading(true);
+                      setApiError(null);
+                      const products = await fetchProducts(type);
+                      setAllProducts(products);
+                      setLoading(false);
                     }}
                     className="px-3 sm:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm sm:text-base"
                   >
@@ -786,6 +1202,12 @@ export default function ProductSearchPage({ params }) {
                           setSearchQuery("");
                           setPriceRange({ min: 0, max: 100000 });
                           setSortBy("relevance");
+                          // Clear melee filters if applicable
+                          if (type === "melee") {
+                            setSelectedColorRanges([]);
+                            setSelectedClarityRanges([]);
+                            setSelectedSieveSizes([]);
+                          }
                         }}
                         className="px-6 sm:px-8 py-2 sm:py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base"
                       >
