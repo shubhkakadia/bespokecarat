@@ -35,10 +35,10 @@ export default function UnderstandingGeometricModernShapesPage() {
   return (
     <>
       <Navbar />
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -46,22 +46,22 @@ export default function UnderstandingGeometricModernShapesPage() {
               Diamond Journal
             </Link>
             <span>/</span>
-            <span>Understanding Geometric Modern Shapes</span>
+            <span className="truncate">Understanding Geometric Modern Shapes</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Understanding Modern Geometric Shapes
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span>Published on December 2024</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>6 min read</span>
-            <span>•</span>
-            <span>Design & Aesthetics</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">Design & Aesthetics</span>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-gray-100">
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
             src="/Understanding Geometric modern shapes/geometric.png"
             alt="Understanding Modern Geometric Shapes"
@@ -73,7 +73,7 @@ export default function UnderstandingGeometricModernShapesPage() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <div className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
             In the world of jewelry and design, geometric shapes represent the
             perfect marriage of mathematical precision and artistic beauty.
             Modern geometric diamond cuts offer a fresh, contemporary
@@ -93,7 +93,7 @@ export default function UnderstandingGeometricModernShapesPage() {
             properties that make diamonds so desirable.
           </p>
 
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Why Geometric Shapes Matter
             </h3>
@@ -132,8 +132,8 @@ export default function UnderstandingGeometricModernShapesPage() {
             who appreciate both vintage charm and contemporary style.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Hexagon Cut Features
               </h4>
@@ -144,7 +144,7 @@ export default function UnderstandingGeometricModernShapesPage() {
                 <li>• Excellent for architectural-inspired jewelry</li>
               </ul>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Best Settings
               </h4>
@@ -167,11 +167,11 @@ export default function UnderstandingGeometricModernShapesPage() {
             appreciating the mathematical beauty of regular polygons.
           </p>
 
-          <div className="bg-purple-50 rounded-2xl p-8 mb-8">
+          <div className="bg-purple-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Octagon Cut Advantages
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Visual Appeal
@@ -208,7 +208,7 @@ export default function UnderstandingGeometricModernShapesPage() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Kite Shape Characteristics
               </h4>
@@ -219,7 +219,7 @@ export default function UnderstandingGeometricModernShapesPage() {
                 <li>• Perfect for modern, artistic designs</li>
               </ul>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Design Applications
               </h4>
@@ -243,11 +243,11 @@ export default function UnderstandingGeometricModernShapesPage() {
             geometric form doesn't compromise the diamond's brilliance and fire.
           </p>
 
-          <div className="bg-blue-50 rounded-2xl p-8 mb-8">
+          <div className="bg-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Technical Considerations
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Mathematical Precision
@@ -287,7 +287,7 @@ export default function UnderstandingGeometricModernShapesPage() {
 
           <div className="space-y-6 mb-8">
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-[11px] sm:text-sm">
                 1
               </div>
               <div>
@@ -303,7 +303,7 @@ export default function UnderstandingGeometricModernShapesPage() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-[11px] sm:text-sm">
                 2
               </div>
               <div>
@@ -319,7 +319,7 @@ export default function UnderstandingGeometricModernShapesPage() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-[11px] sm:text-sm">
                 3
               </div>
               <div>
@@ -335,7 +335,7 @@ export default function UnderstandingGeometricModernShapesPage() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-[11px] sm:text-sm">
                 4
               </div>
               <div>
@@ -364,7 +364,7 @@ export default function UnderstandingGeometricModernShapesPage() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Style Considerations
               </h4>
@@ -375,7 +375,7 @@ export default function UnderstandingGeometricModernShapesPage() {
                 <li>• Long-term style evolution</li>
               </ul>
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-5 sm:p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Practical Factors
               </h4>
@@ -439,7 +439,7 @@ export default function UnderstandingGeometricModernShapesPage() {
             </div>
           </div>
 
-          <div className="bg-primary-50 rounded-2xl p-8">
+          <div className="bg-primary-50 rounded-xl sm:rounded-2xl p-6 sm:p-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Explore Geometric Beauty at Bespoke Carat
             </h3>
@@ -469,14 +469,14 @@ export default function UnderstandingGeometricModernShapesPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex justify-between items-center">
+        <nav className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
             <Link
               href="/diamondjournal/Top10EngagementRingtrendsin2025"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -502,7 +502,7 @@ export default function UnderstandingGeometricModernShapesPage() {
               </span>
               <span className="sm:hidden">Next Article</span>
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

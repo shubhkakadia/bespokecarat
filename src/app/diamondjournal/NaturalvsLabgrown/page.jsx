@@ -33,10 +33,10 @@ export default function NaturalVsLabGrownPage() {
   return (
     <>
       <Navbar />
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -46,21 +46,21 @@ export default function NaturalVsLabGrownPage() {
             <span>/</span>
             <span>Natural vs Lab Grown</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Lab Grown Diamonds vs Natural Diamonds: What Modern Couples Should
             Know
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span>Published on December 2024</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>8 min read</span>
-            <span>•</span>
-            <span>Education</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">Education</span>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-gray-100">
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
             src="/Natural vs Lab grown/Natural vs Lab grown/natural vs lab.jpg"
             alt="Natural vs Lab Grown Diamonds"
@@ -72,7 +72,7 @@ export default function NaturalVsLabGrownPage() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <div className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
             When it comes to choosing the perfect diamond for your engagement
             ring, understanding the differences between lab-grown and natural
             diamonds is crucial. Both options offer stunning beauty, but they
@@ -92,11 +92,11 @@ export default function NaturalVsLabGrownPage() {
             controlled laboratory environments using advanced technology.
           </p>
 
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Key Similarities
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-semibold">✓</span>
@@ -132,7 +132,7 @@ export default function NaturalVsLabGrownPage() {
             Natural Diamonds: The Earth's Masterpiece
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                 Advantages
@@ -185,7 +185,7 @@ export default function NaturalVsLabGrownPage() {
             Lab-Grown Diamonds: The Future of Luxury
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                 Advantages
@@ -247,11 +247,11 @@ export default function NaturalVsLabGrownPage() {
             of mind.
           </p>
 
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 mb-8">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Ethical Advantages of Lab-Grown Diamonds
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Human Rights
@@ -289,7 +289,7 @@ export default function NaturalVsLabGrownPage() {
             tell their geological story.
           </p>
 
-          <div className="overflow-x-auto mb-8">
+          <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 mb-8">
             <table className="w-full border-collapse border border-gray-300 rounded-lg">
               <thead>
                 <tr className="bg-gray-50">
@@ -365,7 +365,7 @@ export default function NaturalVsLabGrownPage() {
             rather than an investment, making this factor less critical.
           </p>
 
-          <div className="bg-amber-50 rounded-2xl p-8 mb-8">
+          <div className="bg-amber-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Important Considerations
             </h3>
@@ -407,7 +407,7 @@ export default function NaturalVsLabGrownPage() {
             environmental impact, or getting the best value for your budget.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Choose Natural Diamonds If:
@@ -434,7 +434,7 @@ export default function NaturalVsLabGrownPage() {
             </div>
           </div>
 
-          <div className="bg-primary-50 rounded-2xl p-8">
+          <div className="bg-primary-50 rounded-xl sm:rounded-2xl p-6 sm:p-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Expert Guidance at Bespoke Carat
             </h3>
@@ -463,14 +463,14 @@ export default function NaturalVsLabGrownPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex justify-between items-center">
+        <nav className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
             <Link
               href="/diamondjournal/HowCutaffectsPerosnality&Energy"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

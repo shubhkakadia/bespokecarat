@@ -32,10 +32,10 @@ export default function OwnAShapeNoOneElseHasPage() {
   return (
     <>
       <Navbar />
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -45,20 +45,20 @@ export default function OwnAShapeNoOneElseHasPage() {
             <span>/</span>
             <span>Own a Shape No One Else Has</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Own a Shape No One Else Has
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span>Published on December 2024</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>6 min read</span>
-            <span>•</span>
-            <span>Custom Design</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">Custom Design</span>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-gray-100">
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
             src="/Own a Shape no one else has/own a shape.png"
             alt="Own a Shape No One Else Has"
@@ -70,7 +70,7 @@ export default function OwnAShapeNoOneElseHasPage() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <div className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
             In a world where trends come and go, owning a truly unique piece of
             jewelry becomes a statement of individuality. At Bespoke Carat, we
             believe that your diamond should be as unique as your love story.
@@ -88,7 +88,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             or create a piece that truly stands out from the crowd.
           </p>
 
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 mb-8">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Why Choose a Custom Shape?
             </h3>
@@ -128,7 +128,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             clean lines and architectural beauty.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Hexagon Cut
@@ -160,7 +160,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             while maintaining the diamond's inherent brilliance.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Leaf Shape
@@ -191,7 +191,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             diamonds tell your unique story.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Initial Shapes
@@ -224,7 +224,7 @@ export default function OwnAShapeNoOneElseHasPage() {
 
           <div className="space-y-6 mb-8">
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm">
                 1
               </div>
               <div>
@@ -241,7 +241,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm">
                 2
               </div>
               <div>
@@ -257,7 +257,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm">
                 3
               </div>
               <div>
@@ -273,7 +273,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+              <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-semibold text-xs sm:text-sm">
                 4
               </div>
               <div>
@@ -300,11 +300,11 @@ export default function OwnAShapeNoOneElseHasPage() {
             your custom shape maintains optimal beauty and durability.
           </p>
 
-          <div className="bg-blue-50 rounded-2xl p-8 mb-8">
+          <div className="bg-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Key Technical Factors
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-semibold">•</span>
@@ -347,11 +347,11 @@ export default function OwnAShapeNoOneElseHasPage() {
             owning something truly unique that can never be replicated.
           </p>
 
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 mb-8">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Value of Custom Shapes
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Emotional Value
@@ -388,7 +388,7 @@ export default function OwnAShapeNoOneElseHasPage() {
             that's not just beautiful, but truly one-of-a-kind.
           </p>
 
-          <div className="bg-primary-50 rounded-2xl p-8">
+          <div className="bg-primary-50 rounded-xl sm:rounded-2xl p-6 sm:p-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Ready to Create Something Unique?
             </h3>
@@ -416,14 +416,14 @@ export default function OwnAShapeNoOneElseHasPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex justify-between items-center">
+        <nav className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
             <Link
               href="/diamondjournal/NaturalvsLabgrown"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

@@ -32,6 +32,8 @@ export default function ProductPage({ params }) {
   const [quantity, setQuantity] = useState(1);
   const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
 
   // Variant selection states
   const [selectedColor, setSelectedColor] = useState("");
@@ -709,6 +711,29 @@ export default function ProductPage({ params }) {
     }
   };
 
+  const handleTouchStart = (e) => {
+    if (e.changedTouches && e.changedTouches.length > 0) {
+      setTouchStartX(e.changedTouches[0].clientX);
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (e.changedTouches && e.changedTouches.length > 0 && touchStartX !== null) {
+      const endX = e.changedTouches[0].clientX;
+      setTouchEndX(endX);
+      const deltaX = endX - touchStartX;
+      if (Math.abs(deltaX) > 30) {
+        if (deltaX < 0) {
+          nextMedia();
+        } else {
+          prevMedia();
+        }
+      }
+      setTouchStartX(null);
+      setTouchEndX(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-whitesmoke">
@@ -877,12 +902,14 @@ export default function ProductPage({ params }) {
         </div>
 
         {/* Main Product Section */}
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8 pb-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-12">
             {/* Left Side - Images */}
             <div className="space-y-3 sm:space-y-4">
               {/* Main Media Display */}
-              <div className="relative aspect-square bg-surface-100 rounded-lg overflow-hidden shadow-sm">
+              <div className="relative aspect-square bg-surface-100 rounded-md sm:rounded-lg overflow-hidden shadow-sm"
+                   onTouchStart={handleTouchStart}
+                   onTouchEnd={handleTouchEnd}>
                 {currentMediaList.length > 0 &&
                 currentMediaIndex >= 0 &&
                 currentMediaIndex < currentMediaList.length &&
@@ -934,7 +961,7 @@ export default function ProductPage({ params }) {
               </div>
               {/* Media Thumbnails */}
               {currentMediaList.filter((media) => media).length > 1 && (
-                <div className="flex justify-center space-x-2 overflow-x-auto pb-2">
+                <div className="flex justify-center space-x-2 overflow-x-auto pb-2 -mx-1 px-1 sm:mx-0 sm:px-0">
                   {currentMediaList.map(
                     (media, index) =>
                       media && (
@@ -983,7 +1010,7 @@ export default function ProductPage({ params }) {
             <div className="space-y-4 sm:space-y-6">
               {/* Product Title and Basic Info */}
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-dark mb-2 sm:mb-3">
+                <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold text-text-dark mb-2 sm:mb-3">
                   {product.name}
                 </h1>
                 <p className="text-sm sm:text-base text-secondary-700 mb-1 sm:mb-2">
@@ -1041,9 +1068,18 @@ export default function ProductPage({ params }) {
                     </p>
                   )}
                 </div>
-                <p className="text-sm sm:text-base lg:text-lg text-text-dark leading-relaxed">
-                  {product.description}
-                </p>
+
+                {/* Description */}
+                {product?.description && (
+                  <div className="mt-4 pt-4 border-t border-surface-300">
+                    <h3 className="text-base sm:text-lg font-semibold text-text-dark mb-2">
+                      Description
+                    </h3>
+                    <p className="text-sm sm:text-base lg:text-lg text-text-dark leading-relaxed">
+                      {product.description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Variants Selection */}
@@ -1440,7 +1476,10 @@ export default function ProductPage({ params }) {
                 currentVariant.price_per_carat ||
                 (product.product_type === "layouts" && product.price)) && (
                 <div className="border-b border-surface-300 pb-4 sm:pb-6">
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary-600">
+                  <h3 className="text-base sm:text-lg font-semibold text-text-dark mb-2">
+                    Pricing
+                  </h3>
+                  <div className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold text-primary-600">
                     {product.product_type === "layouts"
                       ? `$${product.price?.toLocaleString()}`
                       : product.product_type === "melees"
@@ -1514,8 +1553,11 @@ export default function ProductPage({ params }) {
               )}
 
               {/* Certification */}
-              <div className="bg-accent-50 p-4 rounded-lg">
-                <p className="text-sm font-semibold text-accent-800">
+              <div className="bg-accent-50 p-4 rounded-md sm:rounded-lg">
+                <h3 className="text-base sm:text-lg font-semibold text-accent-800 mb-1">
+                  Certification
+                </h3>
+                <p className="text-sm text-accent-800">
                   Certified by {product.certification}
                 </p>
                 <p className="text-sm text-accent-700">
@@ -1549,7 +1591,7 @@ export default function ProductPage({ params }) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="hidden sm:flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={handleAddToCart}
                   className="cursor-pointer flex-1 bg-primary-600 text-white py-3 sm:py-4 px-6 rounded-lg hover:bg-primary-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
@@ -1561,7 +1603,7 @@ export default function ProductPage({ params }) {
                 </button>
                 <button
                   onClick={handleLike}
-                  className={`cursor-pointer p-3 sm:p-4 rounded-lg border transition-all duration-200 ${
+                  className={`cursor-pointer p-3 sm:p-4 rounded-lg border transition-all duration-200 self-start sm:self-auto ${
                     isLiked
                       ? "bg-red-50 border-red-300 text-red-600 shadow-md"
                       : "bg-surface-50 border-surface-300 text-secondary-700 hover:bg-surface-100 hover:shadow-sm"
@@ -1580,14 +1622,14 @@ export default function ProductPage({ params }) {
                 <h3 className="text-base sm:text-lg font-semibold text-text-dark">
                   Quick Contact
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   {/* Email */}
 
                   {/* message: hello */}
 
                   <a
                     href="mailto:sales@khodalgems.com"
-                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 sm:py-4 px-4 border border-primary-200 text-primary-600 rounded-lg hover:bg-primary-50 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="cursor-pointer col-span-1 flex items-center justify-center space-x-2 py-3 sm:py-4 px-4 border border-primary-200 text-primary-600 rounded-lg hover:bg-primary-50 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     <Mail className="w-4 h-4" />
                     <span className="text-sm sm:text-base font-medium">
@@ -1600,7 +1642,7 @@ export default function ProductPage({ params }) {
                     href={`https://wa.me/+919409658456?text=${getWhatsAppMessage()}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="cursor-pointer flex items-center justify-center space-x-2 py-3 sm:py-4 px-4 border border-green-200 text-green-600 rounded-lg hover:bg-green-50 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="cursor-pointer col-span-1 flex items-center justify-center space-x-2 py-3 sm:py-4 px-4 border border-green-200 text-green-600 rounded-lg hover:bg-green-50 transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span className="text-sm sm:text-base font-medium">
@@ -1632,6 +1674,30 @@ export default function ProductPage({ params }) {
               </div>
             </div> */}
             </div>
+          </div>
+        </div>
+
+        {/* Sticky Bottom Action Bar (Mobile) - contained within product page */}
+        <div className="sm:hidden sticky bottom-0 z-50 w-full bg-white border-t border-surface-300 p-3">
+          <div className="max-w-7xl mx-auto px-3 flex items-center gap-3">
+            <button
+              onClick={handleLike}
+              aria-label="Like"
+              className={`cursor-pointer p-3 rounded-lg border transition-all duration-200 ${
+                isLiked
+                  ? "bg-red-50 border-red-300 text-red-600 shadow-md"
+                  : "bg-surface-50 border-surface-300 text-secondary-700 hover:bg-surface-100 hover:shadow-sm"
+              }`}
+            >
+              <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
+            </button>
+            <button
+              onClick={handleAddToCart}
+              className="cursor-pointer flex-1 bg-primary-600 text-white py-3 px-4 rounded-lg hover:bg-primary-700 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              <span className="text-sm font-medium">Add to Cart</span>
+            </button>
           </div>
         </div>
 

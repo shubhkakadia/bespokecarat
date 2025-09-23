@@ -33,10 +33,10 @@ export default function Top10EngagementRingTrends2025Page() {
   return (
     <>
       <Navbar />
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -46,20 +46,20 @@ export default function Top10EngagementRingTrends2025Page() {
             <span>/</span>
             <span>Top 10 Engagement Ring Trends in 2025</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Top 10 Engagement Ring Trends in 2025
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span>Published on December 2024</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>8 min read</span>
-            <span>•</span>
-            <span>Trends & Style</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">Trends & Style</span>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-gray-100">
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
             src="/Top 10 Engagement Ring trends in 2025/top 10 engagement rings.jpg"
             alt="Top 10 Engagement Ring Trends in 2025"
@@ -71,7 +71,7 @@ export default function Top10EngagementRingTrends2025Page() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <div className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
             2025 is bringing exciting new trends to engagement rings, blending
             sustainability, personalization, and timeless elegance. From
             lab-grown diamonds to vintage-inspired designs, discover what's
@@ -90,7 +90,7 @@ export default function Top10EngagementRingTrends2025Page() {
             unique personalities.
           </p>
 
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-8">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               What's Driving 2025 Trends
             </h3>
@@ -118,7 +118,7 @@ export default function Top10EngagementRingTrends2025Page() {
             1. Lab-Grown & Ethical Diamonds
           </h2>
 
-          <div className="bg-green-50 rounded-2xl p-8 mb-8">
+          <div className="bg-green-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               The Ethical Choice
             </h3>
@@ -129,7 +129,7 @@ export default function Top10EngagementRingTrends2025Page() {
               quality as natural stones while addressing environmental and
               ethical concerns.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Why They're Trending
@@ -159,7 +159,7 @@ export default function Top10EngagementRingTrends2025Page() {
             2. Vintage-Inspired Art Deco Revival
           </h2>
 
-          <div className="bg-amber-50 rounded-2xl p-8 mb-8">
+          <div className="bg-amber-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Roaring 2020s Glamour
             </h3>
@@ -168,7 +168,7 @@ export default function Top10EngagementRingTrends2025Page() {
               2025. These geometric, sophisticated designs from the 1920s and
               1930s offer timeless elegance with modern appeal.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Key Features
@@ -198,7 +198,7 @@ export default function Top10EngagementRingTrends2025Page() {
             3. Colored Gemstone Accents
           </h2>
 
-          <div className="bg-purple-50 rounded-2xl p-8 mb-8">
+          <div className="bg-purple-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Beyond Traditional Diamonds
             </h3>
@@ -253,7 +253,7 @@ export default function Top10EngagementRingTrends2025Page() {
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Thin Band Benefits
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-gray-600 font-semibold">•</span>
@@ -372,11 +372,11 @@ export default function Top10EngagementRingTrends2025Page() {
             environmental values.
           </p>
 
-          <div className="bg-green-50 rounded-2xl p-8 mb-8">
+          <div className="bg-green-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Eco-Conscious Choices
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Recycled Metals
@@ -413,7 +413,7 @@ export default function Top10EngagementRingTrends2025Page() {
             them.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 mb-8">
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-3">
                 Hidden Elements
@@ -442,7 +442,7 @@ export default function Top10EngagementRingTrends2025Page() {
             9. Stackable & Modular Designs
           </h2>
 
-          <div className="bg-blue-50 rounded-2xl p-8 mb-8">
+          <div className="bg-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Versatile Styling
             </h3>
@@ -451,7 +451,7 @@ export default function Top10EngagementRingTrends2025Page() {
               styling possibilities. These versatile pieces can be worn alone or
               combined with wedding bands and other rings for different looks.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
               <div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">
                   Stackable Benefits
@@ -530,7 +530,7 @@ export default function Top10EngagementRingTrends2025Page() {
             you.
           </p>
 
-          <div className="bg-primary-50 rounded-2xl p-8">
+          <div className="bg-primary-50 rounded-xl sm:rounded-2xl p-6 sm:p-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Stay Ahead of Trends with Bespoke Carat
             </h3>
@@ -560,14 +560,14 @@ export default function Top10EngagementRingTrends2025Page() {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex justify-between items-center">
+        <nav className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
             <Link
               href="/diamondjournal/TheMeaningBehindMultiStoneRing"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

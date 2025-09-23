@@ -35,10 +35,10 @@ export default function CelebrityInspiredEngagementRingPage() {
   return (
     <>
       <Navbar />
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -46,23 +46,23 @@ export default function CelebrityInspiredEngagementRingPage() {
               Diamond Journal
             </Link>
             <span>/</span>
-            <span>Celebrity Inspired Engagement Ring</span>
+            <span className="truncate">Celebrity Inspired Engagement Ring</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             Celebrity Inspired Engagement Ring - Find Your Dream Diamond at
             Bespoke Carat
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span>Published on December 2024</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>8 min read</span>
-            <span>•</span>
-            <span>Celebrity Style</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">Celebrity Style</span>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-gray-100">
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
             src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/1.jpg"
             alt="Celebrity Inspired Engagement Ring"
@@ -74,7 +74,7 @@ export default function CelebrityInspiredEngagementRingPage() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <div className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
             Get inspired by the most stunning celebrity engagement rings and
             discover how to find your dream diamond at Bespoke Carat.
           </div>
@@ -85,7 +85,7 @@ export default function CelebrityInspiredEngagementRingPage() {
 
           <div className="space-y-12 mb-12">
             {/* 1. Beyoncé */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   1. Beyoncé – The Power Emerald Cut
@@ -108,7 +108,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/1.jpg"
                   alt="Beyoncé Emerald Cut Ring"
@@ -119,7 +119,7 @@ export default function CelebrityInspiredEngagementRingPage() {
             </div>
 
             {/* 2. Kim Kardashian */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div className="lg:order-2">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   2. Kim Kardashian – Modern Cushion Brilliance
@@ -141,7 +141,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="lg:order-1 relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="lg:order-1 relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/2.jpg"
                   alt="Kim Kardashian Cushion Cut Ring"
@@ -152,7 +152,7 @@ export default function CelebrityInspiredEngagementRingPage() {
             </div>
 
             {/* 3. Taylor Swift */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   3. Taylor Swift - The Vintage Romantic
@@ -174,7 +174,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/3.jpg"
                   alt="Taylor Swift Vintage Ring"
@@ -185,7 +185,7 @@ export default function CelebrityInspiredEngagementRingPage() {
             </div>
 
             {/* 4. Priyanka Chopra */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div className="lg:order-2">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   4. Priyanka Chopra – Timeless Glamour
@@ -207,7 +207,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="lg:order-1 relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="lg:order-1 relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/4.jpg"
                   alt="Priyanka Chopra Glamour Ring"
@@ -218,7 +218,7 @@ export default function CelebrityInspiredEngagementRingPage() {
             </div>
 
             {/* 5. Blake Lively */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   5. Blake Lively – Romantic Pink Oval
@@ -239,7 +239,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/5.jpg"
                   alt="Blake Lively Pink Oval Ring"
@@ -250,7 +250,7 @@ export default function CelebrityInspiredEngagementRingPage() {
             </div>
 
             {/* 6. Meghan Markle */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div className="lg:order-2">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   6. Meghan Markle – A Royal Trilogy
@@ -273,7 +273,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="lg:order-1 relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="lg:order-1 relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/6.jpg"
                   alt="Meghan Markle Royal Trilogy Ring"
@@ -284,7 +284,7 @@ export default function CelebrityInspiredEngagementRingPage() {
             </div>
 
             {/* 7. Jennifer Lopez */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   7. Jennifer Lopez – Rare Green Sparkle
@@ -305,7 +305,7 @@ export default function CelebrityInspiredEngagementRingPage() {
                   </p>
                 </div>
               </div>
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden bg-gray-100">
                 <Image
                   src="/Celebrity Inspired Engagement Ring - find your dream diamond at Bespoke Carat/7.jpg"
                   alt="Jennifer Lopez Green Diamond Ring"
@@ -617,14 +617,14 @@ export default function CelebrityInspiredEngagementRingPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex justify-between items-center">
+        <nav className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
             <Link
               href="/diamondjournal"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -647,7 +647,7 @@ export default function CelebrityInspiredEngagementRingPage() {
               </span>
               <span className="sm:hidden">Next Article</span>
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
