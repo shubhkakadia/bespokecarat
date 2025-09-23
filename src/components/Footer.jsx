@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -65,9 +66,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-gray-900 text-white py-10 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <h3 className="text-xl font-bold mb-4">Bespoke Carat</h3>
             <p className="text-gray-400 mb-6">
@@ -86,15 +87,15 @@ export default function Footer() {
 
               <form
                 onSubmit={handleNewsletterSubmit}
-                className="flex flex-row gap-2"
+                className="flex flex-col sm:flex-row gap-2"
               >
-                <div>
+                <div className="min-w-0">
                   <input
                     type="email"
                     placeholder="Enter your email address"
                     value={email}
                     onChange={handleEmailChange}
-                    className={`w-[300px] px-4 py-2 bg-gray-800 border rounded-md focus:outline-none focus:ring-2 transition duration-200 text-white placeholder-gray-400 ${
+                    className={`w-full sm:w-[300px] px-4 py-2 bg-gray-800 border rounded-md focus:outline-none focus:ring-2 transition duration-200 text-white placeholder-gray-400 ${
                       emailError
                         ? "border-red-500 focus:ring-red-500"
                         : "border-gray-700 focus:ring-primary-500 focus:border-primary-500"
@@ -112,7 +113,7 @@ export default function Footer() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`cursor-pointer w-auto py-2 px-4 rounded-md font-medium transition duration-200 ${
+                  className={`cursor-pointer w-full sm:w-auto py-2 px-4 rounded-md font-medium transition duration-200 ${
                     isSubmitting
                       ? "bg-gray-600 cursor-not-allowed"
                       : "bg-primary-500 hover:bg-primary-600"
@@ -199,8 +200,8 @@ export default function Footer() {
           </div>
         </div>
         {/* Certification Logos */}
-        <div className="mt-6" aria-label="Trusted certifications">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-6 items-center justify-items-center w-[500px]">
+        <div className="mt-8" aria-label="Trusted certifications">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 items-center justify-items-center">
             <a
               href="https://www.gia.edu/"
               target="_blank"
@@ -208,12 +209,14 @@ export default function Footer() {
               aria-label="GIA website"
               className="inline-flex items-center justify-center"
             >
-              <img
+              <Image
                 src="/media/GIA.jpg"
                 alt="GIA"
                 loading="lazy"
                 decoding="async"
-                className="h-9 sm:h-10 w-auto object-contain rounded-md"
+                width={100}
+                height={100}
+                className="h-8 sm:h-10 w-auto object-contain rounded-md"
               />
             </a>
             <a
@@ -223,12 +226,14 @@ export default function Footer() {
               aria-label="IGI website"
               className="inline-flex items-center justify-center"
             >
-              <img
+              <Image
                 src="/media/IGI.jpg"
                 alt="IGI"
                 loading="lazy"
                 decoding="async"
-                className="h-9 sm:h-10 w-auto object-contain rounded-md"
+                width={100}
+                height={100}
+                className="h-8 sm:h-10 w-auto object-contain rounded-md"
               />
             </a>
             <a
@@ -238,12 +243,14 @@ export default function Footer() {
               aria-label="HRD website"
               className="inline-flex items-center justify-center"
             >
-              <img
+              <Image
                 src="/media/hrd.jpg"
                 alt="HRD"
                 loading="lazy"
                 decoding="async"
-                className="h-9 sm:h-10 w-auto object-contain rounded-md"
+                width={100}
+                height={100}
+                className="h-8 sm:h-10 w-auto object-contain rounded-md"
               />
             </a>
             <a
@@ -253,17 +260,19 @@ export default function Footer() {
               aria-label="AGS website"
               className="inline-flex items-center justify-center"
             >
-              <img
+              <Image
                 src="/media/AGS.png"
                 alt="AGS"
                 loading="lazy"
                 decoding="async"
-                className="h-9 sm:h-10 w-auto object-contain rounded-md"
+                width={100}
+                height={100}
+                className="h-8 sm:h-10 w-auto object-contain rounded-md"
               />
             </a>
           </div>
         </div>
-        <div className="border-t border-gray-800 mt-6 pt-6 text-center text-gray-400">
+        <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
           <p>&copy; 2025 Bespoke Carat. All rights reserved.</p>
         </div>
       </div>

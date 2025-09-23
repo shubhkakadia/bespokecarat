@@ -23,6 +23,7 @@ import {
   cutTypeOptions,
   sieveSizeOptions,
 } from "@/components/constants/order";
+import Image from "next/image";
 
 export default function AddProductPage() {
   const [formData, setFormData] = useState({
@@ -1420,9 +1421,11 @@ export default function AddProductPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                       {images.map((image, index) => (
                         <div key={index} className="relative">
-                          <img
+                          <Image
                             src={image.preview}
                             alt={`Preview ${index + 1}`}
+                            width={100}
+                            height={100}
                             className="w-full h-32 object-cover rounded-lg"
                           />
                           <button

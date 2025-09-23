@@ -276,3 +276,21 @@
 }
 
 
+/* Global responsive typography scale */
+@layer base {
+  html {
+    font-size: 16px;
+  }
+  @media (min-width: 1024px) {
+    html {
+      font-size: 15px; /* Slightly tighter type on desktop */
+    }
+  }
+  @media (min-width: 1536px) {
+    html {
+      font-size: 16px; /* Restore for very large screens */
+    }
+  }
+}
+
+

@@ -6,6 +6,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "@/components/Footer";
 import { Mail, Phone, Upload, X, CheckCircle } from "lucide-react";
 import emailjs from "@emailjs/browser";
+import Image from "next/image";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -455,9 +456,11 @@ export default function ContactPage() {
                           {uploadedPhotos.map((photo, index) => (
                             <div key={index} className="relative group">
                               <div className="relative">
-                                <img
+                                <Image
                                   src={photo.previewUrl || photo.url}
                                   alt={photo.originalName}
+                                  width={200}
+                                  height={200}
                                   className="w-full h-24 object-cover rounded-lg border border-gray-200"
                                 />
                                 {photo.isUploading && (
