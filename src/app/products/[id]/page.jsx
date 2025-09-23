@@ -685,6 +685,7 @@ export default function ProductPage({ params }) {
     );
   };
 
+
   const nextMedia = () => {
     const validMedia = currentMediaList.filter((media) => media);
     if (validMedia.length > 1) {

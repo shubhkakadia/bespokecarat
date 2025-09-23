@@ -28,6 +28,7 @@
     "redux-persist": "^6.0.0",
     "sequelize": "^6.37.7",
     "uuid": "^13.0.0",
+    "xlsx": "^0.18.5",
     "zustand": "^5.0.6"
   },
   "devDependencies": {

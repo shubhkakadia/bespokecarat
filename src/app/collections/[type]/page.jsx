@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CustomerRoute } from "@/components/ProtectedRoute";
 import { useAuth } from "@/contexts/AuthContext";
+import Image from "next/image";
 
 export default function ProductSearchPage({ params }) {
   const { type } = use(params);
@@ -1280,7 +1281,7 @@ export default function ProductSearchPage({ params }) {
                       >
                         {/* Product Image */}
                         <div className="relative aspect-square overflow-hidden">
-                          <img
+                          <Image
                             src={getProductImage(product)}
                             alt={product.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
