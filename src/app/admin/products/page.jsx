@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import axios from "axios";
 import { AdminRoute } from "../../../components/ProtectedRoute";
 import Sidebar from "@/app/admin/components/sidebar";
@@ -10,9 +10,6 @@ import {
   Filter,
   Download,
   ChevronDown,
-  Edit,
-  Trash2,
-  Eye,
   RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
@@ -20,6 +17,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getAuthToken } from "@/contexts/auth";
 import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -30,6 +28,18 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [filterAvailability, setFilterAvailability] = useState("all");
+
+  // Checkbox filter states
+  const [shapeFilters, setShapeFilters] = useState({});
+  const [colorFilters, setColorFilters] = useState({});
+  const [cutTypeFilters, setCutTypeFilters] = useState({});
+  const [characterFilters, setCharacterFilters] = useState({});
+  const [selectedShapes, setSelectedShapes] = useState(new Set());
+  const [selectedColors, setSelectedColors] = useState(new Set());
+  const [selectedCutTypes, setSelectedCutTypes] = useState(new Set());
+  const [selectedCharacters, setSelectedCharacters] = useState(new Set());
+  const [showFilters, setShowFilters] = useState(false);
+  const filterPopupRef = useRef(null);
 
   // API related state
   const [apiData, setApiData] = useState({});
@@ -220,6 +230,198 @@ export default function ProductsPage() {
     fetchProductsData();
   }, []);
 
+  // Update filter options when data changes
+  useEffect(() => {
+    if (Object.keys(apiData).length > 0) {
+      updateFilterOptions();
+    }
+  }, [apiData]);
+
+  // Handle click outside to close filter popup
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        filterPopupRef.current &&
+        !filterPopupRef.current.contains(event.target)
+      ) {
+        setShowFilters(false);
+      }
+    };
+
+    if (showFilters) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showFilters]);
+
+  // Function to update filter options based on current tab data
+  const updateFilterOptions = () => {
+    const currentProducts = apiData[activeTab] || [];
+
+    if (activeTab === "diamond" || activeTab === "melee") {
+      // Use lowercase for grouping but keep original case for display
+      const shapeMap = new Map();
+      currentProducts.forEach((p) => {
+        if (p.shape) {
+          const lowerShape = p.shape.toLowerCase();
+          if (!shapeMap.has(lowerShape)) {
+            shapeMap.set(lowerShape, p.shape); // Store original case for display
+          }
+        }
+      });
+
+      const shapeObj = {};
+      const originalShapes = [];
+      shapeMap.forEach((originalShape, lowerShape) => {
+        shapeObj[originalShape] = true;
+        originalShapes.push(originalShape);
+      });
+
+      setShapeFilters(shapeObj);
+      setSelectedShapes(new Set(originalShapes)); // Select all by default
+    } else if (activeTab === "colorstone") {
+      // Use lowercase for grouping but keep original case for display
+      const colorMap = new Map();
+      currentProducts.forEach((p) => {
+        if (p.color) {
+          const lowerColor = p.color.toLowerCase();
+          if (!colorMap.has(lowerColor)) {
+            colorMap.set(lowerColor, p.color); // Store original case for display
+          }
+        }
+      });
+
+      const colorObj = {};
+      const originalColors = [];
+      colorMap.forEach((originalColor, lowerColor) => {
+        colorObj[originalColor] = true;
+        originalColors.push(originalColor);
+      });
+
+      setColorFilters(colorObj);
+      setSelectedColors(new Set(originalColors)); // Select all by default
+    } else if (activeTab === "cuts") {
+      // Use lowercase for grouping but keep original case for display
+      const cutTypeMap = new Map();
+      currentProducts.forEach((p) => {
+        if (p.cutType) {
+          const lowerCutType = p.cutType.toLowerCase();
+          if (!cutTypeMap.has(lowerCutType)) {
+            cutTypeMap.set(lowerCutType, p.cutType); // Store original case for display
+          }
+        }
+      });
+
+      const cutTypeObj = {};
+      const originalCutTypes = [];
+      cutTypeMap.forEach((originalCutType, lowerCutType) => {
+        cutTypeObj[originalCutType] = true;
+        originalCutTypes.push(originalCutType);
+      });
+
+      setCutTypeFilters(cutTypeObj);
+      setSelectedCutTypes(new Set(originalCutTypes)); // Select all by default
+    } else if (activeTab === "alphabet") {
+      // Use lowercase for grouping but keep original case for display
+      const characterMap = new Map();
+      currentProducts.forEach((p) => {
+        if (p.character) {
+          const lowerCharacter = p.character.toLowerCase();
+          if (!characterMap.has(lowerCharacter)) {
+            characterMap.set(lowerCharacter, p.character); // Store original case for display
+          }
+        }
+      });
+
+      const characterObj = {};
+      const originalCharacters = [];
+      characterMap.forEach((originalCharacter, lowerCharacter) => {
+        characterObj[originalCharacter] = true;
+        originalCharacters.push(originalCharacter);
+      });
+
+      setCharacterFilters(characterObj);
+      setSelectedCharacters(new Set(originalCharacters)); // Select all by default
+    }
+  };
+
+  // Handle checkbox filter changes
+  const handleShapeFilterChange = (shape, checked) => {
+    const newSelected = new Set(selectedShapes);
+    if (checked) {
+      newSelected.add(shape);
+    } else {
+      newSelected.delete(shape);
+    }
+    setSelectedShapes(newSelected);
+  };
+
+  const handleColorFilterChange = (color, checked) => {
+    const newSelected = new Set(selectedColors);
+    if (checked) {
+      newSelected.add(color);
+    } else {
+      newSelected.delete(color);
+    }
+    setSelectedColors(newSelected);
+  };
+
+  const handleCutTypeFilterChange = (cutType, checked) => {
+    const newSelected = new Set(selectedCutTypes);
+    if (checked) {
+      newSelected.add(cutType);
+    } else {
+      newSelected.delete(cutType);
+    }
+    setSelectedCutTypes(newSelected);
+  };
+
+  const handleCharacterFilterChange = (character, checked) => {
+    const newSelected = new Set(selectedCharacters);
+    if (checked) {
+      newSelected.add(character);
+    } else {
+      newSelected.delete(character);
+    }
+    setSelectedCharacters(newSelected);
+  };
+
+  // Handle select all functionality
+  const handleSelectAllShapes = (checked) => {
+    if (checked) {
+      setSelectedShapes(new Set(Object.keys(shapeFilters)));
+    } else {
+      setSelectedShapes(new Set());
+    }
+  };
+
+  const handleSelectAllColors = (checked) => {
+    if (checked) {
+      setSelectedColors(new Set(Object.keys(colorFilters)));
+    } else {
+      setSelectedColors(new Set());
+    }
+  };
+
+  const handleSelectAllCutTypes = (checked) => {
+    if (checked) {
+      setSelectedCutTypes(new Set(Object.keys(cutTypeFilters)));
+    } else {
+      setSelectedCutTypes(new Set());
+    }
+  };
+
+  const handleSelectAllCharacters = (checked) => {
+    if (checked) {
+      setSelectedCharacters(new Set(Object.keys(characterFilters)));
+    } else {
+      setSelectedCharacters(new Set());
+    }
+  };
+
   // Get products data for current tab
   const currentProducts = apiData[activeTab] || [];
 
@@ -249,6 +451,54 @@ export default function ProductsPage() {
       );
     }
 
+    // Apply checkbox filters based on product type (case-insensitive)
+    if (activeTab === "diamond" || activeTab === "melee") {
+      if (selectedShapes.size > 0) {
+        products = products.filter((product) => {
+          if (!product.shape) return false;
+          // Check if any selected shape matches (case-insensitive)
+          return Array.from(selectedShapes).some(
+            (selectedShape) =>
+              selectedShape.toLowerCase() === product.shape.toLowerCase()
+          );
+        });
+      }
+    } else if (activeTab === "colorstone") {
+      if (selectedColors.size > 0) {
+        products = products.filter((product) => {
+          if (!product.color) return false;
+          // Check if any selected color matches (case-insensitive)
+          return Array.from(selectedColors).some(
+            (selectedColor) =>
+              selectedColor.toLowerCase() === product.color.toLowerCase()
+          );
+        });
+      }
+    } else if (activeTab === "cuts") {
+      if (selectedCutTypes.size > 0) {
+        products = products.filter((product) => {
+          if (!product.cutType) return false;
+          // Check if any selected cut type matches (case-insensitive)
+          return Array.from(selectedCutTypes).some(
+            (selectedCutType) =>
+              selectedCutType.toLowerCase() === product.cutType.toLowerCase()
+          );
+        });
+      }
+    } else if (activeTab === "alphabet") {
+      if (selectedCharacters.size > 0) {
+        products = products.filter((product) => {
+          if (!product.character) return false;
+          // Check if any selected character matches (case-insensitive)
+          return Array.from(selectedCharacters).some(
+            (selectedCharacter) =>
+              selectedCharacter.toLowerCase() ===
+              product.character.toLowerCase()
+          );
+        });
+      }
+    }
+
     // Apply sorting
     products.sort((a, b) => {
       let aValue = a[sortBy];
@@ -267,7 +517,18 @@ export default function ProductsPage() {
     });
 
     return products;
-  }, [currentProducts, searchTerm, filterAvailability, sortBy, sortOrder]);
+  }, [
+    currentProducts,
+    searchTerm,
+    filterAvailability,
+    sortBy,
+    sortOrder,
+    activeTab,
+    selectedShapes,
+    selectedColors,
+    selectedCutTypes,
+    selectedCharacters,
+  ]);
 
   // Pagination
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -282,6 +543,10 @@ export default function ProductsPage() {
     setActiveTab(tab);
     setCurrentPage(1);
     setSearchTerm("");
+    // Update filter options for the new tab
+    setTimeout(() => {
+      updateFilterOptions();
+    }, 100);
   };
 
   // Get variant count for a product
@@ -295,10 +560,130 @@ export default function ProductsPage() {
     return 0;
   };
 
-  // Export to Excel function (placeholder)
+  // Export to Excel function with variants
   const handleExportToExcel = () => {
-    // In a real implementation, this would generate and download an Excel file
-    alert("Export to Excel functionality would be implemented here");
+    try {
+      if (filteredProducts.length === 0) {
+        toast.warning("No data to export");
+        return;
+      }
+
+      // Create a single sheet with all products and their variants
+      const allData = [];
+
+      filteredProducts.forEach((product, productIndex) => {
+        // If product has variants, create a row for each variant
+        if (product.variants && product.variants.length > 0) {
+          product.variants.forEach((variant, variantIndex) => {
+            const row = {
+              "S.No": allData.length + 1,
+              "Product Name": product.name || "",
+              SKU: product.sku || "",
+              Description: product.description || "",
+              Availability: product.availability ? "Available" : "Unavailable",
+            };
+
+            // Add product-specific fields
+            switch (activeTab) {
+              case "diamond":
+              case "melee":
+                row["Shape"] = product.shape || "";
+                break;
+              case "colorstone":
+                row["Color"] = product.color || "";
+                break;
+              case "cuts":
+                row["Cut Type"] = product.cutType || "";
+                break;
+              case "layout":
+                row["Price"] = product.layoutPrice || "";
+                break;
+              case "alphabet":
+                row["Character"] = product.character || "";
+                break;
+            }
+
+            // Add variant fields
+            Object.keys(variant).forEach((key) => {
+              row[`Variant ${key}`] = variant[key] || "";
+            });
+
+            allData.push(row);
+          });
+        } else {
+          // If no variants, create a single row for the product
+          const row = {
+            "S.No": allData.length + 1,
+            "Product Name": product.name || "",
+            SKU: product.sku || "",
+            Description: product.description || "",
+            Availability: product.availability ? "Available" : "Unavailable",
+          };
+
+          // Add product-specific fields
+          switch (activeTab) {
+            case "diamond":
+            case "melee":
+              row["Shape"] = product.shape || "";
+              break;
+            case "colorstone":
+              row["Color"] = product.color || "";
+              break;
+            case "cuts":
+              row["Cut Type"] = product.cutType || "";
+              break;
+            case "layout":
+              row["Price"] = product.layoutPrice || "";
+              break;
+            case "alphabet":
+              row["Character"] = product.character || "";
+              break;
+          }
+
+          allData.push(row);
+        }
+      });
+
+      // Create workbook and worksheet
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(allData);
+
+      // Set column widths for better readability
+      const colWidths = [
+        { wch: 8 }, // S.No
+        { wch: 25 }, // Product Name
+        { wch: 20 }, // SKU
+        { wch: 40 }, // Description
+        { wch: 15 }, // Availability
+        { wch: 15 }, // Product-specific field
+        { wch: 15 }, // Variant fields
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 15 },
+      ];
+      ws["!cols"] = colWidths;
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Products`
+      );
+
+      // Generate filename with current date
+      const currentDate = new Date().toISOString().split("T")[0];
+      const filename = `${activeTab}_products_${currentDate}.xlsx`;
+
+      // Write and download the file
+      XLSX.writeFile(wb, filename);
+
+      toast.success(
+        `${allData.length} ${activeTab} records exported successfully!`
+      );
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error("Failed to export products to Excel");
+    }
   };
 
   // Action handlers (placeholders)
@@ -806,27 +1191,303 @@ export default function ProductsPage() {
                       <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
                     </div>
 
-                    {/* Filters Button */}
-                    <div className="relative">
-                      <select
-                        value={filterAvailability}
-                        onChange={(e) => setFilterAvailability(e.target.value)}
-                        className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer hover:bg-gray-50"
+                    {/* Advanced Filters Button */}
+                    <div className="relative" ref={filterPopupRef}>
+                      <button
+                        onClick={() => setShowFilters(!showFilters)}
+                        className="cursor-pointer px-4 py-2 gap-2 bg-primary-600 text-white rounded-lg flex items-center hover:bg-primary-700 transition-colors"
                       >
-                        <option value="all">Filters</option>
-                        <option value="available">Available Only</option>
-                        <option value="unavailable">Unavailable Only</option>
-                      </select>
-                      <Filter className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
+                        <Filter className="w-4 h-4" />
+                        <span>Filters</span>
+                      </button>
+
+                      {/* Filter Popup */}
+                      {showFilters && (
+                        <div className="absolute top-full right-0 mt-2 w-70 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                          <div className="p-4">
+                            <div className="grid grid-cols-1 gap-4">
+                              {/* Availability Filters */}
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                  Availability
+                                </h3>
+                                <div className="space-y-2">
+                                  <label className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      checked={filterAvailability === "all"}
+                                      onChange={(e) =>
+                                        setFilterAvailability(
+                                          e.target.checked ? "all" : "available"
+                                        )
+                                      }
+                                      className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                    />
+                                    <span className="text-sm text-gray-700">
+                                      All
+                                    </span>
+                                  </label>
+                                  <label className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      checked={
+                                        filterAvailability === "available"
+                                      }
+                                      onChange={(e) =>
+                                        setFilterAvailability(
+                                          e.target.checked ? "available" : "all"
+                                        )
+                                      }
+                                      className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                    />
+                                    <span className="text-sm text-gray-700">
+                                      Available
+                                    </span>
+                                  </label>
+                                  <label className="flex items-center">
+                                    <input
+                                      type="checkbox"
+                                      checked={
+                                        filterAvailability === "unavailable"
+                                      }
+                                      onChange={(e) =>
+                                        setFilterAvailability(
+                                          e.target.checked
+                                            ? "unavailable"
+                                            : "all"
+                                        )
+                                      }
+                                      className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                    />
+                                    <span className="text-sm text-gray-700">
+                                      Unavailable
+                                    </span>
+                                  </label>
+                                </div>
+                              </div>
+
+                              {/* Shape Filters (for Diamond and Melee) */}
+                              {(activeTab === "diamond" ||
+                                activeTab === "melee") && (
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                    Shapes
+                                  </h3>
+                                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                                    <label className="flex items-center">
+                                      <input
+                                        type="checkbox"
+                                        checked={
+                                          selectedShapes.size ===
+                                          Object.keys(shapeFilters).length
+                                        }
+                                        onChange={(e) =>
+                                          handleSelectAllShapes(
+                                            e.target.checked
+                                          )
+                                        }
+                                        className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                      />
+                                      <span className="text-sm font-medium text-gray-700">
+                                        Select All
+                                      </span>
+                                    </label>
+                                    {Object.keys(shapeFilters).map((shape) => (
+                                      <label
+                                        key={shape}
+                                        className="flex items-center"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          checked={selectedShapes.has(shape)}
+                                          onChange={(e) =>
+                                            handleShapeFilterChange(
+                                              shape,
+                                              e.target.checked
+                                            )
+                                          }
+                                          className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                        />
+                                        <span className="text-sm text-gray-700">
+                                          {shape}
+                                        </span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Color Filters (for Color Stone) */}
+                              {activeTab === "colorstone" && (
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                    Colors
+                                  </h3>
+                                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                                    <label className="flex items-center">
+                                      <input
+                                        type="checkbox"
+                                        checked={
+                                          selectedColors.size ===
+                                          Object.keys(colorFilters).length
+                                        }
+                                        onChange={(e) =>
+                                          handleSelectAllColors(
+                                            e.target.checked
+                                          )
+                                        }
+                                        className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                      />
+                                      <span className="text-sm font-medium text-gray-700">
+                                        Select All
+                                      </span>
+                                    </label>
+                                    {Object.keys(colorFilters).map((color) => (
+                                      <label
+                                        key={color}
+                                        className="flex items-center"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          checked={selectedColors.has(color)}
+                                          onChange={(e) =>
+                                            handleColorFilterChange(
+                                              color,
+                                              e.target.checked
+                                            )
+                                          }
+                                          className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                        />
+                                        <span className="text-sm text-gray-700">
+                                          {color}
+                                        </span>
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Cut Type Filters (for Cuts) */}
+                              {activeTab === "cuts" && (
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                    Cut Types
+                                  </h3>
+                                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                                    <label className="flex items-center">
+                                      <input
+                                        type="checkbox"
+                                        checked={
+                                          selectedCutTypes.size ===
+                                          Object.keys(cutTypeFilters).length
+                                        }
+                                        onChange={(e) =>
+                                          handleSelectAllCutTypes(
+                                            e.target.checked
+                                          )
+                                        }
+                                        className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                      />
+                                      <span className="text-sm font-medium text-gray-700">
+                                        Select All
+                                      </span>
+                                    </label>
+                                    {Object.keys(cutTypeFilters).map(
+                                      (cutType) => (
+                                        <label
+                                          key={cutType}
+                                          className="flex items-center"
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            checked={selectedCutTypes.has(
+                                              cutType
+                                            )}
+                                            onChange={(e) =>
+                                              handleCutTypeFilterChange(
+                                                cutType,
+                                                e.target.checked
+                                              )
+                                            }
+                                            className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                          />
+                                          <span className="text-sm text-gray-700">
+                                            {cutType}
+                                          </span>
+                                        </label>
+                                      )
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Character Filters (for Alphabet) */}
+                              {activeTab === "alphabet" && (
+                                <div>
+                                  <h3 className="text-sm font-medium text-gray-700 mb-3">
+                                    Characters
+                                  </h3>
+                                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                                    <label className="flex items-center">
+                                      <input
+                                        type="checkbox"
+                                        checked={
+                                          selectedCharacters.size ===
+                                          Object.keys(characterFilters).length
+                                        }
+                                        onChange={(e) =>
+                                          handleSelectAllCharacters(
+                                            e.target.checked
+                                          )
+                                        }
+                                        className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                      />
+                                      <span className="text-sm font-medium text-gray-700">
+                                        Select All
+                                      </span>
+                                    </label>
+                                    {Object.keys(characterFilters).map(
+                                      (character) => (
+                                        <label
+                                          key={character}
+                                          className="flex items-center"
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            checked={selectedCharacters.has(
+                                              character
+                                            )}
+                                            onChange={(e) =>
+                                              handleCharacterFilterChange(
+                                                character,
+                                                e.target.checked
+                                              )
+                                            }
+                                            className="cursor-pointer mr-2 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                          />
+                                          <span className="text-sm text-gray-700">
+                                            {character}
+                                          </span>
+                                        </label>
+                                      )
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Export Button */}
+                    {/* Export to Excel Button */}
                     <button
                       onClick={handleExportToExcel}
-                      className="cursor-pointer px-4 py-2 gap-2 bg-white border border-gray-300 rounded-lg flex items-center hover:bg-gray-50 transition-colors"
+                      disabled={filteredProducts.length === 0}
+                      className="cursor-pointer px-4 py-2 gap-2 bg-green-600 text-white rounded-lg flex items-center hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Download className="w-4 h-4 text-gray-600" />
-                      <span className="text-gray-700">Export To Excel</span>
+                      <Download className="w-4 h-4" />
+                      <span>Export to Excel</span>
                     </button>
                   </div>
                 </div>
