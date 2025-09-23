@@ -274,6 +274,26 @@ export default function Footer() {
         </div>
         <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
           <p>&copy; 2025 Bespoke Carat. All rights reserved.</p>
+          <p className="mt-2">
+            Developed by{" "}
+            <a
+              href="https://shubhkakadia.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-500 hover:text-primary-400 transition-colors duration-200 font-semibold"
+            >
+              Shubh Kakadia
+            </a>{" "}
+            &{" "}
+            <a
+              href="https://dharmik.codes/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-500 hover:text-primary-400 transition-colors duration-200 font-semibold"
+            >
+              Dharmik Navadiya
+            </a>
+          </p>
         </div>
       </div>
     </footer>
