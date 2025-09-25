@@ -16,7 +16,7 @@ export const metadata = {
     type: "article",
     images: [
       {
-        url: "/How Cut affects Perosnality & Energy/cut affects.png",
+        url: "/How Cut affects Perosnality and Energy/cut affects.png",
         width: 1200,
         height: 630,
         alt: "How Cut Affects Personality and Energy",
@@ -61,7 +61,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
         {/* Hero Image */}
         <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
-            src="/How Cut affects Perosnality & Energy/cut affects.png"
+            src="/How Cut affects Perosnality and Energy/cut affects.png"
             alt="How Cut Affects Personality and Energy"
             fill
             className="object-cover"

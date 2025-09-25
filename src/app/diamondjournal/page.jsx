@@ -52,7 +52,7 @@ const JOURNALS = [
   {
     id: "HowCutaffectsPerosnality&Energy",
     title: "How Cut Affects Personality and Energy",
-    image: "/How Cut affects Perosnality & Energy/cut affects.png",
+    image: "/How Cut affects Perosnality and Energy/cut affects.png",
     excerpt:
       "Discover how different diamond cuts reflect personality and energy. From round cuts to emerald cuts, find your perfect match.",
     category: "Personality & Style",
@@ -176,7 +176,9 @@ export default function Page() {
                   {item.excerpt}
                 </p>
                 <div className="mt-3 sm:mt-4 flex items-center justify-between text-[11px] sm:text-xs text-gray-500">
-                  <span className="truncate">{new Date(item.date).toLocaleDateString()}</span>
+                  <span className="truncate">
+                    {new Date(item.date).toLocaleDateString()}
+                  </span>
                   <span className="inline-flex items-center gap-1">
                     <svg
                       width="12"

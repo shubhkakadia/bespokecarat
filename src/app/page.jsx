@@ -635,7 +635,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Portuguese Cut Diamond */}
             <Link
-              href="/diamondjournal/WhatYouShouldKnowAboutPortugueseCutDiamond"
+              href="/diamondjournal/WhatyouShouldknowaboutPortugueseCutDiamond"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-[4/3]">
@@ -695,7 +695,7 @@ export default function HomePage() {
 
             {/* Natural vs Lab Grown */}
             <Link
-              href="/diamondjournal/NaturalVsLabGrown"
+              href="/diamondjournal/NaturalvsLabgrown"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-[4/3]">
@@ -725,7 +725,7 @@ export default function HomePage() {
 
             {/* Understanding Geometric Modern Shapes */}
             <Link
-              href="/diamondjournal/UnderstandingGeometricModernShapes"
+              href="/diamondjournal/UnderstandingGeometricmodernshapes"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-[4/3]">
