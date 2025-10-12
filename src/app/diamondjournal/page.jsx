@@ -52,7 +52,7 @@ const JOURNALS = [
   {
     id: "HowCutaffectsPerosnality&Energy",
     title: "How Cut Affects Personality and Energy",
-    image: "/How Cut affects Perosnality & Energy/cut affects.png",
+    image: "/How Cut affects Perosnality and Energy/cut affects.png",
     excerpt:
       "Discover how different diamond cuts reflect personality and energy. From round cuts to emerald cuts, find your perfect match.",
     category: "Personality & Style",
@@ -140,47 +140,49 @@ export default function Page() {
           className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white"
           aria-hidden="true"
         />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 tracking-tight">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-4 sm:pb-6">
+          <h1 className="text-2xl sm:text-4xl font-semibold text-gray-900 tracking-tight">
             Diamond Journal
           </h1>
-          <p className="mt-3 max-w-2xl text-gray-600">
+          <p className="mt-2 sm:mt-3 max-w-2xl text-gray-600 text-sm sm:text-base">
             Expert insights to help you buy and style diamonds with confidence.
           </p>
         </div>
       </section>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 sm:pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {JOURNALS.map((item) => (
             <Link
               key={item.id}
               href={`/diamondjournal/${item.id}`}
-              className="group relative flex flex-col rounded-2xl overflow-hidden border border-gray-200 bg-white hover:border-gray-300 hover:shadow-lg transition-all"
+              className="group relative flex flex-col rounded-xl sm:rounded-2xl overflow-hidden border border-gray-200 bg-white hover:border-gray-300 hover:shadow-lg transition-all"
             >
-              <div className="relative aspect-[4/3] bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] bg-gray-100">
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
-                <div className="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-700 shadow-sm backdrop-blur-sm">
+                <div className="absolute left-2 top-2 sm:left-4 sm:top-4 inline-flex items-center rounded-full bg-white/90 px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs font-medium text-gray-700 shadow-sm backdrop-blur-sm">
                   {item.category}
                 </div>
               </div>
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+              <div className="p-4 sm:p-5">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                <p className="mt-2 text-xs sm:text-sm text-gray-600 line-clamp-2">
                   {item.excerpt}
                 </p>
-                <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-                  <span>{new Date(item.date).toLocaleDateString()}</span>
+                <div className="mt-3 sm:mt-4 flex items-center justify-between text-[11px] sm:text-xs text-gray-500">
+                  <span className="truncate">
+                    {new Date(item.date).toLocaleDateString()}
+                  </span>
                   <span className="inline-flex items-center gap-1">
                     <svg
-                      width="14"
-                      height="14"
+                      width="12"
+                      height="12"
                       viewBox="0 0 24 24"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"

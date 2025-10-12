@@ -66,9 +66,11 @@ export default function MediaSection({
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {newImageFiles.map((file, idx) => (
                       <div key={idx} className="relative">
-                        <img
+                        <Image
                           src={URL.createObjectURL(file)}
                           alt={file.name}
+                          width={200}
+                          height={200}
                           className="w-full h-32 object-cover rounded border"
                         />
                       </div>

@@ -16,7 +16,7 @@ export const metadata = {
     type: "article",
     images: [
       {
-        url: "/How Cut affects Perosnality & Energy/cut affects.png",
+        url: "/How Cut affects Perosnality and Energy/cut affects.png",
         width: 1200,
         height: 630,
         alt: "How Cut Affects Personality and Energy",
@@ -33,10 +33,10 @@ export default function HowCutAffectsPersonalityEnergyPage() {
   return (
     <>
       <Navbar />
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -44,24 +44,24 @@ export default function HowCutAffectsPersonalityEnergyPage() {
               Diamond Journal
             </Link>
             <span>/</span>
-            <span>How Cut Affects Personality & Energy</span>
+            <span className="truncate">How Cut Affects Personality & Energy</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
             How Cut Affects Personality and Energy
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             <span>Published on December 2024</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>7 min read</span>
-            <span>•</span>
-            <span>Personality & Style</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">Personality & Style</span>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="relative aspect-[16/9] rounded-2xl overflow-hidden mb-12 bg-gray-100">
+        <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden mb-8 sm:mb-12 bg-gray-100">
           <Image
-            src="/How Cut affects Perosnality & Energy/cut affects.png"
+            src="/How Cut affects Perosnality and Energy/cut affects.png"
             alt="How Cut Affects Personality and Energy"
             fill
             className="object-cover"
@@ -71,7 +71,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <div className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
             More Than Just Sparkle – A Reflection of You. We all know diamonds
             sparkle, but did you know the cut of your diamond can reveal volumes
             about your personality and the energy you bring to the world?
@@ -105,9 +105,9 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             Round Cut: The Classic Charmer
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             <div>
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden mb-4 bg-gray-100">
                 <Image
                   src="/placeholders/round.jpg"
                   alt="Round Cut Diamond"
@@ -153,7 +153,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             Emerald Cut: The Sophisticated Leader
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                 Personality Traits
@@ -178,7 +178,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
               </ul>
             </div>
             <div>
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-gray-100">
+              <div className="relative aspect-[16/10] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden mb-4 bg-gray-100">
                 <Image
                   src="/placeholders/Emerald Diamond.png"
                   alt="Emerald Cut Diamond"
@@ -201,8 +201,8 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             Oval Cut: The Creative Romantic
           </h2>
 
-          <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-8 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   Personality Traits
@@ -242,7 +242,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             Princess Cut: The Bold Individualist
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             <div>
               <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-4 bg-gray-100">
                 <Image
@@ -290,8 +290,8 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             Cushion Cut: The Vintage Soul
           </h2>
 
-          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-8 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   Personality Traits
@@ -331,7 +331,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             Marquise Cut: The Dramatic Performer
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                 Personality Traits
@@ -387,7 +387,7 @@ export default function HowCutAffectsPersonalityEnergyPage() {
             yourself, enhancing your natural energy and confidence.
           </p>
 
-          <div className="bg-primary-50 rounded-2xl p-8">
+          <div className="bg-primary-50 rounded-xl sm:rounded-2xl p-6 sm:p-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
               Discover Your Cut Energy at Bespoke Carat
             </h3>
@@ -417,14 +417,14 @@ export default function HowCutAffectsPersonalityEnergyPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex justify-between items-center">
+        <nav className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
             <Link
               href="/diamondjournal/Historyoflabgrowndiamonds"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 transition-colors"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

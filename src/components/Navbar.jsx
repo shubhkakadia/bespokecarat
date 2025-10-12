@@ -340,7 +340,7 @@ export default function Navbar() {
                               Heart
                             </Link>
                             <Link
-                              href="/collections/shapes"
+                              href="/collections/diamond"
                               className="cursor-pointer mt-3 px-4 py-1 border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm rounded transition-colors"
                             >
                               View All
@@ -1061,7 +1061,7 @@ export default function Navbar() {
                           </Link>
                         </div>
                         <Link
-                          href="/collections/shapes"
+                          href="/collections/diamond"
                           className="block text-primary-600 hover:text-primary-700 text-xs font-medium mt-1"
                           onClick={() => setIsMobileDiamondDropdownOpen(false)}
                         >

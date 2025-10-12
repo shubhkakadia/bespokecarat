@@ -52,35 +52,35 @@ export default function HomePage() {
         "We had a tricky order with unusual size requirements, but they delivered exactly as promised. The stones matched perfectly with our design and the turnaround time was faster than expected.",
       initials: "AR",
       name: "Alice Roberts",
-      title: "Interior Designer, New York, USA",
+      title: "New York, USA",
     },
     {
       quote:
         "Consistent quality and clear grading reports. For bulk B2B orders, reliability is everything, and they’ve been one of the few suppliers we can depend on.",
       initials: "JD",
       name: "John Davis",
-      title: "Wholesale Jeweler, Dubai",
+      title: "Dubai",
     },
     {
       quote:
         "We often need antique cuts and portrait stones for custom projects. Their polishing and precision work have been top-notch every single time.",
       initials: "SL",
       name: "Sophie Lewis",
-      title: "Boutique Studio Owner, London",
+      title: "London",
     },
     {
       quote:
         "The diamonds I ordered arrived exactly as shown in the videos. Clean, well-cut, and excellent communication throughout the process. Definitely ordering again.",
       initials: "MW",
       name: "Michael Williams",
-      title: "Retail Jeweler, Melbourne, Australia",
+      title: "Melbourne, Australia",
     },
     {
       quote:
         "Very professional team. The quality of the diamonds exceeded my expectations and delivery was smooth. Great experience overall.",
       initials: "AT",
       name: "Andrew Taylor",
-      title: "Private Buyer, Sydney, Australia",
+      title: "Sydney, Australia",
     },
   ];
 
@@ -158,7 +158,7 @@ export default function HomePage() {
           <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-accent-100 blur-3xl opacity-60"></div>
           <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-accent-cool-100 blur-3xl opacity-60"></div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-serif font-bold text-text-dark tracking-tight mb-4">
               Bespoke brilliance,
@@ -635,7 +635,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Portuguese Cut Diamond */}
             <Link
-              href="/diamondjournal/WhatYouShouldKnowAboutPortugueseCutDiamond"
+              href="/diamondjournal/WhatyouShouldknowaboutPortugueseCutDiamond"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-[4/3]">
@@ -695,7 +695,7 @@ export default function HomePage() {
 
             {/* Natural vs Lab Grown */}
             <Link
-              href="/diamondjournal/NaturalVsLabGrown"
+              href="/diamondjournal/NaturalvsLabgrown"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-[4/3]">
@@ -725,7 +725,7 @@ export default function HomePage() {
 
             {/* Understanding Geometric Modern Shapes */}
             <Link
-              href="/diamondjournal/UnderstandingGeometricModernShapes"
+              href="/diamondjournal/UnderstandingGeometricmodernshapes"
               className="group block rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-neutral-300 hover:shadow-lg hover:ring-neutral-400 transition-all duration-300"
             >
               <div className="relative aspect-[4/3]">

@@ -34,7 +34,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
       <article className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
         <header className="mb-8 sm:mb-12">
-          <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
             <Link
               href="/diamondjournal"
               className="hover:text-primary-600 transition-colors"
@@ -52,7 +52,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
             <span className="hidden sm:inline">•</span>
             <span>6 min read</span>
             <span className="hidden sm:inline">•</span>
-            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-xs font-medium">
+            <span className="inline-flex items-center px-2 py-1 rounded-full bg-primary-100 text-primary-800 text-[10px] sm:text-xs font-medium">
               Education
             </span>
           </div>
@@ -71,7 +71,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
 
         {/* Article Content */}
         <div className="prose prose-lg max-w-none">
-          <div className="text-lg sm:text-xl text-gray-600 mb-8 sm:mb-10 leading-relaxed font-medium">
+          <div className="text-base sm:text-xl text-gray-600 mb-6 sm:mb-10 leading-relaxed font-medium">
             The history of lab-grown diamonds began with early 20th-century
             research culminating in General Electric's 1954 creation of the
             first synthetic diamond via the High Pressure High Temperature
@@ -89,7 +89,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
           </h2>
 
           <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-10">
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 Carbon Identification
               </h3>
@@ -99,7 +99,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
               </p>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 Unconfirmed Claims
               </h3>
@@ -110,7 +110,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
               </p>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 General Electric's Research
               </h3>
@@ -129,7 +129,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
           </h2>
 
           <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-10">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 sm:p-8 shadow-sm">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg sm:rounded-xl p-5 sm:p-8 shadow-sm">
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">
                 GE's HPHT Process
               </h3>
@@ -176,7 +176,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 Industrial Applications
               </h3>
@@ -196,7 +196,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
           </h2>
 
           <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-10">
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 sm:p-8 shadow-sm">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg sm:rounded-xl p-5 sm:p-8 shadow-sm">
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">
                 CVD Emergence
               </h3>
@@ -230,7 +230,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
                 Improved Quality
               </h3>
@@ -250,7 +250,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
           </h2>
 
           <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-10">
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 sm:p-8 shadow-sm">
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg sm:rounded-xl p-5 sm:p-8 shadow-sm">
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">
                 First Gem-Quality Diamonds
               </h3>
@@ -261,7 +261,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl p-6 sm:p-8 shadow-sm">
+            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg sm:rounded-xl p-5 sm:p-8 shadow-sm">
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">
                 Mainstream Adoption
               </h3>
@@ -275,13 +275,13 @@ export default function HistoryOfLabGrownDiamondsPage() {
           </div>
 
           {/* Timeline Section */}
-          <div className="bg-gray-50 rounded-2xl p-6 sm:p-8 mb-8 sm:mb-10">
+          <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-5 sm:p-8 mb-8 sm:mb-10">
             <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">
               Key Milestones Timeline
             </h3>
             <div className="space-y-4 sm:space-y-6">
               <div className="flex items-start gap-3 sm:gap-4">
-                <div className="bg-primary-600 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
+                <div className="bg-primary-600 text-white rounded-full w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center text-[11px] sm:text-sm font-semibold flex-shrink-0">
                   1772
                 </div>
                 <div className="min-w-0 flex-1">
@@ -294,7 +294,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3 sm:gap-4">
-                <div className="bg-primary-600 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
+                <div className="bg-primary-600 text-white rounded-full w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center text-[11px] sm:text-sm font-semibold flex-shrink-0">
                   1940s
                 </div>
                 <div className="min-w-0 flex-1">
@@ -307,7 +307,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3 sm:gap-4">
-                <div className="bg-primary-600 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
+                <div className="bg-primary-600 text-white rounded-full w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center text-[11px] sm:text-sm font-semibold flex-shrink-0">
                   1954
                 </div>
                 <div className="min-w-0 flex-1">
@@ -320,7 +320,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3 sm:gap-4">
-                <div className="bg-primary-600 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-xs sm:text-sm font-semibold flex-shrink-0">
+                <div className="bg-primary-600 text-white rounded-full w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center text-[11px] sm:text-sm font-semibold flex-shrink-0">
                   1980s
                 </div>
                 <div className="min-w-0 flex-1">
@@ -374,7 +374,7 @@ export default function HistoryOfLabGrownDiamondsPage() {
             technology.
           </p>
 
-          <div className="bg-primary-50 rounded-2xl p-6 sm:p-8">
+          <div className="bg-primary-50 rounded-xl sm:rounded-2xl p-5 sm:p-8">
             <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
               Why Choose Lab-Grown Diamonds from Bespoke Carat?
             </h3>
