@@ -146,11 +146,6 @@ export default async function handler(req, res) {
           product_slug: slug,
         }));
         await Medias.bulkCreate(rows, { transaction: t });
-      } else {
-        await t.rollback();
-        return res.status(200).send({
-          message: "Color Stone",
-        });
       }
 
       await t.commit();
