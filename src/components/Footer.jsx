@@ -200,7 +200,7 @@ export default function Footer() {
         </div>
         {/* Certification Logos */}
         <div className="mt-6" aria-label="Trusted certifications">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-6 items-center justify-items-center w-[500px]">
+          <div className="flex flex-wrap gap-4 items-center justify-center sm:justify-start w-full max-w-md sm:max-w-full mx-auto sm:mx-0">
             <a
               href="https://www.gia.edu/"
               target="_blank"

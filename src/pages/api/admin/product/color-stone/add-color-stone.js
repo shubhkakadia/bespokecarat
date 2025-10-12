@@ -149,7 +149,7 @@ export default async function handler(req, res) {
       } else {
         await t.rollback();
         return res.status(200).send({
-          message: "Color Stone benchod",
+          message: "Color Stone",
         });
       }
 
