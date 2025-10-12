@@ -7,7 +7,7 @@ module.exports = (Seq, DT) => {
         allowNull: false,
       },
       slug: { type: DT.STRING, allowNull: false, unique: true },
-      color: { type: DT.STRING, allowNull: false, unique: true },
+      color: { type: DT.STRING, allowNull: false },
       sku: {
         type: DT.STRING,
         allowNull: false,
