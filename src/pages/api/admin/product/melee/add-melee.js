@@ -1,4 +1,5 @@
 import { isAdmin } from "../../../../../../lib/authFromToken";
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
 
 const db = require("../../../../../../config/dbConfig");
 const { getUniqueId } = require("../../../../../../lib/getUniqueId");
@@ -91,17 +92,14 @@ export default async function handler(req, res) {
       const { name, shape, sku, description, is_available, sieve_sizes } =
         value;
 
-      const isExist = await Melees.findOne({
-        where: { sku },
-        transaction: t,
-      });
+      const taken = await isGlobalSkuTaken(sku, t);
 
-      if (isExist) {
+      if (taken.taken) {
         await t.rollback();
         await cleanupUploadedFiles(req.files);
         return res.status(200).send({
           status: false,
-          message: `A melee with sku ${isExist.sku} already exists.`,
+          message: `SKU : '${sku}' already exists in ${taken.table}`,
         });
       }
 

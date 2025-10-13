@@ -1,3 +1,5 @@
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
+
 const db = require("../../../../../../config/dbConfig");
 const { isAdmin } = require("../../../../../../lib/authFromToken");
 const { getUniqueId } = require("../../../../../../lib/getUniqueId");
@@ -97,19 +99,14 @@ export default async function handler(req, res) {
         diamond_details,
       } = value;
 
-      const isExist = await Layouts.findOne({
-        where: { sku },
-        transaction: t,
-      });
+      const taken = await isGlobalSkuTaken(sku, t);
 
-      if (isExist) {
+      if (taken.taken) {
         await t.rollback();
-
         await cleanupUploadedFiles(req.files);
-
         return res.status(200).send({
           status: false,
-          message: `A layout with sku ${isExist.sku} already exists.`,
+          message: `SKU : '${sku}' already exists in ${taken.table}`,
         });
       }
 

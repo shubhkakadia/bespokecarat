@@ -1,5 +1,6 @@
 import db from "../../../../../../config/dbConfig";
 import { isAdmin } from "../../../../../../lib/authFromToken";
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
 import { getUniqueId } from "../../../../../../lib/getUniqueId";
 import { cleanupUploadedFiles } from "../../../../../../lib/middlewares/cleanupUploadedFiles";
 import {
@@ -95,19 +96,14 @@ export default async function handler(req, res) {
         diamond_variants,
       } = value;
 
-      const isExist = await Diamonds.findOne({
-        where: { sku },
-        transaction: t,
-      });
+      const taken = await isGlobalSkuTaken(sku, t);
 
-      if (isExist) {
+      if (taken.taken) {
         await t.rollback();
-
         await cleanupUploadedFiles(req.files);
-
         return res.status(200).send({
           status: false,
-          message: `A diamond with sku ${isExist.sku} already exists.`,
+          message: `SKU : '${sku}' already exists in ${taken.table}`,
         });
       }
 

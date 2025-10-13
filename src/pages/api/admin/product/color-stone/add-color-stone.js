@@ -1,3 +1,4 @@
+import { isGlobalSkuTaken } from "../../../../../../lib/checkProductExist";
 import { cleanupUploadedFiles } from "../../../../../../lib/middlewares/cleanupUploadedFiles";
 
 const db = require("../../../../../../config/dbConfig");
@@ -147,7 +148,6 @@ export default async function handler(req, res) {
         console.log("🔴 [ERROR] SKU already exists:", isExist.sku);
         await t.rollback();
         await cleanupUploadedFiles(req.files);
-
         return res.status(200).send({
           status: false,
           message: `A Color Stone with sku ${isExist.sku} already exists.`,
