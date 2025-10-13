@@ -158,7 +158,7 @@ export default async function handler(req, res) {
 
       await cleanupUploadedFiles(req.files);
 
-      return res.status(200).send({ status: true, message: error.message });
+      return res.status(200).send({ status: false, message: error.message });
     }
   } else {
     return res.status(200).send({ status: false, message: "Not Allowed" });

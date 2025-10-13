@@ -196,7 +196,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
-              Shop by Category
+              SHOP BY CATEGORY
             </h2>
             <p className="text-secondary text-sm md:text-base mt-2">
               Curated cuts, colors, and shapes crafted to your specs
@@ -404,7 +404,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
-              Sample inventory
+              SAMPLE INVENTORY
             </h2>
             <p className="text-secondary text-sm md:text-base mt-2">
               A quick look at recently polished stones
@@ -625,7 +625,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-text-dark tracking-tight">
-              Diamond Journal
+              DIAMOND JOURNAL
             </h2>
             <p className="text-secondary text-sm md:text-base mt-2">
               Expert insights, trends, and stories from the world of diamonds
