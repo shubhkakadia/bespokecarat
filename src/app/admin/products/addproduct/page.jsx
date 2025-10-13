@@ -24,6 +24,7 @@ import {
   sieveSizeOptions,
 } from "@/components/constants/order";
 import Image from "next/image";
+import axios from "axios";
 
 export default function AddProductPage() {
   const [formData, setFormData] = useState({
@@ -109,6 +110,10 @@ export default function AddProductPage() {
 
   const [activeProductTab, setActiveProductTab] = useState("diamond");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Add these state variables for drag-and-drop feedback
+  const [isDraggingImage, setIsDraggingImage] = useState(false);
+  const [isDraggingVideo, setIsDraggingVideo] = useState(false);
 
   const resetFormData = () => {
     setFormData({
@@ -588,16 +593,19 @@ export default function AddProductPage() {
         formDataAPI.append("videos", video.file);
       }
 
-      // Make API request
-      const response = await fetch("/api/admin/product/diamond/add-diamond", {
-        method: "POST",
-        headers: {
-          Authorization: authToken,
-        },
-        body: formDataAPI,
-      });
+      // Make API request with axios
+      const response = await axios.post(
+        "/api/admin/product/diamond/add-diamond",
+        formDataAPI,
+        {
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.status) {
         toast.success(formData.sku + " - Diamond saved successfully!");
@@ -620,7 +628,16 @@ export default function AddProductPage() {
       }
     } catch (error) {
       console.error("Error saving diamond:", error);
-      toast.error("An error occurred while saving the diamond");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while saving the diamond"
+      );
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        error.response.data.errors.forEach((err) => toast.error(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -670,14 +687,19 @@ export default function AddProductPage() {
         formDataAPI.append("videos", video.file);
       }
 
-      // API request
-      const response = await fetch("/api/admin/product/melee/add-melee", {
-        method: "POST",
-        headers: { Authorization: authToken },
-        body: formDataAPI,
-      });
+      // API request with axios
+      const response = await axios.post(
+        "/api/admin/product/melee/add-melee",
+        formDataAPI,
+        {
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.status) {
         toast.success(formData.sku + " - Melee saved successfully!");
@@ -699,7 +721,16 @@ export default function AddProductPage() {
       }
     } catch (error) {
       console.error("Error saving melee:", error);
-      toast.error("An error occurred while saving the melee");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while saving the melee"
+      );
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        error.response.data.errors.forEach((err) => toast.error(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -754,17 +785,19 @@ export default function AddProductPage() {
         formDataAPI.append("videos", video.file);
       }
 
-      // API request
-      const response = await fetch(
+      // API request with axios
+      const response = await axios.post(
         "/api/admin/product/color-stone/add-color-stone",
+        formDataAPI,
         {
-          method: "POST",
-          headers: { Authorization: authToken },
-          body: formDataAPI,
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.status) {
         toast.success(formData.sku + " - Color Stone saved successfully!");
@@ -780,7 +813,16 @@ export default function AddProductPage() {
       }
     } catch (error) {
       console.error("Error saving color stone:", error);
-      toast.error("An error occurred while saving the color stone");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while saving the color stone"
+      );
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        error.response.data.errors.forEach((err) => toast.error(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -832,14 +874,19 @@ export default function AddProductPage() {
         formDataAPI.append("videos", video.file);
       }
 
-      // API request
-      const response = await fetch("/api/admin/product/cut/add-cut", {
-        method: "POST",
-        headers: { Authorization: authToken },
-        body: formDataAPI,
-      });
+      // API request with axios
+      const response = await axios.post(
+        "/api/admin/product/cut/add-cut",
+        formDataAPI,
+        {
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.status) {
         toast.success(formData.sku + " - By Cut saved successfully!");
@@ -862,7 +909,16 @@ export default function AddProductPage() {
       }
     } catch (error) {
       console.error("Error saving by cut:", error);
-      toast.error("An error occurred while saving the by cut product");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while saving the by cut product"
+      );
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        error.response.data.errors.forEach((err) => toast.error(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -921,14 +977,19 @@ export default function AddProductPage() {
         formDataAPI.append("videos", video.file);
       }
 
-      // API request
-      const response = await fetch("/api/admin/product/layout/add-layout", {
-        method: "POST",
-        headers: { Authorization: authToken },
-        body: formDataAPI,
-      });
+      // API request with axios
+      const response = await axios.post(
+        "/api/admin/product/layout/add-layout",
+        formDataAPI,
+        {
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.status) {
         toast.success(formData.sku + " - Layout saved successfully!");
@@ -954,7 +1015,16 @@ export default function AddProductPage() {
       }
     } catch (error) {
       console.error("Error saving layout:", error);
-      toast.error("An error occurred while saving the layout");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while saving the layout"
+      );
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        error.response.data.errors.forEach((err) => toast.error(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -1004,14 +1074,19 @@ export default function AddProductPage() {
         formDataAPI.append("videos", video.file);
       }
 
-      // API request
-      const response = await fetch("/api/admin/product/alphabet/add-alphabet", {
-        method: "POST",
-        headers: { Authorization: authToken },
-        body: formDataAPI,
-      });
+      // API request with axios
+      const response = await axios.post(
+        "/api/admin/product/alphabet/add-alphabet",
+        formDataAPI,
+        {
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      const result = await response.json();
+      const result = response.data;
 
       if (result.status) {
         toast.success(formData.sku + " - Alphabet saved successfully!");
@@ -1031,7 +1106,16 @@ export default function AddProductPage() {
       }
     } catch (error) {
       console.error("Error saving alphabet:", error);
-      toast.error("An error occurred while saving the alphabet");
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred while saving the alphabet"
+      );
+      if (
+        error.response?.data?.errors &&
+        Array.isArray(error.response.data.errors)
+      ) {
+        error.response.data.errors.forEach((err) => toast.error(err));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -1154,6 +1238,37 @@ export default function AddProductPage() {
       layout: "Layout",
       alphabet: "Alphabet",
     };
+  };
+
+  const handleDragEvent = (e, type, action) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (action === "enter" || action === "over") {
+      if (type === "image") setIsDraggingImage(true);
+      else setIsDraggingVideo(true);
+    } else if (action === "leave") {
+      if (type === "image") setIsDraggingImage(false);
+      else setIsDraggingVideo(false);
+    } else if (action === "drop") {
+      if (type === "image") {
+        setIsDraggingImage(false);
+        const files = Array.from(e.dataTransfer.files);
+        const imageFiles = files.filter((file) =>
+          file.type.startsWith("image/")
+        );
+        if (imageFiles.length > 0) {
+          handleImageUpload({ target: { files: imageFiles } });
+        }
+      } else {
+        setIsDraggingVideo(false);
+        const files = Array.from(e.dataTransfer.files);
+        const videoFile = files.find((file) => file.type.startsWith("video/"));
+        if (videoFile) {
+          handleVideoUpload({ target: { files: [videoFile] } });
+        }
+      }
+    }
   };
 
   return (
@@ -1395,25 +1510,42 @@ export default function AddProductPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-4">
                     Upload Product Images
                   </label>
-                  <div className="cursor-pointer border-2 border-dashed border-gray-300 rounded-lg p-6 group hover:border-primary-500">
-                    <div className="text-center">
-                      <ImagePlus className="mx-auto h-12 w-12 stroke-1 text-gray-400 group-hover:text-primary-500" />
+                  <div
+                    onDragEnter={(e) => handleDragEvent(e, "image", "enter")}
+                    onDragOver={(e) => handleDragEvent(e, "image", "over")}
+                    onDragLeave={(e) => handleDragEvent(e, "image", "leave")}
+                    onDrop={(e) => handleDragEvent(e, "image", "drop")}
+                    onClick={() => document.getElementById("images").click()}
+                    className={`cursor-pointer border-2 border-dashed rounded-lg p-6 group transition-colors ${
+                      isDraggingImage
+                        ? "border-primary-500 bg-primary-50"
+                        : "border-gray-300 hover:border-primary-500"
+                    }`}
+                  >
+                    <div className="text-center pointer-events-none">
+                      <ImagePlus
+                        className={`mx-auto h-12 w-12 stroke-1 transition-colors ${
+                          isDraggingImage
+                            ? "text-primary-500"
+                            : "text-gray-400 group-hover:text-primary-500"
+                        }`}
+                      />
                       <div className="mt-4">
-                        <label htmlFor="images" className="cursor-pointer">
-                          <span className="mt-2 block text-sm font-medium text-gray-900">
-                            Drop your images here or select click to browse
-                          </span>
-                          <input
-                            id="images"
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            className="sr-only"
-                          />
-                        </label>
+                        <span className="mt-2 block text-sm font-medium text-gray-900">
+                          {isDraggingImage
+                            ? "Drop images here"
+                            : "Drop your images here or click to browse"}
+                        </span>
                       </div>
                     </div>
+                    <input
+                      id="images"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="sr-only"
+                    />
                   </div>
 
                   {/* Image Previews */}
@@ -1445,24 +1577,41 @@ export default function AddProductPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-4">
                     Upload Product Video
                   </label>
-                  <div className="cursor-pointer border-2 border-dashed border-gray-300 rounded-lg p-6 group hover:border-primary-500">
-                    <div className="text-center">
-                      <Video className="mx-auto h-12 w-12 stroke-1 text-gray-400 group-hover:text-primary-500" />
+                  <div
+                    onDragEnter={(e) => handleDragEvent(e, "video", "enter")}
+                    onDragOver={(e) => handleDragEvent(e, "video", "over")}
+                    onDragLeave={(e) => handleDragEvent(e, "video", "leave")}
+                    onDrop={(e) => handleDragEvent(e, "video", "drop")}
+                    onClick={() => document.getElementById("video").click()}
+                    className={`cursor-pointer border-2 border-dashed rounded-lg p-6 group transition-colors ${
+                      isDraggingVideo
+                        ? "border-primary-500 bg-primary-50"
+                        : "border-gray-300 hover:border-primary-500"
+                    }`}
+                  >
+                    <div className="text-center pointer-events-none">
+                      <Video
+                        className={`mx-auto h-12 w-12 stroke-1 transition-colors ${
+                          isDraggingVideo
+                            ? "text-primary-500"
+                            : "text-gray-400 group-hover:text-primary-500"
+                        }`}
+                      />
                       <div className="mt-4">
-                        <label htmlFor="video" className="cursor-pointer">
-                          <span className="mt-2 block text-sm font-medium text-gray-900">
-                            Drop your video here or select click to browse
-                          </span>
-                          <input
-                            id="video"
-                            type="file"
-                            accept="video/*"
-                            onChange={handleVideoUpload}
-                            className="sr-only"
-                          />
-                        </label>
+                        <span className="mt-2 block text-sm font-medium text-gray-900">
+                          {isDraggingVideo
+                            ? "Drop video here"
+                            : "Drop your video here or click to browse"}
+                        </span>
                       </div>
                     </div>
+                    <input
+                      id="video"
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoUpload}
+                      className="sr-only"
+                    />
                   </div>
 
                   {/* Video Preview */}
