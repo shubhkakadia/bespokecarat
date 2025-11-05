@@ -1393,7 +1393,7 @@ export default function page({ params }) {
     <AdminRoute>
       <div className="flex h-screen">
         <Sidebar />
-        
+
         {/* Main Content */}
         <div className="flex-1 p-4 overflow-auto bg-whitesmoke ">
           <div className="flex flex-col ">

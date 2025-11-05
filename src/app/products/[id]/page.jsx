@@ -2,7 +2,7 @@
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, useRef } from "react";
 import axios from "axios";
 import Image from "next/image";
 import {
@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ArrowLeft,
   Mail,
+  ChevronDown,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -34,6 +35,41 @@ export default function ProductPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchEndX, setTouchEndX] = useState(null);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  const descriptionContentRef = useRef(null);
+  const [descriptionMaxHeight, setDescriptionMaxHeight] = useState(0);
+  const [similarPageIndex, setSimilarPageIndex] = useState(0);
+  const [youMayIndexBySku, setYouMayIndexBySku] = useState({});
+
+  const youMayNext = (key, total) => {
+    setYouMayIndexBySku((prev) => {
+      const current = Number(prev[key] || 0);
+      const next = (current + 1) % total;
+      return { ...prev, [key]: next };
+    });
+  };
+
+  const youMayPrev = (key, total) => {
+    setYouMayIndexBySku((prev) => {
+      const current = Number(prev[key] || 0);
+      const next = (current - 1 + total) % total;
+      return { ...prev, [key]: next };
+    });
+  };
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (descriptionContentRef.current) {
+        setDescriptionMaxHeight(
+          isDescriptionOpen ? descriptionContentRef.current.scrollHeight : 0
+        );
+      }
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, [isDescriptionOpen, product?.description]);
 
   // Variant selection states
   const [selectedColor, setSelectedColor] = useState("");
@@ -69,10 +105,20 @@ export default function ProductPage({ params }) {
     const fetchProduct = async () => {
       setLoading(true);
       const productData = await getProductById(id);
-      const recommended = await getRecommendedProducts(id);
 
       setProduct(productData);
-      setRecommendedProducts(recommended);
+
+      // After product is known, load similar products from same product type
+      if (productData?.product_type) {
+        const recommended = await getRecommendedProducts(
+          productData.product_type,
+          id,
+          6
+        );
+        setRecommendedProducts(recommended || []);
+      } else {
+        setRecommendedProducts([]);
+      }
 
       // Set initial variant selection based on product type
       if (productData?.variants?.length > 0) {
@@ -160,17 +206,68 @@ export default function ProductPage({ params }) {
   };
 
   // Function to get recommended products
-  const getRecommendedProducts = async (currentProductId, limit = 5) => {
+  const getRecommendedProducts = async (
+    productType,
+    currentProductId,
+    limit = 6
+  ) => {
     try {
       const authToken = getAuthToken();
       if (!authToken) {
         toast.error("Authorization failed. Please login again.");
         return null;
       }
-      // TODO: Implement recommended products API call
-      // For now, returning empty array as no recommended products API is provided
-      return [];
+      // Normalize collection key to allowed values
+      const typeMap = {
+        diamond: "diamonds",
+        diamonds: "diamonds",
+        melee: "melees",
+        melees: "melees",
+        colorstone: "colorstones",
+        colorstones: "colorstones",
+        alphabet: "alphabets",
+        alphabets: "alphabets",
+        cut: "cuts",
+        cuts: "cuts",
+        layout: "layouts",
+        layouts: "layouts",
+      };
+      const collectionType =
+        typeMap[String(productType).toLowerCase()] ||
+        String(productType).toLowerCase();
+
+      const response = await fetch(
+        `/api/client/product/collection?c=${encodeURIComponent(
+          collectionType
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        if (response.status === 404) return [];
+        return [];
+      }
+      const json = await response.json();
+      const list = json?.data?.products || [];
+      const normalized = (Array.isArray(list) ? list : [])
+        .filter((p) => p && (p.sku || p.id))
+        .filter((p) => (p.sku || p.id) !== currentProductId);
+      // Shuffle
+      for (let i = normalized.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [normalized[i], normalized[j]] = [normalized[j], normalized[i]];
+      }
+      return normalized.slice(0, limit);
     } catch (error) {
+      if (error?.response?.status === 404) {
+        // Endpoint not available; hide section silently
+        return [];
+      }
       console.error("Error loading recommended products:", error);
       return [];
     }
@@ -687,7 +784,6 @@ export default function ProductPage({ params }) {
     );
   };
 
-
   const nextMedia = () => {
     const validMedia = currentMediaList.filter((media) => media);
     if (validMedia.length > 1) {
@@ -718,7 +814,11 @@ export default function ProductPage({ params }) {
   };
 
   const handleTouchEnd = (e) => {
-    if (e.changedTouches && e.changedTouches.length > 0 && touchStartX !== null) {
+    if (
+      e.changedTouches &&
+      e.changedTouches.length > 0 &&
+      touchStartX !== null
+    ) {
       const endX = e.changedTouches[0].clientX;
       setTouchEndX(endX);
       const deltaX = endX - touchStartX;
@@ -907,9 +1007,11 @@ export default function ProductPage({ params }) {
             {/* Left Side - Images */}
             <div className="space-y-3 sm:space-y-4">
               {/* Main Media Display */}
-              <div className="relative aspect-square bg-surface-100 rounded-md sm:rounded-lg overflow-hidden shadow-sm"
-                   onTouchStart={handleTouchStart}
-                   onTouchEnd={handleTouchEnd}>
+              <div
+                className="relative aspect-square bg-surface-100 rounded-md sm:rounded-lg overflow-hidden shadow-sm"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
                 {currentMediaList.length > 0 &&
                 currentMediaIndex >= 0 &&
                 currentMediaIndex < currentMediaList.length &&
@@ -1069,17 +1171,7 @@ export default function ProductPage({ params }) {
                   )}
                 </div>
 
-                {/* Description */}
-                {product?.description && (
-                  <div className="mt-4 pt-4 border-t border-surface-300">
-                    <h3 className="text-base sm:text-lg font-semibold text-text-dark mb-2">
-                      Description
-                    </h3>
-                    <p className="text-sm sm:text-base lg:text-lg text-text-dark leading-relaxed">
-                      {product.description}
-                    </p>
-                  </div>
-                )}
+                {/* Description moved to bottom */}
               </div>
 
               {/* Variants Selection */}
@@ -1477,7 +1569,7 @@ export default function ProductPage({ params }) {
                 (product.product_type === "layouts" && product.price)) && (
                 <div className="border-b border-surface-300 pb-4 sm:pb-6">
                   <h3 className="text-base sm:text-lg font-semibold text-text-dark mb-2">
-                    Pricing
+                    Price
                   </h3>
                   <div className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold text-primary-600">
                     {product.product_type === "layouts"
@@ -1553,19 +1645,22 @@ export default function ProductPage({ params }) {
               )}
 
               {/* Certification */}
-              <div className="bg-accent-50 p-4 rounded-md sm:rounded-lg">
-                <h3 className="text-base sm:text-lg font-semibold text-accent-800 mb-1">
-                  Certification
-                </h3>
-                <p className="text-sm text-accent-800">
-                  Certified by {product.certification}
-                </p>
-                <p className="text-sm text-accent-700">
-                  Comes with official certification documentation
-                </p>
-              </div>
+              {product?.certification && (
+                <div className="bg-accent-50 p-4 rounded-md sm:rounded-lg">
+                  <h3 className="text-base sm:text-lg font-semibold text-accent-800 mb-1">
+                    Certification
+                  </h3>
+                  <p className="text-sm text-accent-800">
+                    Certified by {product.certification}
+                  </p>
+                  <p className="text-sm text-accent-700">
+                    Comes with official certification documentation
+                  </p>
+                </div>
+              )}
 
-              {/* Quantity Selector */}
+              {/* Quantity Selector - disabled during development */}
+              {/*
               <div className="flex items-center space-x-3 sm:space-x-4">
                 <label className="text-sm sm:text-base font-medium text-text-dark">
                   Quantity:
@@ -1589,8 +1684,10 @@ export default function ProductPage({ params }) {
                   </button>
                 </div>
               </div>
+              */}
 
-              {/* Action Buttons */}
+              {/* Action Buttons - disabled during development */}
+              {/*
               <div className="hidden sm:flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={handleAddToCart}
@@ -1616,6 +1713,7 @@ export default function ProductPage({ params }) {
                   />
                 </button>
               </div>
+              */}
 
               {/* Quick Contact Buttons */}
               <div className="space-y-3 sm:space-y-4">
@@ -1652,6 +1750,8 @@ export default function ProductPage({ params }) {
                 </div>
               </div>
 
+              {/* Description removed from here to be shown full width below */}
+
               {/* Reviews Section */}
               {/* <div className="border-t border-surface-300 pt-6">
               <div className="flex items-center justify-between mb-4">
@@ -1677,7 +1777,50 @@ export default function ProductPage({ params }) {
           </div>
         </div>
 
-        {/* Sticky Bottom Action Bar (Mobile) - contained within product page */}
+        {/* Full-width Description (Accordion) below the grid */}
+        {product?.description && (
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+            <div className="bg-white rounded-md sm:rounded-lg border border-surface-300">
+              <button
+                type="button"
+                aria-expanded={isDescriptionOpen}
+                onClick={() => setIsDescriptionOpen((prev) => !prev)}
+                className="cursor-pointer w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4"
+              >
+                <span className="text-base sm:text-lg font-semibold text-text-dark">
+                  Description
+                </span>
+                <ChevronDown
+                  className={`w-5 h-5 text-secondary-700 transition-transform duration-200 ${
+                    isDescriptionOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                />
+              </button>
+              <div
+                style={{
+                  maxHeight: descriptionMaxHeight,
+                  transition: "max-height 300ms ease",
+                  overflow: "hidden",
+                }}
+                aria-hidden={!isDescriptionOpen}
+              >
+                <div
+                  ref={descriptionContentRef}
+                  className={`px-4 sm:px-6 pb-4 sm:pb-5 transition-opacity duration-300 ${
+                    isDescriptionOpen ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <p className="text-sm sm:text-base lg:text-lg text-text-dark leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sticky Bottom Action Bar (Mobile) - disabled during development */}
+        {/**
         <div className="sm:hidden sticky bottom-0 z-50 w-full bg-white border-t border-surface-300 p-3">
           <div className="max-w-7xl mx-auto px-3 flex items-center gap-3">
             <button
@@ -1700,6 +1843,7 @@ export default function ProductPage({ params }) {
             </button>
           </div>
         </div>
+        */}
 
         {/* You May Also Like Section */}
         {recommendedProducts.length > 0 && (
@@ -1708,19 +1852,76 @@ export default function ProductPage({ params }) {
               You May Also Like
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-              {recommendedProducts.map((recProduct) => (
-                <div key={recProduct.productId} className="group">
+              {recommendedProducts.map((recProduct, idx) => (
+                <div
+                  key={`${
+                    recProduct.sku || recProduct.id || "rec"
+                  }_${idx}_ymal`}
+                  className="group"
+                >
                   <div className="bg-white rounded-lg p-3 sm:p-4 hover:shadow-lg transition-all duration-300 border border-surface-200 hover:border-primary-200">
                     {/* Product Image */}
                     <div className="aspect-square bg-surface-100 rounded-md mb-3 sm:mb-4 overflow-hidden">
-                      {recProduct.images?.[0] ? (
-                        <Image
-                          src={recProduct.images[0]}
-                          alt={recProduct.name}
-                          width={200}
-                          height={200}
-                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                        />
+                      {recProduct.medias?.length > 0 ? (
+                        <div className="relative w-full h-full">
+                          {(() => {
+                            const keyId = `${String(
+                              recProduct.sku || recProduct.id || "item"
+                            )}_${similarPageIndex}_${idx}`;
+                            const total = recProduct.medias.length;
+                            const useCarousel = total > 5; // activate only if more than 5
+                            const carouselIdx = Number(
+                              youMayIndexBySku[keyId] || 0
+                            );
+                            const safeIdx = isNaN(carouselIdx)
+                              ? 0
+                              : Math.max(0, Math.min(carouselIdx, total - 1));
+                            const media = recProduct.medias[safeIdx];
+                            return (
+                              <>
+                                {media?.filelink ? (
+                                  <Image
+                                    src={media.filelink}
+                                    alt={recProduct.name || "Product"}
+                                    width={200}
+                                    height={200}
+                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-surface-400">
+                                    <p className="text-xs sm:text-sm">
+                                      No image
+                                    </p>
+                                  </div>
+                                )}
+                                {useCarousel && (
+                                  <>
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        youMayPrev(keyId, total);
+                                      }}
+                                      className="cursor-pointer absolute left-1.5 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow"
+                                    >
+                                      <ChevronLeft className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        youMayNext(keyId, total);
+                                      }}
+                                      className="cursor-pointer absolute right-1.5 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 shadow"
+                                    >
+                                      <ChevronRight className="w-4 h-4" />
+                                    </button>
+                                  </>
+                                )}
+                              </>
+                            );
+                          })()}
+                        </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-surface-400">
                           <p className="text-xs sm:text-sm">No image</p>
