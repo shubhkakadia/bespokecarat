@@ -6,7 +6,7 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3000',
+        port: process.env.NEXT_APP_PORT,
         pathname: '/api/media/**',
       },
       {
