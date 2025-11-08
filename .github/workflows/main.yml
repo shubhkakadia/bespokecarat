@@ -23,12 +23,13 @@ jobs:
           else
             echo "Deploying to main environment"
             echo "REMOTE_PATH=/var/www/bespokecarat" >> $GITHUB_ENV
+            echo "${{ secrets.PRODUCTION_ENV }}" >> .env
           fi
 
       - name: Deploy with rsync
         uses: burnett01/rsync-deployments@7.1.0
         with:
-          switches: -avz --delete
+          switches: -avz --delete --exclude="node_modules" --exclude=".next"
           path: ./
           remote_path: ${{ env.REMOTE_PATH }}
           remote_host: ${{ secrets.VPS_HOST }}
@@ -42,6 +43,9 @@ jobs:
           username: root
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            cd ${{ env.REMOTE_PATH }}
+            npm install
+            npm run build
             sudo systemctl reload nginx
 
 
