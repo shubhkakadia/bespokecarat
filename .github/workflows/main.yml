@@ -28,9 +28,20 @@ jobs:
       - name: Deploy with rsync
         uses: burnett01/rsync-deployments@7.1.0
         with:
-          switches: -avz
+          switches: -avz --delete
           path: ./
           remote_path: ${{ env.REMOTE_PATH }}
           remote_host: ${{ secrets.VPS_HOST }}
           remote_user: root
           remote_key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Reload Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            sudo systemctl reload nginx
+
+
