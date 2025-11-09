@@ -36,7 +36,7 @@ jobs:
           remote_user: root
           remote_key: ${{ secrets.VPS_SSH_KEY }}
 
-      - name: Clean, reinstall, and rebuild on server
+      - name: Clean, reinstall, rebuild, and restart server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -56,3 +56,15 @@ jobs:
             npm run build
             echo "Reloading Nginx..."
             sudo systemctl reload nginx
+
+            echo "Restarting PM2 process..."
+            # Identify which app to restart based on branch
+            if [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+              pm2 restart bespokecarat-staging
+            else
+              pm2 restart bespokecarat
+            fi
+
+            echo "Saving PM2 process list..."
+            pm2 save
+
