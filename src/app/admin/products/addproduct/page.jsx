@@ -25,6 +25,7 @@ import {
 } from "@/components/constants/order";
 import Image from "next/image";
 import axios from "axios";
+import TextEditor from "@/components/TextEditor";
 
 export default function AddProductPage() {
   const [formData, setFormData] = useState({
@@ -40,7 +41,7 @@ export default function AddProductPage() {
   });
 
   const [images, setImages] = useState([]);
-  const [video, setVideo] = useState(null);
+  const [videos, setVideos] = useState([]);
   const [diamondVariants, setDiamondVariants] = useState([
     {
       id: 1,
@@ -128,7 +129,7 @@ export default function AddProductPage() {
       dimension: "",
     });
     setImages([]);
-    setVideo(null);
+    setVideos([]);
     setLayoutPrice("");
     setLayoutType("");
     setCutType("");
@@ -340,6 +341,13 @@ export default function AddProductPage() {
     }));
   };
 
+  const handleDescriptionChange = (html) => {
+    setFormData((prev) => ({
+      ...prev,
+      description: html,
+    }));
+  };
+
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.map((file) => ({
@@ -350,24 +358,26 @@ export default function AddProductPage() {
   };
 
   const handleVideoUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setVideo({
-        file,
-        preview: URL.createObjectURL(file),
-      });
-    }
+    const files = Array.from(e.target.files);
+    const newVideos = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setVideos((prev) => [...prev, ...newVideos]);
   };
 
   const removeImage = (index) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const removeVideo = () => {
-    if (video) {
-      URL.revokeObjectURL(video.preview);
-      setVideo(null);
-    }
+  const removeVideo = (index) => {
+    setVideos((prev) => {
+      const videoToRemove = prev[index];
+      if (videoToRemove) {
+        URL.revokeObjectURL(videoToRemove.preview);
+      }
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const handleDiamondVariantChange = (id, field, value) => {
@@ -588,10 +598,10 @@ export default function AddProductPage() {
         formDataAPI.append("images", image.file);
       });
 
-      // Add video
-      if (video) {
+      // Add videos
+      videos.forEach((video) => {
         formDataAPI.append("videos", video.file);
-      }
+      });
 
       // Make API request with axios
       const response = await axios.post(
@@ -683,9 +693,9 @@ export default function AddProductPage() {
       images.forEach((image) => {
         formDataAPI.append("images", image.file);
       });
-      if (video) {
+      videos.forEach((video) => {
         formDataAPI.append("videos", video.file);
-      }
+      });
 
       // API request with axios
       const response = await axios.post(
@@ -781,9 +791,9 @@ export default function AddProductPage() {
       images.forEach((image) => {
         formDataAPI.append("images", image.file);
       });
-      if (video) {
+      videos.forEach((video) => {
         formDataAPI.append("videos", video.file);
-      }
+      });
 
       // API request with axios
       const response = await axios.post(
@@ -870,9 +880,9 @@ export default function AddProductPage() {
       images.forEach((image) => {
         formDataAPI.append("images", image.file);
       });
-      if (video) {
+      videos.forEach((video) => {
         formDataAPI.append("videos", video.file);
-      }
+      });
 
       // API request with axios
       const response = await axios.post(
@@ -973,9 +983,9 @@ export default function AddProductPage() {
       images.forEach((image) => {
         formDataAPI.append("images", image.file);
       });
-      if (video) {
+      videos.forEach((video) => {
         formDataAPI.append("videos", video.file);
-      }
+      });
 
       // API request with axios
       const response = await axios.post(
@@ -1070,9 +1080,9 @@ export default function AddProductPage() {
       images.forEach((image) => {
         formDataAPI.append("images", image.file);
       });
-      if (video) {
+      videos.forEach((video) => {
         formDataAPI.append("videos", video.file);
-      }
+      });
 
       // API request with axios
       const response = await axios.post(
@@ -1199,7 +1209,7 @@ export default function AddProductPage() {
     const completeData = {
       ...formData,
       images: images.map((img) => img.file.name),
-      video: video?.file.name || null,
+      videos: videos.map((vid) => vid.file.name),
       productType: activeProductTab,
     };
 
@@ -1263,9 +1273,9 @@ export default function AddProductPage() {
       } else {
         setIsDraggingVideo(false);
         const files = Array.from(e.dataTransfer.files);
-        const videoFile = files.find((file) => file.type.startsWith("video/"));
-        if (videoFile) {
-          handleVideoUpload({ target: { files: [videoFile] } });
+        const videoFiles = files.filter((file) => file.type.startsWith("video/"));
+        if (videoFiles.length > 0) {
+          handleVideoUpload({ target: { files: videoFiles } });
         }
       }
     }
@@ -1495,13 +1505,10 @@ export default function AddProductPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Description
                   </label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="Enter product description..."
+                  <TextEditor
+                    initialContent={formData.description}
+                    onSave={handleDescriptionChange}
+                    placeholder="Start typing your product description..."
                   />
                 </div>
 
@@ -1575,7 +1582,7 @@ export default function AddProductPage() {
                 {/* Upload Video */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-4">
-                    Upload Product Video
+                    Upload Product Videos
                   </label>
                   <div
                     onDragEnter={(e) => handleDragEvent(e, "video", "enter")}
@@ -1600,8 +1607,8 @@ export default function AddProductPage() {
                       <div className="mt-4">
                         <span className="mt-2 block text-sm font-medium text-gray-900">
                           {isDraggingVideo
-                            ? "Drop video here"
-                            : "Drop your video here or click to browse"}
+                            ? "Drop videos here"
+                            : "Drop your videos here or click to browse"}
                         </span>
                       </div>
                     </div>
@@ -1609,27 +1616,30 @@ export default function AddProductPage() {
                       id="video"
                       type="file"
                       accept="video/*"
+                      multiple
                       onChange={handleVideoUpload}
                       className="sr-only"
                     />
                   </div>
 
-                  {/* Video Preview */}
-                  {video && (
-                    <div className="mt-4">
-                      <div className="relative inline-block">
-                        <video
-                          src={video.preview}
-                          controls
-                          className="w-64 h-48 object-cover rounded-lg"
-                        />
-                        <button
-                          onClick={removeVideo}
-                          className="cursor-pointer absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
-                        >
-                          <Trash2 className="w-4 h-4 stroke-2" />
-                        </button>
-                      </div>
+                  {/* Video Previews */}
+                  {videos.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                      {videos.map((video, index) => (
+                        <div key={index} className="relative">
+                          <video
+                            src={video.preview}
+                            controls
+                            className="w-full h-48 object-cover rounded-lg"
+                          />
+                          <button
+                            onClick={() => removeVideo(index)}
+                            className="cursor-pointer absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                          >
+                            <Trash2 className="w-4 h-4 stroke-2" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
