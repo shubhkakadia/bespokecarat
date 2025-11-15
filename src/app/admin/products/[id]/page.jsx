@@ -24,6 +24,7 @@ import {
   certificationOptions,
   shapeOptions,
 } from "@/components/constants/order";
+import TextEditor from "@/components/TextEditor";
 
 export default function page({ params }) {
   // Unwrap params Promise using React.use()
@@ -1255,6 +1256,14 @@ export default function page({ params }) {
     }));
   };
 
+  // Handle description change from TextEditor
+  const handleDescriptionChange = (html) => {
+    setEditedProductData((prev) => ({
+      ...prev,
+      description: html,
+    }));
+  };
+
   // Add a new empty variant for all supported product types
   const handleAddVariant = () => {
     if (
@@ -1888,25 +1897,71 @@ export default function page({ params }) {
                   </div>
                 </div>
                 <div className="flex flex-col m-4 border-t border-gray-200 pt-4">
+                  <style>{`
+                    .product-description ul {
+                      padding-left: 1.5em;
+                      margin: 0.5em 0;
+                      list-style-type: disc;
+                      list-style-position: outside;
+                    }
+                    
+                    .product-description ol {
+                      padding-left: 1.5em;
+                      margin: 0.5em 0;
+                      list-style-type: decimal;
+                      list-style-position: outside;
+                    }
+                    
+                    .product-description li {
+                      margin: 0.25em 0;
+                      display: list-item;
+                      padding-left: 0.25em;
+                    }
+                    
+                    .product-description p {
+                      margin: 0.5em 0;
+                    }
+                    
+                    .product-description h1 {
+                      font-size: 2em;
+                      font-weight: bold;
+                      margin: 0.5em 0;
+                      line-height: 1.2;
+                    }
+                    
+                    .product-description h2 {
+                      font-size: 1.5em;
+                      font-weight: bold;
+                      margin: 0.5em 0;
+                      line-height: 1.3;
+                    }
+                    
+                    .product-description h3 {
+                      font-size: 1.25em;
+                      font-weight: bold;
+                      margin: 0.5em 0;
+                      line-height: 1.4;
+                    }
+                  `}</style>
                   <div className="flex flex-col gap-2">
                     <p className="text-sm text-gray-500">Description</p>
                     {editingProduct ? (
-                      <textarea
-                        value={editedProductData.description || ""}
-                        onChange={(e) =>
-                          handleProductInputChange(
-                            "description",
-                            e.target.value
-                          )
+                      <TextEditor
+                        initialContent={
+                          editedProductData.description ||
+                          productData.description ||
+                          ""
                         }
-                        rows={4}
-                        className="text-sm text-gray-800 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 resize-vertical"
-                        placeholder="Product description..."
+                        onSave={handleDescriptionChange}
+                        placeholder="Start typing your product description..."
                       />
                     ) : (
-                      <p className="text-sm text-gray-800">
-                        {productData.description}
-                      </p>
+                      <div
+                        className="product-description text-sm text-gray-800 leading-relaxed"
+                        dangerouslySetInnerHTML={{
+                          __html: productData.description || "",
+                        }}
+                      />
                     )}
                   </div>
                 </div>
