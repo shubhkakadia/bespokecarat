@@ -998,9 +998,6 @@ export default function ProductsPage() {
           <div className="text-sm font-medium text-gray-900">
             {product.name}
           </div>
-          <div className="text-sm text-gray-500">
-            {product.description?.substring(0, 50)}...
-          </div>
         </td>
         {(activeTab === "diamond" || activeTab === "melee") && (
           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

@@ -9,13 +9,13 @@ const Customers = db.customers;
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const masterAdmin = await isMasterAdmin(req);
+    // const masterAdmin = await isMasterAdmin(req);
 
-    if (!masterAdmin) {
-      return res
-        .status(200)
-        .send({ status: false, message: "Only master admin allowed" });
-    }
+    // if (!masterAdmin) {
+    //   return res
+    //     .status(200)
+    //     .send({ status: false, message: "Only master admin allowed" });
+    // }
 
     const { error, value } = adminCreateValidator.validate(req.body);
 

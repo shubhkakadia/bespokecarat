@@ -467,7 +467,7 @@ export default function Navbar() {
                       <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-48 sm:h-64 lg:h-80 flex items-center justify-center">
                         <div className="text-center text-gray-500 shadow-lg">
                           <Image
-                            src="/layout.jpg"
+                            src="/media/layout.jpg"
                             alt="Diamond Shapes"
                             className="w-full h-full object-cover rounded-lg"
                             width={400}
