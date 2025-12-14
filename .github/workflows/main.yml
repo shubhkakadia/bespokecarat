@@ -33,7 +33,8 @@ jobs:
             --exclude="node_modules" \
             --exclude=".next" \
             --exclude=".git" \
-            --exclude="uploads"
+            --exclude="uploads" \
+            --exclude=".env"
           path: ./
           remote_path: ${{ env.REMOTE_PATH }}
           remote_host: ${{ secrets.VPS_HOST }}
