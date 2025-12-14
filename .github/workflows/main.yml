@@ -29,7 +29,11 @@ jobs:
       - name: Deploy with rsync
         uses: burnett01/rsync-deployments@7.1.0
         with:
-          switches: -avz --delete --exclude="node_modules" --exclude=".next" --exclude=".git"
+          switches: -avz --delete \
+            --exclude="node_modules" \
+            --exclude=".next" \
+            --exclude=".git" \
+            --exclude="uploads"
           path: ./
           remote_path: ${{ env.REMOTE_PATH }}
           remote_host: ${{ secrets.VPS_HOST }}
@@ -67,4 +71,3 @@ jobs:
 
             echo "Saving PM2 process list..."
             pm2 save
-
