@@ -16,9 +16,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CustomerRoute } from "@/components/ProtectedRoute";
-import { getAuthToken } from "@/contexts/auth";
-import { toast } from "react-toastify";
 
 export default function ProductPage({ params }) {
   const { id } = use(params);
@@ -164,18 +161,10 @@ export default function ProductPage({ params }) {
   // Function to get product data from API
   const getProductById = async (id) => {
     try {
-      const authToken = getAuthToken();
-      if (!authToken) {
-        toast.error("Authorization failed. Please login again.");
-        return null;
-      }
       const config = {
         method: "get",
         maxBodyLength: Infinity,
         url: `/api/product-id?sku=${id}`,
-        headers: {
-          Authorization: authToken,
-        },
       };
 
       const response = await axios.request(config);
@@ -210,11 +199,6 @@ export default function ProductPage({ params }) {
     limit = 5
   ) => {
     try {
-      const authToken = getAuthToken();
-      if (!authToken) {
-        toast.error("Authorization failed. Please login again.");
-        return null;
-      }
       // Normalize collection key to allowed values
       const typeMap = {
         diamond: "diamonds",
@@ -241,7 +225,6 @@ export default function ProductPage({ params }) {
         {
           method: "GET",
           headers: {
-            Authorization: authToken,
             "Content-Type": "application/json",
           },
         }
@@ -1161,7 +1144,7 @@ export default function ProductPage({ params }) {
   const currentVariant = getSelectedVariant();
 
   return (
-    <CustomerRoute>
+    <>
       <div>
         <Navbar />
 
@@ -2280,6 +2263,6 @@ export default function ProductPage({ params }) {
 
         <Footer />
       </div>
-    </CustomerRoute>
+    </>
   );
 }

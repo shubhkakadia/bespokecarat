@@ -15,14 +15,11 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CustomerRoute } from "@/components/ProtectedRoute";
-import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 
 export default function ProductSearchPage({ params }) {
   const { type } = use(params);
   const router = useRouter();
-  const { getToken } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -84,11 +81,6 @@ export default function ProductSearchPage({ params }) {
       setLoading(true);
       setApiError(null);
 
-      const authToken = getToken();
-      if (!authToken) {
-        throw new Error("Authentication required");
-      }
-
       // Use API 1 (collection API) for specific collection types
       if (shouldUseCollectionAPI(type)) {
         const collectionType = getCollectionType(type);
@@ -97,7 +89,6 @@ export default function ProductSearchPage({ params }) {
           {
             method: "GET",
             headers: {
-              Authorization: authToken,
               "Content-Type": "application/json",
             },
           }
@@ -119,7 +110,6 @@ export default function ProductSearchPage({ params }) {
           {
             method: "GET",
             headers: {
-              Authorization: authToken,
               "Content-Type": "application/json",
             },
           }
@@ -447,7 +437,7 @@ export default function ProductSearchPage({ params }) {
   };
 
   return (
-    <CustomerRoute>
+    <>
       <div className="min-h-screen bg-whitesmoke">
         <Navbar />
 
@@ -1417,6 +1407,6 @@ export default function ProductSearchPage({ params }) {
 
         <Footer />
       </div>
-    </CustomerRoute>
+    </>
   );
 }
