@@ -16,7 +16,6 @@ import { useAuth } from "../contexts/AuthContext";
 import SearchCard from "./SearchCard";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
-import { getAuthToken } from "@/contexts/auth";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,7 +36,6 @@ export default function Navbar() {
   const debounceRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
-  const authToken = getAuthToken();
 
   const isActivePath = (path) => {
     if (!pathname) return false;
@@ -52,8 +50,7 @@ export default function Navbar() {
     );
   };
 
-  const { isAuthenticated, isAdmin, isCustomer, userData, logout, getToken } =
-    useAuth();
+  const { isAuthenticated, isAdmin, isCustomer, userData, logout } = useAuth();
 
   // Dropdown hover handlers with delay
   const handleDropdownEnter = () => {
@@ -114,9 +111,9 @@ export default function Navbar() {
     };
   }, []);
 
-  // Debounced search - Only for authenticated users
+  // Debounced search
   useEffect(() => {
-    if (!isAuthenticated || !searchQuery || searchQuery.trim().length === 0) {
+    if (!searchQuery || searchQuery.trim().length === 0) {
       setSearchResults([]);
       setSearchLoading(false);
       return;
@@ -134,7 +131,6 @@ export default function Navbar() {
 
         const res = await axios.get(`/api/client/product/search`, {
           params: { q: searchQuery.trim() },
-          headers: { Authorization: authToken },
           signal: controller.signal,
         });
         const data = Array.isArray(res?.data?.data) ? res.data.data : [];
@@ -150,7 +146,7 @@ export default function Navbar() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [searchQuery, getToken, isAuthenticated]);
+  }, [searchQuery]);
 
   const navigateToProduct = (item) => {
     if (!item) return;
@@ -162,10 +158,6 @@ export default function Navbar() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!isAuthenticated) {
-      // Don't redirect, just show the login message in the dropdown
-      return;
-    }
     if (searchQuery.trim()) {
       // Redirect to collections page with search query as type
       const searchType = searchQuery.trim().toLowerCase().replace(/\s+/g, "");
@@ -538,9 +530,7 @@ export default function Navbar() {
                       <div className="p-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10 rounded-t-2xl">
                         <div className="flex items-center justify-between">
                           <div className="text-xs font-medium text-gray-600">
-                            {!isAuthenticated
-                              ? "Authentication required"
-                              : searchLoading
+                            {searchLoading
                               ? "Searching diamonds..."
                               : searchResults.length > 0
                               ? `${searchResults.length} result${
@@ -550,106 +540,70 @@ export default function Navbar() {
                               ? "No diamonds found"
                               : "Start typing to search"}
                           </div>
-                          {searchLoading && isAuthenticated && (
+                          {searchLoading && (
                             <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary-500 border-t-transparent"></div>
                           )}
                         </div>
                       </div>
                       <div className="p-3 space-y-1">
-                        {!isAuthenticated ? (
-                          <div className="p-6 text-center">
-                            <div className="text-gray-400 text-4xl mb-3 flex items-center justify-center">
-                              <Gem className="h-8 w-8" />
+                        {!searchLoading &&
+                          searchResults.map((item) => {
+                            const firstImage =
+                              item?.medias?.find(
+                                (m) => m.file_type === "image"
+                              )?.filelink || "/placeholders/Heart Diamond.png";
+                            const subtitle =
+                              item?.shape || item?.color || item?.description || "";
+                            let price;
+                            if (
+                              Array.isArray(item?.variants) &&
+                              item.variants.length
+                            ) {
+                              price = item.variants[0]?.price;
+                            }
+                            if (
+                              price == null &&
+                              Array.isArray(item?.sieve_sizes) &&
+                              item.sieve_sizes.length
+                            ) {
+                              price = item.sieve_sizes[0]?.price_per_carat;
+                            }
+                            if (
+                              item?.product_type?.toLowerCase() === "layouts" &&
+                              item?.price
+                            ) {
+                              price = item?.price;
+                            }
+                            return (
+                              <SearchCard
+                                key={`${item.product_type}-${item.id}`}
+                                image={firstImage}
+                                title={item?.name || item?.sku}
+                                subtitle={subtitle}
+                                badge={item?.product_type}
+                                price={price}
+                                onClick={() => navigateToProduct(item)}
+                                onAddToCart={() => {}}
+                                onToggleLike={() => {}}
+                                isLiked={false}
+                              />
+                            );
+                          })}
+                        {!searchLoading &&
+                          searchResults.length === 0 &&
+                          searchQuery && (
+                            <div className="p-6 text-center">
+                              <div className="text-gray-400 text-4xl mb-3 flex items-center justify-center">
+                                <Gem className="h-8 w-8" />
+                              </div>
+                              <div className="text-sm font-medium text-gray-600 mb-1">
+                                No diamonds found
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                Try different keywords or browse our collections
+                              </div>
                             </div>
-                            <div className="text-sm font-medium text-gray-600 mb-1">
-                              You need to login to view full inventory
-                            </div>
-                            <div className="text-xs text-gray-400 mb-4">
-                              Sign in to search and browse our complete diamond
-                              collection
-                            </div>
-                            <Link
-                              href="/login"
-                              className="inline-block bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
-                              onClick={() => setSearchOpen(false)}
-                            >
-                              Sign In
-                            </Link>
-                          </div>
-                        ) : (
-                          <>
-                            {!searchLoading &&
-                              searchResults.map((item) => {
-                                const firstImage =
-                                  item?.medias?.find(
-                                    (m) => m.file_type === "image"
-                                  )?.filelink ||
-                                  "/placeholders/Heart Diamond.png";
-                                const subtitle =
-                                  item?.shape ||
-                                  item?.color ||
-                                  item?.description ||
-                                  "";
-                                let price;
-                                if (
-                                  Array.isArray(item?.variants) &&
-                                  item.variants.length
-                                ) {
-                                  price = item.variants[0]?.price;
-                                }
-                                if (
-                                  price == null &&
-                                  Array.isArray(item?.sieve_sizes) &&
-                                  item.sieve_sizes.length
-                                ) {
-                                  price = item.sieve_sizes[0]?.price_per_carat;
-                                }
-                                if (
-                                  item?.product_type.toLowerCase() ===
-                                    "layouts" &&
-                                  item?.price
-                                ) {
-                                  price = item?.price;
-                                }
-                                return (
-                                  <SearchCard
-                                    key={`${item.product_type}-${item.id}`}
-                                    image={firstImage}
-                                    title={item?.name || item?.sku}
-                                    subtitle={subtitle}
-                                    badge={item?.product_type}
-                                    price={price}
-                                    onClick={() => navigateToProduct(item)}
-                                    onAddToCart={() => {
-                                      addToCart(item);
-                                      // Add to cart logic here
-                                    }}
-                                    onToggleLike={() => {
-                                      toggleWishlist(item);
-                                      // Toggle wishlist logic here
-                                    }}
-                                    isLiked={false} // This would come from your wishlist state
-                                  />
-                                );
-                              })}
-                            {!searchLoading &&
-                              searchResults.length === 0 &&
-                              searchQuery && (
-                                <div className="p-6 text-center">
-                                  <div className="text-gray-400 text-4xl mb-3 flex items-center justify-center">
-                                    <Gem className="h-8 w-8" />
-                                  </div>
-                                  <div className="text-sm font-medium text-gray-600 mb-1">
-                                    No diamonds found
-                                  </div>
-                                  <div className="text-xs text-gray-400">
-                                    Try different keywords or browse our
-                                    collections
-                                  </div>
-                                </div>
-                              )}
-                          </>
-                        )}
+                          )}
                       </div>
                     </div>
                   </div>
@@ -833,9 +787,7 @@ export default function Navbar() {
                           <div className="p-3 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur-sm z-10 rounded-t-xl">
                             <div className="flex items-center justify-between">
                               <div className="text-xs font-medium text-gray-600">
-                                {!isAuthenticated
-                                  ? "Authentication required"
-                                  : searchLoading
+                                {searchLoading
                                   ? "Searching diamonds..."
                                   : searchResults.length > 0
                                   ? `${searchResults.length} result${
@@ -845,72 +797,74 @@ export default function Navbar() {
                                   ? "No diamonds found"
                                   : "Start typing to search"}
                               </div>
-                              {searchLoading && isAuthenticated && (
+                              {searchLoading && (
                                 <div className="animate-spin rounded-full h-3 w-3 border-2 border-primary-500 border-t-transparent"></div>
                               )}
                             </div>
                           </div>
                           <div className="p-2 space-y-1">
-                            {!isAuthenticated ? (
-                              <div className="p-4 text-center">
-                                <div className="text-gray-400 text-3xl mb-2 flex items-center justify-center">
-                                  <Gem className="h-6 w-6" />
+                            {!searchLoading &&
+                              searchResults.map((item) => {
+                                const firstImage =
+                                  item?.medias?.find(
+                                    (m) => m.file_type === "image"
+                                  )?.filelink || "/placeholders/Heart Diamond.png";
+                                const subtitle =
+                                  item?.shape ||
+                                  item?.color ||
+                                  item?.description ||
+                                  "";
+                                let price;
+                                if (
+                                  Array.isArray(item?.variants) &&
+                                  item.variants.length
+                                ) {
+                                  price = item.variants[0]?.price;
+                                }
+                                if (
+                                  price == null &&
+                                  Array.isArray(item?.sieve_sizes) &&
+                                  item.sieve_sizes.length
+                                ) {
+                                  price = item.sieve_sizes[0]?.price_per_carat;
+                                }
+                                if (
+                                  item?.product_type?.toLowerCase() ===
+                                    "layouts" &&
+                                  item?.price
+                                ) {
+                                  price = item?.price;
+                                }
+                                return (
+                                  <SearchCard
+                                    key={`${item.product_type}-${item.id}`}
+                                    image={firstImage}
+                                    title={item?.name || item?.sku}
+                                    subtitle={subtitle}
+                                    badge={item?.product_type}
+                                    price={price}
+                                    onClick={() => navigateToProduct(item)}
+                                    onAddToCart={() => {}}
+                                    onToggleLike={() => {}}
+                                  />
+                                );
+                              })}
+                            {!searchLoading &&
+                              searchResults.length === 0 &&
+                              searchQuery && (
+                                <div className="p-4 text-center">
+                                  <div className="text-gray-400 text-3xl mb-2 flex items-center justify-center">
+                                    <Gem className="h-6 w-6" />
+                                  </div>
+                                  <div className="text-sm font-medium text-gray-600 mb-1">
+                                    No diamonds found
+                                  </div>
+                                  <div className="text-xs text-gray-400">
+                                    Try different keywords or browse our
+                                    collections
+                                  </div>
                                 </div>
-                                <div className="text-sm font-medium text-gray-600 mb-1">
-                                  You need to login to view full inventory
-                                </div>
-                                <div className="text-xs text-gray-400 mb-3">
-                                  Sign in to search and browse our complete
-                                  diamond collection
-                                </div>
-                                <Link
-                                  href="/login"
-                                  className="inline-block bg-primary-600 text-white px-3 py-2 rounded-lg text-xs font-medium hover:bg-primary-700 transition-colors"
-                                  onClick={() => setSearchOpen(false)}
-                                >
-                                  Sign In
-                                </Link>
-                              </div>
-                            ) : (
-                              <>
-                                {!searchLoading &&
-                                  searchResults.map((item) => {
-                                    const firstImage =
-                                      item?.medias?.find(
-                                        (m) => m.file_type === "image"
-                                      )?.file_url || null;
-                                    return (
-                                      <SearchCard
-                                        key={item.id}
-                                        image={firstImage}
-                                        title={item.name}
-                                        subtitle={item.description}
-                                        badge={item.category}
-                                        price={item.price}
-                                        onClick={() => navigateToProduct(item)}
-                                        onAddToCart={() => {}}
-                                        onToggleLike={() => {}}
-                                      />
-                                    );
-                                  })}
-                                {!searchLoading &&
-                                  searchResults.length === 0 &&
-                                  searchQuery && (
-                                    <div className="p-4 text-center">
-                                      <div className="text-gray-400 text-3xl mb-2 flex items-center justify-center">
-                                        <Gem className="h-6 w-6" />
-                                      </div>
-                                      <div className="text-sm font-medium text-gray-600 mb-1">
-                                        No diamonds found
-                                      </div>
-                                      <div className="text-xs text-gray-400">
-                                        Try different keywords or browse our
-                                        collections
-                                      </div>
-                                    </div>
-                                  )}
-                              </>
-                            )}
+                              )}
                           </div>
                         </div>
                       </div>
